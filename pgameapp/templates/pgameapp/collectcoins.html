@@ -6,7 +6,6 @@
     <h2>Collect coins</h2>
 
     <p>last coin collection <b>{{ user.profile.last_coin_collection_time|timesince }}</b> ago</p>
-    You have <b>{{ user.actors.count }} types</b> of shitz total.
     <ul>{% for ua, output in user_actors %}
 
                      {# FIXME static image loading and paths #}

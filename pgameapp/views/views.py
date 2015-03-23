@@ -1,8 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 
 from django.utils import timezone
-from django.views.generic import DetailView, TemplateView, FormView
+from django.views.generic import DetailView, TemplateView, FormView, ListView
 
 from pgameapp.forms import SellCoinsForm, CollectCoinsForm, StoreForm, ExchangeForm
 
@@ -20,6 +21,8 @@ from pgameapp.models.gameconfiguration import GameConfiguration
 # TODO Request payout / withdrawal
 # TODO Profile settings
 # TODO game stats box
+
+User = get_user_model()  # TODO fixme
 
 
 class CollectCoinsView(FormView):
@@ -86,6 +89,15 @@ class UserProfileView(DetailView):
     def get_object(self, queryset=None):
         return self.request.user.profile
 
+    def get_context_data(self, **kwargs):
+        context = super(UserProfileView, self).get_context_data(**kwargs)
+
+        context['user_referred_count'] = User.objects\
+            .filter(profile__referrer=self.request.user)\
+            .count()
+
+        return context
+
 
 class StoreView(FormView):
     template_name = 'pgameapp/store.html'
@@ -133,8 +145,14 @@ class ExchangeView(FormView):
         return context
 
 
-class ReferralsView(TemplateView):
+class ReferralsView(ListView):
     template_name = 'pgameapp/referrals.html'
+    context_object_name = 'user_referred_accounts'
+
+    def get_queryset(self):
+        return User.objects\
+            .filter(profile__referrer=self.request.user)\
+            .order_by('-date_joined')
 
 
 # def get_name(request):

@@ -5,5 +5,19 @@
 {% block content %}
     <h2>Referrals list</h2>
 
-    <h1>TODO</h1>
+    {% if user_referred_accounts %}
+      <table style="width: 80%;">
+        <thead>
+            <td><b>date joined</b></td><td><b>account</b></td>
+        </thead>
+        {% for referred in user_referred_accounts %}
+            <tr>
+                <td>{{ referred.date_joined|date:"Y-m-d H:i" }}</td>
+                <td>{{ referred.email }}</td>
+            </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+        <p>Nobody has signed up with your referal links yet</p>
+    {% endif %}
 {% endblock %}
