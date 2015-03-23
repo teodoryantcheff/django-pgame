@@ -92,9 +92,7 @@ class UserProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(UserProfileView, self).get_context_data(**kwargs)
 
-        context['user_referred_count'] = User.objects\
-            .filter(profile__referrer=self.request.user)\
-            .count()
+        context['user_referred_count'] = self.request.user.referrals.count()
 
         return context
 
@@ -150,9 +148,7 @@ class ReferralsView(ListView):
     context_object_name = 'user_referred_accounts'
 
     def get_queryset(self):
-        return User.objects\
-            .filter(profile__referrer=self.request.user)\
-            .order_by('-date_joined')
+        return self.request.user.referrals.order_by('-user__date_joined')
 
 
 # def get_name(request):

@@ -6,14 +6,15 @@
     <h2>Referrals list</h2>
 
     {% if user_referred_accounts %}
+      Total <b>{{ user_referred_accounts|length }}</b>
       <table style="width: 80%;">
         <thead>
             <td><b>date joined</b></td><td><b>account</b></td>
         </thead>
         {% for referred in user_referred_accounts %}
             <tr>
-                <td>{{ referred.date_joined|date:"Y-m-d H:i" }}</td>
-                <td>{{ referred.email }}</td>
+                <td>{{ referred.user.date_joined|date:"Y-m-d H:i" }}</td>
+                <td>{{ referred.user.email }}</td>
             </tr>
         {% endfor %}
       </table>
