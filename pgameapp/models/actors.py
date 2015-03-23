@@ -14,18 +14,16 @@ class UserActorOwnership(models.Model):
 
     user = models.ForeignKey(
         to=AUTH_USER_MODEL,
-        # related_name='actor_set',
         null=False,
         blank=False
     )
 
     actor = models.ForeignKey(
         'Actor',
-        related_name='owner_set'
     )
 
     num_actors = models.PositiveIntegerField(
-        verbose_name='Number of actors',
+        verbose_name='number of actors',
         default=0
     )
 
@@ -33,8 +31,7 @@ class UserActorOwnership(models.Model):
         unique_together = (('user', 'actor'),)
 
     def __unicode__(self):  # __str__ on python 3
-        return 'UA <{}> <{}>'.format(self.user, self.actor)
-        # return 'UserActorOwnership'  # FIXME
+        return 'UA <{}> {}x"{}"'.format(self.user, self.num_actors, self.actor)
 
 
 class Actor(models.Model):
@@ -75,7 +72,6 @@ class Actor(models.Model):
     users = models.ManyToManyField(
         to=AUTH_USER_MODEL,
         through=UserActorOwnership,
-        # related_name='ua_own'
     )
 
     class Meta:

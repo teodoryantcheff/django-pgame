@@ -9,7 +9,8 @@
     Bonus percent <b>{{ w_to_i_conversion_bonus_percent }}%</b>
 
     <form action="" method="post">{% csrf_token %}
-        {{ form.as_p }}
+        {{ form }}
+        <b style="color: red">{{ form.non_field_errors }}</b>
         <input type="submit" value="Convert" />
     </form>
 

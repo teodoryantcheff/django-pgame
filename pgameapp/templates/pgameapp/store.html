@@ -8,7 +8,7 @@
         <ul>
         {% for actor in sellable_actors %}
             <li>
-                You have <b>{{ actor.user_owned }}</b> of
+                You have <b>{{ actor.sum_user_owned }}</b> of
                 <img src="{% static actor.image_path %}">"{{ actor.name }}"
                 <i>price</i> <b>{{ actor.price|floatformat:"0" }}</b>
                 <i>ouput</i> <b>{{ actor.output|floatformat:"0" }}</b>

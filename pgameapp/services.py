@@ -67,11 +67,11 @@ def collect_coins(request):
     if seconds < game_config.coin_collect_time*60:
         raise ValidationError('Too soon')
 
+    # TODO move this and the one in the view to a proper place
     # actors = user.actors.select_related('user', 'actor')
-    actors = user.useractorownership_set.all()
+    actors = user.useractorownership_set.select_related('actor')
     sum_coins_generated = 0
     for actor in actors:
-        # print 'will convert', actor.num_actors, 'of type', actor.actor.name
         sum_coins_generated += actor.num_actors * actor.actor.output * int(seconds/60)
 
     print('total collected {}'.format(sum_coins_generated))
@@ -132,8 +132,8 @@ def sell_coins_to_gc(request, coins):
     )
 
 
-# This gets call after account signup
-def create_userprofile(user_email, ref_info=None):
+# This gets called after account signup
+def create_userprofile(user_email, ref_info={}):
 
     user = User.objects.get(email=user_email)
 
@@ -156,6 +156,12 @@ def create_userprofile(user_email, ref_info=None):
         # generate referral_id
         up.referral_id = get_random_string(length=12)
         try:
-            up.save(force_insert=True)
+            up.save()
+            break  # generated referral_id is unique and user profile got saved
         except IntegrityError:
             continue  # referral_id is not unique, try again
+
+    # TODO Actor bonuses go in here
+    for actor in Actor.objects.all():
+        ua = UserActorOwnership(user=user, actor=actor, num_actors=0)
+        ua.save(force_insert=True)

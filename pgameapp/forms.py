@@ -36,15 +36,7 @@ class StoreForm(ContextForm):
 
 
 class SellCoinsForm(ContextForm):
-    coins_to_sell = forms.IntegerField(
-        min_value=0,
-        required=True
-    )
-
-    # TODO
-    # def __init__(self, *args, **kwargs):
-    #     super(SellCoinsForm, self).__init__(*args, **kwargs)
-    #     self.coins_to_sell.min_value =
+    coins_to_sell = forms.IntegerField(required=True)
 
     def clean(self):
         cleaned_data = super(SellCoinsForm, self).clean()
@@ -57,16 +49,13 @@ class SellCoinsForm(ContextForm):
 
 class ExchangeForm(ContextForm):
     gc_to_exchange = forms.IntegerField(
-        min_value=0,
+        min_value=1,
         required=True,
-        label='GC'
     )
 
     def clean(self):
         cleaned_data = super(ExchangeForm, self).clean()
 
-        # coins_to_sell = self.cleaned_data['coins_to_sell']
-        # coins_to_sell = self.cleaned_data.get('coins_to_sell', 0)
         gc_to_exchange = cleaned_data.get('gc_to_exchange')
         exchange__gc_w_to_i(self.request, gc_to_exchange)
 

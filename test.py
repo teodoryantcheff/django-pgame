@@ -4,6 +4,14 @@ import dogecoinrpc
 from datetime import datetime
 import sys
 
+
+from pgameapp.services import create_userprofile
+from django.conf import settings
+settings.configure()
+
+create_userprofile('test@test.com')
+
+
 a = [
     'D7NS6tGNifYLprFay4BZzwgAVbdKZ9VY38',
     'DGRE7ojuB1VcmF1iVJKy2UkVUk3efd2Dge',

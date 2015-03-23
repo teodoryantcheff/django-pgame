@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Sum
 
 from django.utils import timezone
 from django.views.generic import DetailView, TemplateView, FormView
@@ -7,8 +8,6 @@ from pgameapp.forms import SellCoinsForm, CollectCoinsForm, StoreForm, ExchangeF
 
 from pgameapp.models import UserActorOwnership, Actor, ActorProcurementHistory, CoinConversionHistory
 from pgameapp.models.gameconfiguration import GameConfiguration
-
-
 
 # _TODO Profile, after login
 # _TODO Shop - buy actors
@@ -22,25 +21,6 @@ from pgameapp.models.gameconfiguration import GameConfiguration
 # TODO Profile settings
 # TODO game stats box
 
-# def get_name(request):
-# # if this is a POST request we need to process the form data
-# if request.method == 'POST':
-#         # create a form instance and populate it with data from the request:
-#         form = NameForm(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#             # process the data in form.cleaned_data as required
-#             # ...
-#             # redirect to a new URL:
-#             return HttpResponseRedirect('/thanks/')
-#
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = NameForm()
-#
-#     return render(request, 'name.html', {'form': form})
-
-
 
 class CollectCoinsView(FormView):
     template_name = 'pgameapp/collectcoins.html'
@@ -51,8 +31,10 @@ class CollectCoinsView(FormView):
         context = super(CollectCoinsView, self).get_context_data(**kwargs)
         user = self.request.user
 
-        #qs = user.actor_set.order_by('actor_id')
-        qs = UserActorOwnership.objects.filter(user=user).select_related('actor').order_by('actor__id')
+        # qs = UserActorOwnership.objects\
+        qs = user.useractorownership_set\
+            .select_related('actor')\
+            .order_by('actor__id')
 
         last_collection_datetime = user.profile.last_coin_collection_time
         now = timezone.now()
@@ -118,20 +100,14 @@ class StoreView(FormView):
     def get_context_data(self, **kwargs):
         context = super(StoreView, self).get_context_data(**kwargs)
 
-        sellable_actors = Actor.objects.filter(is_active=True)
+        context['sellable_actors'] = Actor.objects\
+            .filter(is_active=True, users=self.request.user)\
+            .annotate(sum_user_owned=Sum('useractorownership__num_actors'))
 
-        # put number of actors owned by the current user on the actor object
-        for actor in sellable_actors:
-            try:
-                actor.user_owned = actor.owner_set.get(user=self.request.user).num_actors
-            except ObjectDoesNotExist:
-                actor.user_owned = 0
-
-        context['sellable_actors'] = sellable_actors
-
-        procurement_history = ActorProcurementHistory.objects.filter(user=self.request.user).order_by('-timestamp')[:10]
-        # procurement_history.prefetch_related('actor')
-        context['actor_procurement_history'] = procurement_history
+        context['actor_procurement_history'] = ActorProcurementHistory.objects\
+            .filter(user=self.request.user) \
+            .order_by('-timestamp') \
+            .select_related('actor')[:10]
 
         return context
 
@@ -160,3 +136,21 @@ class ExchangeView(FormView):
 class ReferralsView(TemplateView):
     template_name = 'pgameapp/referrals.html'
 
+
+# def get_name(request):
+# # if this is a POST request we need to process the form data
+# if request.method == 'POST':
+# # create a form instance and populate it with data from the request:
+#         form = NameForm(request.POST)
+#         # check whether it's valid:
+#         if form.is_valid():
+#             # process the data in form.cleaned_data as required
+#             # ...
+#             # redirect to a new URL:
+#             return HttpResponseRedirect('/thanks/')
+#
+#     # if a GET (or any other method) we'll create a blank form
+#     else:
+#         form = NameForm()
+#
+#     return render(request, 'name.html', {'form': form})

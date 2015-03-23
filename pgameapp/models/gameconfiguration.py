@@ -14,7 +14,7 @@ class GameConfiguration(solo.models.SingletonModel):
     """
     game_currency = models.CharField(
         max_length=30,
-        verbose_name='Game currency name',
+        verbose_name='game currency name',
         default='Default game currency'
     )
 
@@ -30,7 +30,7 @@ class GameConfiguration(solo.models.SingletonModel):
     Interval (minutes) between coin collects
     """
     coin_collect_time = models.PositiveIntegerField(
-        verbose_name='Interval (minutes) between coin collects',
+        verbose_name='interval (minutes) between coin collects',
         default=10
     )
 
@@ -38,7 +38,7 @@ class GameConfiguration(solo.models.SingletonModel):
     Minimum coin balance to allow selling for GC
     """
     min_coins_to_sell = models.FloatField(
-        verbose_name='Minimum coin balance to allow selling for GC',
+        verbose_name='minimum coin balance to allow selling for GC',
         default=100
     )
 
@@ -62,7 +62,7 @@ class GameConfiguration(solo.models.SingletonModel):
     Minimum withdrawal amount. Less than that cannot be withdrawn
     """
     min_withdrawal_amount = models.FloatField(
-        verbose_name='Minimum withdrawal amount',
+        verbose_name='minimum withdrawal amount',
         default=0
     )
 
@@ -70,7 +70,7 @@ class GameConfiguration(solo.models.SingletonModel):
     Minimum deposit amount to allow withdrawals
     """
     min_withdrawal_deposit_amount = models.FloatField(
-        verbose_name='Minimum deposit amount to allow withdrawals',
+        verbose_name='minimum deposit amount to allow withdrawals',
         default=0
     )
 
@@ -86,7 +86,7 @@ class GameConfiguration(solo.models.SingletonModel):
     Bonus (additional) percent on converting withdrawal to investment balance
     """
     w_to_i_conversion_bonus_percent = models.PositiveSmallIntegerField(
-        verbose_name='Bonus (additional) percent on converting withdrawal to investment balance',
+        verbose_name='bonus (additional) percent on converting withdrawal to investment balance',
         default=99
     )
 
@@ -94,4 +94,4 @@ class GameConfiguration(solo.models.SingletonModel):
         return 'Game Configuration'
 
     class Meta:
-        verbose_name = 'Game Configuration'
+        verbose_name = 'game configuration'
