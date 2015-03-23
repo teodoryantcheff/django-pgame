@@ -1,0 +1,81 @@
+{% load i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+
+    <script src="{% static "js/jquery-1.11.2.min.js" %}"></script>
+    <script src="{% static "js/jquery.cookie.js" %}"></script>
+    <script src="{% static "js/querystring-0.9.0-min.js" %}"></script>
+
+    <title>{% block title %}MEGA page title TEST{% endblock %}</title>
+
+</head>
+
+
+
+<body>
+    <h1 id="h01"></h1>
+    <div id="header">
+        {% block header %} HEADER block {% endblock %}
+        <hr />
+    </div>
+
+    <div id="sidemenu">
+        {% block sidemenu %}
+            {% if user.is_authenticated %}
+                {% trans "Logged in" %}: {{ user }}
+                <br/>
+                <small>
+                (<a href="{% url 'account_logout' %}">{% trans "Log out" %}</a> |
+                <a href="{% url 'account_password_reset' %}">{% trans "Change password" %}</a>)
+                </small>
+            {% else %}
+                <a href="{% url 'account_login' %}">{% trans "Log in" %}</a> | <a href="{% url 'account_signup' %}">{% trans "Register" %}</a>
+            {% endif %}
+            <br/>
+            Side menu :
+            <nav><ul>
+                <li><a href="{% url 'user-profile' %}">Profile</a></li>
+                <li><a href="{% url 'collect-coins' %}">Collect</a></li>
+                <li><a href="{% url 'sell-coins' %}">Sell coins</a></li>
+                <li><a href="{% url 'store' %}">Store</a></li>
+                <li><a href="#">Game</a></li>
+                <li><a href="#">Game</a></li>
+                <li><a href="#">Game</a></li>
+                <li><a href="{% url 'exchange' %}">Exchange</a></li>
+                <li><a href="{% url 'referrals' %}">Referrals</a></li>
+                <li><a href="#">Confirm payment</a></li>
+                <li><a href="#">Request payout</a></li>
+                <li><a href="#">Account settings</a></li>
+                <li><a href="{% url 'account_logout' %}">Logout</a></li>
+            </ul></nav>
+        {% endblock %}
+        <div id="userprofile">
+            {% if user.is_authenticated %}
+                <ul>
+                <li>investment: <b>{{ user.profile.balance_i|floatformat:"1" }}</b></li>
+                <li>withdrawal: <b>{{ user.profile.balance_w|floatformat:"1" }}</b></li>
+                <li>coins: <b>{{ user.profile.balance_coins|floatformat:"1" }}</b></li>
+                </ul>
+            {% else %}
+                <p>Login to see account balance</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="content">
+      {% block content %} CONTENT block {% endblock %}
+    </div>
+
+    <div id="footer">
+      <hr />
+      {% block footer %}
+          FOOTER BLOCK <small>(Remote IP :  {{ remote_ip }})</small>
+      {% endblock %}
+    </div>
+</body>
+
+</html>

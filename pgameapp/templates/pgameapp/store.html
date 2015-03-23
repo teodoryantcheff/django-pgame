@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+    <h2>Store</h2>
+    <form action="" method="post">{% csrf_token %}
+        <ul>
+        {% for actor in sellable_actors %}
+            <li>
+                You have <b>{{ actor.user_owned }}</b> of
+                <img src="{% static actor.image_path %}">"{{ actor.name }}"
+                <i>price</i> <b>{{ actor.price|floatformat:"0" }}</b>
+                <i>ouput</i> <b>{{ actor.output|floatformat:"0" }}</b>
+                &nbsp;&nbsp;&nbsp;
+                <input type="submit" name="actor_{{ forloop.counter }}" value="Buy for {{ actor.price }}"  />
+{#                <button type="button" name>Buy ! <i><small>(TODO)</small></i></button>#}
+            </li>
+        {% endfor %}
+        </ul>
+        <b>{{ form.non_field_errors }} {#{{ form }}#} </b>
+    </form>
+
+    {% if actor_procurement_history %}
+      Last 10
+      <table style="width: 80%;">
+        <thead>
+            <td><b>timestamp</b></td><td><b>actor</b></td><td><b>price</b></td>
+        </thead>
+        {% for bought in actor_procurement_history %}
+            <tr>
+                <td>{{ bought.timestamp|date:"Y-m-d H:i" }}</td>
+                <td>{{ bought.actor.name }}</td>
+                <td>{{ bought.price }}</td>
+            </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p>haven't bought any yet</p>
+    {% endif %}
+
+{% endblock %}

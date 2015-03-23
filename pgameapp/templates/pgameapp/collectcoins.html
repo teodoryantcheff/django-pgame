@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+    <h2>Collect coins</h2>
+
+    <p>last coin collection <b>{{ user.profile.last_coin_collection_time|timesince }}</b> ago</p>
+    You have <b>{{ user.actors.count }} types</b> of shitz total.
+    <ul>{% for ua, output in user_actors %}
+
+                     {# FIXME static image loading and paths #}
+        <li><b>{{ ua.num_actors }} X</b> <img src="/static/{{ ua.actor.image_path }}">"{{ ua.actor.name }}" <i>generated:</i> <b>{{ output|floatformat:"0" }}</b></li>
+    {% endfor %}</ul>
+
+{#    <br/><br/><br/>#}
+
+    <form action="" method="post">{% csrf_token %}
+        <b>{{ form.non_field_errors }} {#{{ form }}#} </b>
+        <input type="submit"  value="Collect coins" />
+    </form>
+{% endblock %}

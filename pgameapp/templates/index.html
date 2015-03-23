@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+    <h1>This is the index madafaka</h1>
+    <h2>this is a test</h2>
+
+    <text>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque dolorum laudantium ratione. Accusantium
+        aliquam aspernatur aut dicta ducimus ea earum et hic, illo iure magnam maiores molestiae omnis veniam vitae!
+    </text>
+     <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque dolorum laudantium ratione. Accusantium
+        aliquam aspernatur aut dicta ducimus ea earum et hic, illo iure magnam maiores molestiae omnis veniam vitae!
+     </p>
+    <text>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque dolorum laudantium ratione. Accusantium
+        aliquam aspernatur aut dicta ducimus ea earum et hic, illo iure magnam maiores molestiae omnis veniam vitae!
+    </text>
+
+    <br/><br/>
+    <a href="{% static "test.txt" %}">{% trans "test link" %}</a>
+{% endblock %}
