@@ -162,6 +162,5 @@ def create_userprofile(user_email, ref_info={}):
             continue  # referral_id is not unique, try again
 
     # TODO Actor bonuses go in here
-    for actor in Actor.objects.all():
-        ua = UserActorOwnership(user=user, actor=actor, num_actors=0)
-        ua.save(force_insert=True)
+    all_actors = Actor.objects.all()
+    UserActorOwnership.objects.bulk_create([UserActorOwnership(user=user, actor=actor) for actor in all_actors])
