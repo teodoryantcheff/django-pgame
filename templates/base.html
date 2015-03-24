@@ -1,9 +1,9 @@
 {% load i18n %}
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en">
+ <html lang="en">
 
-<head>
+  <head>
     <link rel="stylesheet" href="{% static "css/style.css" %}">
 
     <script src="{% static "js/jquery-1.11.2.min.js" %}"></script>
@@ -12,70 +12,72 @@
 
     <title>{% block title %}MEGA page title TEST{% endblock %}</title>
 
-</head>
+  </head>
 
-
-
-<body>
-    <h1 id="h01"></h1>
-    <div id="header">
-        {% block header %} HEADER block {% endblock %}
-        <hr />
+  <body>
+    <div class="header">
+      {% block header %} HEADER block {% endblock %}
     </div>
 
-    <div id="sidemenu">
-        {% block sidemenu %}
+    <div class="wrap">
+      <div class="sidebar">
+        <div class="sidemenu">
+          {% block sidemenu %}
             {% if user.is_authenticated %}
-                {% trans "Logged in" %}: {{ user }}
-                <br/>
-                <small>
+              {% trans "Logged in" %}: {{ user }}
+              <br/>
+              <small>
                 (<a href="{% url 'account_logout' %}">{% trans "Log out" %}</a> |
                 <a href="{% url 'account_password_reset' %}">{% trans "Change password" %}</a>)
-                </small>
+              </small>
             {% else %}
-                <a href="{% url 'account_login' %}">{% trans "Log in" %}</a> | <a href="{% url 'account_signup' %}">{% trans "Register" %}</a>
+              <a href="{% url 'account_login' %}">{% trans "Log in" %}</a> | <a href="{% url 'account_signup' %}">{% trans "Register" %}</a>
             {% endif %}
             <br/>
             Side menu :
             <nav><ul>
-                <li><a href="{% url 'user-profile' %}">Profile</a></li>
-                <li><a href="{% url 'collect-coins' %}">Collect</a></li>
-                <li><a href="{% url 'sell-coins' %}">Sell coins</a></li>
-                <li><a href="{% url 'store' %}">Store</a></li>
-                <li><a href="#">Game</a></li>
-                <li><a href="#">Game</a></li>
-                <li><a href="#">Game</a></li>
-                <li><a href="{% url 'exchange' %}">Exchange</a></li>
-                <li><a href="{% url 'referrals' %}">Referrals</a></li>
-                <li><a href="#">Confirm payment</a></li>
-                <li><a href="#">Request payout</a></li>
-                <li><a href="#">Account settings</a></li>
-                <li><a href="{% url 'account_logout' %}">Logout</a></li>
+              <li><a href="{% url 'user-profile' %}">Profile</a></li>
+              <li><a href="{% url 'collect-coins' %}">Collect</a></li>
+              <li><a href="{% url 'sell-coins' %}">Sell coins</a></li>
+              <li><a href="{% url 'store' %}">Store</a></li>
+              <li><a href="#">Game</a></li>
+              <li><a href="#">Game</a></li>
+              <li><a href="#">Game</a></li>
+              <li><a href="{% url 'exchange' %}">Exchange</a></li>
+              <li><a href="{% url 'referrals' %}">Referrals</a></li>
+              <li><a href="#">Confirm payment</a></li>
+              <li><a href="#">Request payout</a></li>
+              <li><a href="#">Account settings</a></li>
+              <li><a href="{% url 'account_logout' %}">Logout</a></li>
             </ul></nav>
-        {% endblock %}
-        <div id="userprofile">
+          {% endblock %}
+          <div class="userprofile">
             {% if user.is_authenticated %}
-                <ul>
+              <ul>
                 <li>investment: <b>{{ user.profile.balance_i|floatformat:"1" }}</b></li>
                 <li>withdrawal: <b>{{ user.profile.balance_w|floatformat:"1" }}</b></li>
                 <li>coins: <b>{{ user.profile.balance_coins|floatformat:"1" }}</b></li>
-                </ul>
+              </ul>
             {% else %}
-                <p>Login to see account balance</p>
+              <p>Login to see account balance</p>
             {% endif %}
+          </div>
         </div>
+        <div> <!-- Shit below the side bar -->
+          <img src="{% static "img/dogecoin.png" %}" alt="doge accepted here image" width="100%"/>
+        </div>
+      </div>
+
+      <div class="content">
+        {% block content %} CONTENT block {% endblock %}
+      </div>
     </div>
 
-    <div id="content">
-      {% block content %} CONTENT block {% endblock %}
-    </div>
-
-    <div id="footer">
-      <hr />
+    <div class="footer">
       {% block footer %}
-          FOOTER BLOCK <small>(Remote IP :  {{ remote_ip }})</small>
+        FOOTER BLOCK <small>(Remote IP :  {{ remote_ip }})</small>
       {% endblock %}
     </div>
-</body>
+  </body>
 
 </html>

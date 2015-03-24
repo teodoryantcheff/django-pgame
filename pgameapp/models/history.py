@@ -1,12 +1,10 @@
-__author__ = 'Jailbreaker'
-
 from django.db import models
-from django.conf import settings
 
+from . import AUTH_USER_MODEL
 from pgameapp.models import Actor
 
 
-AUTH_USER_MODEL = getattr(settings, "AUTH_USER_MODEL", "auth.User")
+__author__ = 'Jailbreaker'
 
 
 class ActorProcurementHistory(models.Model):
@@ -20,32 +18,28 @@ class ActorProcurementHistory(models.Model):
     user = models.ForeignKey(
         to=AUTH_USER_MODEL,
         null=False,
-        blank=False
     )
 
     timestamp = models.DateTimeField(
         auto_now_add=True,
         null=False,
-        blank=False
     )
 
     actor = models.ForeignKey(
         to=Actor,
         null=False,
-        blank=False
     )
 
     price = models.FloatField(
         verbose_name='Price of procurement',
         null=False,
-        blank=False
     )
 
     class Meta:
         ordering = ['-timestamp']
 
     def __unicode__(self):  # __str__ on python 3
-        return 'ActorProcurementHistory'
+        return u'ActorProcurementHistory'
 
 
 class CoinConversionHistory(models.Model):
@@ -59,32 +53,28 @@ class CoinConversionHistory(models.Model):
     user = models.ForeignKey(
         to=AUTH_USER_MODEL,
         null=False,
-        blank=False
     )
 
     timestamp = models.DateTimeField(
         auto_now_add=True,
         null=False,
-        blank=False
     )
 
     coins = models.FloatField(
         verbose_name='Converted coins',
         null=False,
-        blank=False
     )
 
     game_currency = models.FloatField(
         verbose_name='Received GC',
         null=False,
-        blank=False
     )
 
     class Meta:
         ordering = ['-timestamp']
 
     def __unicode__(self):  # __str__ on python 3
-        return 'CoinConversionHistory'
+        return u'CoinConversionHistory'
 
 
 class DepositHistory(models.Model):
@@ -98,32 +88,28 @@ class DepositHistory(models.Model):
     user = models.ForeignKey(
         to=AUTH_USER_MODEL,
         null=False,
-        blank=False
     )
 
     timestamp = models.DateTimeField(
         auto_now_add=True,
         null=False,
-        blank=False
     )
 
     real_currency = models.FloatField(
         verbose_name='Real money',
         null=False,
-        blank=False
     )
 
     game_currency = models.FloatField(
         verbose_name='Received GC',
         null=False,
-        blank=False
     )
 
     class Meta:
         ordering = ['-timestamp']
 
     def __unicode__(self):  # __str__ on python 3
-        return 'DepositHistory'
+        return u'DepositHistory'
 
 
 class WithdrawalHistory(models.Model):
@@ -137,7 +123,6 @@ class WithdrawalHistory(models.Model):
     user = models.ForeignKey(
         to=AUTH_USER_MODEL,
         null=False,
-        blank=False
     )
 
     timestamp = models.DateTimeField(
@@ -147,17 +132,15 @@ class WithdrawalHistory(models.Model):
     real_currency = models.FloatField(
         verbose_name='Real money received',
         null=False,
-        blank=False
     )
 
     game_currency = models.FloatField(
         verbose_name='GC spent',
         null=False,
-        blank=False
     )
 
     class Meta:
         ordering = ['-timestamp']
 
     def __unicode__(self):  # __str__ on python 3
-        return 'WithdrawalHistory'
+        return u'WithdrawalHistory'

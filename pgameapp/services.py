@@ -141,26 +141,11 @@ def create_userprofile(user_email, ref_info={}):
     ref_src = ref_info.get('ref_src', '')
     ref_cmp = ref_info.get('ref_cmp', '')
 
+    # TODO ref source and ref campaign storage and usage
+
     try:
         referrer_user = User.objects.get(profile__referral_id=ref_code)
     except ObjectDoesNotExist:
         referrer_user = None
 
-    up = UserProfile(
-        user=user,
-        referrer=referrer_user
-    )
-    up.pin = get_random_string(6)
 
-    while True:
-        # generate referral_id
-        up.referral_id = get_random_string(length=12)
-        try:
-            up.save()
-            break  # generated referral_id is unique and user profile got saved
-        except IntegrityError:
-            continue  # referral_id is not unique, try again
-
-    # TODO Actor bonuses go in here
-    all_actors = Actor.objects.all()
-    UserActorOwnership.objects.bulk_create([UserActorOwnership(user=user, actor=actor) for actor in all_actors])

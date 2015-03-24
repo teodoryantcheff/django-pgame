@@ -138,6 +138,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
@@ -150,9 +154,9 @@ AUTH_USER_MODEL = 'custom_user.EmailUser'
 # see http://django-user-accounts.readthedocs.org/en/latest/ for full parameter set
 ACCOUNT_EMAIL_UNIQUE = True
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = False
-ACCOUNT_USER_DISPLAY = lambda user: user.email
-
+ACCOUNT_EMAIL_CONFIRMATION_EMAIL = False
 ACCOUNT_LOGIN_REDIRECT_URL = '/user'
+ACCOUNT_USER_DISPLAY = lambda user: user.email
 
 
 # for django debug toolbar

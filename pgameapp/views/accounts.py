@@ -1,3 +1,5 @@
+from urllib import unquote_plus
+
 try:
     import simplejson as json
 except ImportError:
@@ -30,7 +32,7 @@ class SignupView(account.views.SignupView):
     def after_signup(self, form):
         # Read and parse the referal cookie off the request if there is one
         tracking_cookie = self.request.COOKIES.get('ref', '{}')
-        tracking_cookie = django.utils.http.unquote_plus(tracking_cookie)
+        tracking_cookie = unquote_plus(tracking_cookie)
         ref_info = json.loads(tracking_cookie)
 
         # Actually create the user profile
