@@ -115,6 +115,7 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = 'user@domain.com'
+
 # FIXME
 from  local_settings import *
 
