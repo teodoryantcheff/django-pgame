@@ -151,7 +151,7 @@ AUTH_USER_MODEL = 'custom_user.EmailUser'
 # django-accounts
 # see http://django-user-accounts.readthedocs.org/en/latest/ for full parameter set
 ACCOUNT_EMAIL_UNIQUE = True
-ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = False
 ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 ACCOUNT_LOGIN_REDIRECT_URL = '/'
 ACCOUNT_USER_DISPLAY = lambda user: user.email

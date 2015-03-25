@@ -43,7 +43,7 @@ class Actor(models.Model):
     """
     name = models.CharField(max_length=50)
     price = models.FloatField(default=0)
-    output = models.FloatField(default=0)
+    output = models.FloatField(default=0, verbose_name='output / h')
 
     image_path = models.CharField(
         verbose_name='actor image file location',
@@ -58,6 +58,14 @@ class Actor(models.Model):
     is_active = models.BooleanField(
         # verbose_name='Make sellable',
         default=True
+    )
+
+    """
+    How many of those to give as bonus to users
+    """
+    num_as_bonus = models.PositiveIntegerField(
+        verbose_name='as bonus',
+        default=0,
     )
 
     """

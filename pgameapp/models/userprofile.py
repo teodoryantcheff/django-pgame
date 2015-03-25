@@ -95,7 +95,6 @@ class UserProfile(models.Model):
                 self.referrer = user_model.objects.get(profile__referral_id=ref_code)
             except user_model.DoesNotExist:
                 print 'Account with referral_id {} does not exist. Ignosring'.format(ref_code)
-                pass
 
     def set_crypto_address(self, crypto_adderess):
         self.crypto_address = crypto_adderess
