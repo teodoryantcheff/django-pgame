@@ -13,16 +13,14 @@ __author__ = 'Jailbreaker'
 User = get_user_model()  # TODO fixme
 
 
-def buy_actor(request, actor_id):
-    a = Actor.objects.get(pk=actor_id)
-
-    if not a:
+def buy_actor(request, actor):
+    if not actor:
         raise ValidationError('Invalid Actor')
 
     user = request.user
     now = timezone.now()
 
-    if a.price > user.profile.balance_i:
+    if actor.price > user.profile.balance_i:
         raise ValidationError('Insufficient funds')
 
     game_config = GameConfiguration.objects.get()
@@ -30,28 +28,30 @@ def buy_actor(request, actor_id):
     last_coll = user.profile.last_coin_collection_time
     seconds = int((now - last_coll).total_seconds())
 
-    if seconds > game_config.coin_collect_time*60:
+    # If user has actors and hasn;t collected
+    if seconds > game_config.coin_collect_time*60 and user.profile.get_total_actors() > 0:
         raise ValidationError('Go collect your shit first')
 
     ua, created = UserActorOwnership.objects.get_or_create(
         user=user,
-        actor=a,
+        actor=actor,
         defaults={'num_actors': 1}
     )
 
     if not created:
         ua.num_actors += 1
-        ua.save()
 
-    user.profile.balance_i -= a.price
+    ua.save()
+
+    user.profile.balance_i -= actor.price
     user.profile.last_coin_collection_time = now
     user.profile.save()
 
     ActorProcurementHistory.objects.create(
         user=user,
         timestamp=now,
-        actor=a,
-        price=a.price
+        actor=actor,
+        price=actor.price
     )
 
 

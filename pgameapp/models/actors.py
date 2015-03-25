@@ -1,8 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
 
 from . import AUTH_USER_MODEL
+
 
 __author__ = 'Jailbreaker'
 
@@ -21,9 +23,7 @@ class UserActorOwnership(models.Model):
         blank=False
     )
 
-    actor = models.ForeignKey(
-        'Actor',
-    )
+    actor = models.ForeignKey('Actor',)
 
     num_actors = models.PositiveIntegerField(
         verbose_name='number of actors',
@@ -85,14 +85,54 @@ class Actor(models.Model):
         return self.name
 
 
-def on_user_creation(sender, instance, created, **kwargs):
-    # TODO Actor bonuses go in here... maybe
+def create_blank_uas_for_user(sender, instance, created, **kwargs):
+    """
+    Creates blank UserActorOwnership entries for a newly added User
+    Intended to be called in a signal receiver on post_save for User (EmailUser in this case)
+    """
+
     if created:
-        print 'Adding actors to user', instance
-        all_actors = Actor.objects.all()
+        # print 'Adding actors to user', instance
         UserActorOwnership.objects.bulk_create(
-            [UserActorOwnership(user=instance, actor=actor, num_actors=0) for actor in all_actors]
+            [UserActorOwnership(user=instance, actor=actor, num_actors=0) for actor in Actor.objects.all()]
         )
 
 
-post_save.connect(on_user_creation, sender=AUTH_USER_MODEL)
+def add_uas_to_users_on_new_actor(sender, instance, created, **kwargs):
+    """
+    Creates blank UserActorOwnership entries to all users for a newly added Actor
+    Intended to be called in a signal receiver on post_save for Actor
+    """
+
+    if created:
+        # Add actor to all users
+        UserActorOwnership.objects.bulk_create(
+            [UserActorOwnership(user=user, actor=instance) for user in sender.objects.all()]
+        )
+
+
+post_save.connect(
+    create_blank_uas_for_user,
+    sender=AUTH_USER_MODEL,
+    dispatch_uid='post_save__User__create_blank_uas_for_user'
+)
+
+post_save.connect(
+    add_uas_to_users_on_new_actor,
+    sender=Actor,
+    dispatch_uid='add_uas_to_users_on_new_actor'
+)
+
+
+#
+# def delete_uas_from_users(sender, instance, using, **kwargs):
+#     """
+#     Triggered by a signal on Actor deletion. Deletes all UserActorOwnership referring the to be deleted Actor
+#     """
+#     UserActorOwnership.objects.filter(actor=instance).delete()
+#
+# pre_delete.connect(
+#     delete_uas_from_users,
+#     sender=Actor,
+#     dispatch_uid='delete_uas_from_users'
+# )

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 import solo.models
 
 __author__ = 'Jailbreaker'
@@ -88,6 +89,15 @@ class GameConfiguration(solo.models.SingletonModel):
     w_to_i_conversion_bonus_percent = models.PositiveSmallIntegerField(
         verbose_name='bonus (additional) percent on converting withdrawal to investment balance',
         default=99
+    )
+
+    """
+    Date of "official" game start
+    """
+    game_start_datetime = models.DateTimeField(
+        verbose_name='Date of "official" game start',
+        auto_now_add=True,
+        default=timezone.now()
     )
 
     def __unicode__(self):  # __str__ on python 3

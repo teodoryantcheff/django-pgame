@@ -4,28 +4,27 @@
 
 {% block content %}
     <h2>Store</h2>
-    <form action="" method="post">{% csrf_token %}
-        <ul>
-        {% for actor in sellable_actors %}
-            <li>
-                You have <b>{{ actor.sum_user_owned }}</b> of
-                <img src="{% static actor.image_path %}">"{{ actor.name }}"
-                <i>price</i> <b>{{ actor.price|floatformat:"0" }}</b>
-                <i>ouput</i> <b>{{ actor.output|floatformat:"0" }}</b>
-                &nbsp;&nbsp;&nbsp;
-                <input type="submit" name="actor_{{ forloop.counter }}" value="Buy for {{ actor.price }}"  />
-{#                <button type="button" name>Buy ! <i><small>(TODO)</small></i></button>#}
-            </li>
-        {% endfor %}
-        </ul>
-        <b>{{ form.non_field_errors }} {#{{ form }}#} </b>
-    </form>
-
+    {% for actor in sellable_actors %}
+      <form action="" method="post">{% csrf_token %}
+        <li>
+          You have <b>{{ actor.sum_user_owned }}</b> of
+          <img src="{% static actor.image_path %}">"{{ actor.name }}"
+          <i>price</i> <b>{{ actor.price|floatformat:"0" }}</b> {{ game_currency }}
+          <i>ouput</i> <b>{{ actor.output|floatformat:"0" }}</b> coins/hour
+          &nbsp;&nbsp;&nbsp;
+          <input type="hidden" id="id_actor" class="hidden_id" name="actor" value="{{ actor.pk }}" />
+          <input type="hidden" id="id_user" class="hidden_id" name="user" value="{{ user.pk }}" />
+          <input type="submit" value="Buy for {{ actor.price }}"  />
+        </li>
+      </form>
+    {% endfor %}
+    <b style="color: red">{{ form.non_field_errors }}</b>
+    <br/><br/><br/>
     {% if actor_procurement_history %}
       Last 10
       <table style="width: 80%;">
         <thead>
-            <td><b>timestamp</b></td><td><b>actor</b></td><td><b>price</b></td>
+            <td><b>timestamp</b></td><td><b>actor</b></td><td><b>price ({{ game_currency }})</b></td>
         </thead>
         {% for bought in actor_procurement_history %}
             <tr>

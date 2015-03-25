@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 
 from django.utils import timezone
-from django.views.generic import DetailView, TemplateView, FormView, ListView
+from django.views.generic import DetailView, FormView, ListView
 
 from pgameapp.forms import SellCoinsForm, CollectCoinsForm, StoreForm, ExchangeForm
 
@@ -20,7 +19,7 @@ from pgameapp.models.gameconfiguration import GameConfiguration
 # TODO Top up balance (doge transfer confirmation)
 # TODO Request payout / withdrawal
 # TODO Profile settings
-# TODO game stats box
+# _TODO game stats box
 
 User = get_user_model()  # TODO fixme
 
@@ -168,3 +167,33 @@ class ReferralsView(ListView):
 #         form = NameForm()
 #
 #     return render(request, 'name.html', {'form': form})
+
+# class StoreView2(ListView):
+#     template_name = 'pgameapp/store2.html'
+#     context_object_name = 'sellable_actors'
+#
+#     def get_queryset(self):
+#         return Actor.objects.filter(is_active=True, users=self.request.user)\
+#             .annotate(sum_user_owned=Sum('useractorownership__num_actors'))
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(StoreView2, self).get_context_data(**kwargs)
+#
+#         context['actor_procurement_history'] = ActorProcurementHistory.objects\
+#             .filter(user=self.request.user) \
+#             .order_by('-timestamp') \
+#             .select_related('actor')[:10]
+#
+#         return context
+#
+#
+# class BuyFormView(FormView):
+#     form_class = BuyForm
+#
+#     def form_valid(self, form):
+#         print 'form_valid'
+#         return super(BuyFormView, self).form_valid(form)
+#
+#     def form_invalid(self, form):
+#         print 'form_invalid'
+#         return super(BuyFormView, self).form_invalid(form)

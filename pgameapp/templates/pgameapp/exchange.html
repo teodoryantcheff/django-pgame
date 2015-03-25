@@ -5,7 +5,8 @@
 {% block content %}
     <h2>Withdrawal GC -> Investment GC</h2>
 
-    Investment <b>{{ user.profile.balance_i|floatformat:"0" }}</b>.  Withdrawal <b>{{ user.profile.balance_w|floatformat:"0" }}</b>
+    Withdrawal <b>{{ user.profile.balance_w|floatformat:"0" }}</b> {{ game_currency }}<br/>
+    Investment <b>{{ user.profile.balance_i|floatformat:"0" }}</b> {{ game_currency }}.
     Bonus percent <b>{{ w_to_i_conversion_bonus_percent }}%</b>
 
     <form action="" method="post">{% csrf_token %}

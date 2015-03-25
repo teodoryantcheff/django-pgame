@@ -33,6 +33,21 @@ body {
     margin-bottom: 20px;
 }
 
+.gamestats {
+    width: 100%;
+    border-radius: 10px;
+    background-color: rgb(191, 240, 244);
+    padding: 5px 5px;
+    margin: 15px 0;
+    font-size: smaller;
+}
+
+.gamestats ul {
+    list-style: none;
+    padding: 5px 15px;
+    margin: 0;
+}
+
 .sidemenu ul {
     list-style-type: none;
 }

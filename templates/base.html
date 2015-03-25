@@ -40,6 +40,7 @@
               <li><a href="{% url 'collect-coins' %}">Collect</a></li>
               <li><a href="{% url 'sell-coins' %}">Sell coins</a></li>
               <li><a href="{% url 'store' %}">Store</a></li>
+{#              <li><a href="{% url 'store2' %}">MEGA Store</a></li>#}
               <li><a href="#">Game</a></li>
               <li><a href="#">Game</a></li>
               <li><a href="#">Game</a></li>
@@ -51,6 +52,7 @@
               <li><a href="{% url 'account_logout' %}">Logout</a></li>
             </ul></nav>
           {% endblock %}
+
           <div class="userprofile">
             {% if user.is_authenticated %}
               <ul>
@@ -62,6 +64,17 @@
               <p>Login to see account balance</p>
             {% endif %}
           </div>
+        </div>
+        <div class="gamestats">
+          {% block gamestats %}
+          <ul>
+            <li>Total users: <b>{{ gamestats.users_total }}</b></li>
+            <li>Last 24 h: <b>{{ gamestats.users_new_last_24h }}</b></li>
+{#            <li>Cash Paid: <b>{{ gamestats.cash_total_paid }}</b></li>#}
+            <li>Cash reserve: <b>{{ gamestats.cash_reserve }}</b></li>
+{#            <li>Duration: <b>{{ gamestats.project_duration_days }}</b></li>#}
+          </ul>
+          {% endblock %}
         </div>
         <div> <!-- Shit below the side bar -->
           <img src="{% static "img/dogecoin.png" %}" alt="doge accepted here image" width="100%"/>

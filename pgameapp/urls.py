@@ -19,6 +19,9 @@ urlpatterns = patterns('',
     url(r'^store/$', auth(StoreView.as_view(success_url = reverse_lazy('store'))),
         name='store'),
 
+    # url(r'^store2/$', auth(StoreView2.as_view()), name='store2'),
+    # url(r'^buy/$', auth(BuyFormView.as_view(success_url = reverse_lazy('store'))), name='buy'),
+
     url(r'^exchange/$', auth(ExchangeView.as_view(success_url = reverse_lazy('user-profile'))),
         name='exchange'),
 

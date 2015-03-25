@@ -21,7 +21,6 @@
 # TODO http://stackoverflow.com/questions/12578908/separation-of-business-logic-and-data-access-in-django
 # TODO http://mauveweb.co.uk/posts/2014/08/organising-django-projects.html
 
-
 from django.db.backends.signals import connection_created
 
 def activate_foreign_keys(sender, connection, **kwargs):

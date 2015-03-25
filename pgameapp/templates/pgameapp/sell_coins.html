@@ -3,9 +3,9 @@
 {% load staticfiles %}
 
 {% block content %}
-    <h2>Sell coins to GC</h2>
+    <h2>Sell coins for <b>{{ game_currency }}</b></h2>
 
-    You have <b>{{ user.profile.balance_coins|floatformat:"0" }}</b> total coins right now. <br/>
+    You have <b>{{ user.profile.balance_coins|floatformat:"1" }}</b> total coins right now. <br/>
     Rate <b>{{ coin_to_gc_rate }}</b> coins for one <b>{{ game_currency }}</b>
 
     <form action="" method="post">{% csrf_token %}

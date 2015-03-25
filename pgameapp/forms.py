@@ -5,7 +5,7 @@ from account.models import EmailAddress
 from django import forms
 from django.conf import settings
 
-from pgameapp.models import Actor
+from pgameapp.models import Actor, UserActorOwnership
 from pgameapp.services import collect_coins, sell_coins_to_gc, buy_actor, exchange__gc_w_to_i
 
 
@@ -19,20 +19,35 @@ class ContextForm(forms.Form):
         super(ContextForm, self).__init__(*args, **kwargs)
 
 
+# class BuyForm(forms.ModelForm):
+#     class Meta:
+#         model = UserActorOwnership
+#         exclude = ('num_actors',)
+#
+#     def clean(self):
+#         super(BuyForm, self).clean()
+
 class CollectCoinsForm(ContextForm):
     def clean(self):
         collect_coins(self.request)
 
 
 class StoreForm(ContextForm):
+    # class Meta:
+    #     model = UserActorOwnership
+    #     exclude = ('num_actors', )
+    #
+    # def __init__(self, *args, **kwargs):
+    #     self.request = kwargs.pop('request', None)
+    #     super(StoreForm, self).__init__(*args, **kwargs)
+
     def clean(self):
-        total_actors = Actor.objects.count()
-        for a in xrange(1, total_actors+1):
-            if self.data.get('actor_{}'.format(a), None) is not None:
-                buy_actor(self.request, a)
-                break
-        else:
-            raise ValidationError('No such actor')
+        # cleaned_data = super(StoreForm, self).clean()
+        actor = int(self.data['actor'])
+        print actor
+        # print cleaned_data['actor']
+        actor = Actor.objects.get(pk=actor)
+        buy_actor(self.request, actor)
 
 
 class SellCoinsForm(ContextForm):

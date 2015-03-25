@@ -9,7 +9,7 @@
     <ul>{% for ua, output in user_actors %}
 
                      {# FIXME static image loading and paths #}
-        <li><b>{{ ua.num_actors }} X</b> <img src="/static/{{ ua.actor.image_path }}">"{{ ua.actor.name }}" <i>generated:</i> <b>{{ output|floatformat:"0" }}</b></li>
+        <li><b>{{ ua.num_actors }} X</b> <img src="/static/{{ ua.actor.image_path }}">"{{ ua.actor.name }}" <i>generated:</i> <b>{{ output|floatformat:"0" }}</b> {{ game_currency }}</li>
     {% endfor %}</ul>
 
 {#    <br/><br/><br/>#}

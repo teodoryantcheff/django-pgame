@@ -1,4 +1,5 @@
 from django.db import models, IntegrityError
+from django.db.models import Sum
 from django.db.models.signals import post_save
 
 from . import AUTH_USER_MODEL, Actor, UserActorOwnership
@@ -70,6 +71,9 @@ class UserProfile(models.Model):
         auto_now_add=True,
     )
 
+    def get_total_actors(self):
+        return self.user.useractorownership_set.aggregate(Sum('num_actors')).values()[0]
+
     class Meta:
         verbose_name = 'UserProfile'
 
@@ -80,7 +84,6 @@ class UserProfile(models.Model):
 
 def create_userprofile(sender, instance, created, **kwargs):
     if created:
-        print 'Creating userporofile for', instance
         up, created = UserProfile.objects.get_or_create(user=instance)
         up.pin = get_random_string(6)
 
@@ -93,4 +96,4 @@ def create_userprofile(sender, instance, created, **kwargs):
             except IntegrityError:
                 continue  # referral_id is not unique, try again
 
-post_save.connect(create_userprofile, sender=AUTH_USER_MODEL)
+post_save.connect(create_userprofile, sender=AUTH_USER_MODEL, dispatch_uid='post_save__User__create_userprofile')
