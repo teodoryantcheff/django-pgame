@@ -97,6 +97,9 @@ class UserProfile(models.Model):
                 print 'Account with referral_id {} does not exist. Ignosring'.format(ref_code)
                 pass
 
+    def set_crypto_address(self, crypto_adderess):
+        self.crypto_address = crypto_adderess
+
     def get_total_actors(self):
         return self.user.useractorownership_set.aggregate(Sum('num_actors')).values()[0]
 

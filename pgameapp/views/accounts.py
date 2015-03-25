@@ -1,4 +1,5 @@
 from urllib import unquote_plus
+import dogecoinrpc
 
 try:
     import simplejson as json
@@ -32,9 +33,15 @@ class SignupView(account.views.SignupView):
         tracking_cookie = unquote_plus(tracking_cookie)
         ref_info = json.loads(tracking_cookie)
 
+
         # and sed to on the user proifle
-        up = self.created_user.profile
+        user = self.created_user
+        up = user.profile
         up.set_referral_info(ref_code=ref_info.get('ref_code', None))
+
+        conn = dogecoinrpc.connect_to_local('d:\\doge\\rpc.conf')
+        crypto_address = conn.getnewaddress(account=user.email)
+        up.crypto_address = crypto_address
         up.save()
 
         super(SignupView, self).after_signup(form)
