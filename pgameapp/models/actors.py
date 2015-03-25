@@ -107,7 +107,7 @@ def add_uas_to_users_on_new_actor(sender, instance, created, **kwargs):
     if created:
         # Add actor to all users
         UserActorOwnership.objects.bulk_create(
-            [UserActorOwnership(user=user, actor=instance) for user in sender.objects.all()]
+            [UserActorOwnership(user=user, actor=instance) for user in get_user_model().objects.all()]
         )
 
 

@@ -40,17 +40,16 @@ DJANGO_APPS = (
 
 # non-django, 3rd party apps
 THIRD_PARTY_APPS = (
-    'custom_user',
-    'debug_toolbar',
-    'django_extensions',
-    'solo',  # model singletons
-    'account',
+    'custom_user',        # EmailUser
+    'debug_toolbar',      # DjDT
+    'django_extensions',  # django-extensions
+    'solo',               # model singletons
+    'account',            # django-user-accounts
     # 'axes',  # TODO django-axes
 )
 
 # Apps defined in the project
 PROJECT_APPS = (
-    # 'users',
     'pgameapp',
 )
 
@@ -117,9 +116,6 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = 'user@domain.com'
 
-# FIXME
-from  local_settings import *
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
@@ -175,3 +171,8 @@ INTERNAL_IPS = ('127.0.0.1', '192.168.0.10')
 # AXES_LOCKOUT_URL: If set, specifies a URL to redirect to on lockout. If both AXES_LOCKOUT_TEMPLATE and AXES_LOCKOUT_URL are set, the template will be used. Default: None
 # AXES_VERBOSE: If True, you'll see slightly more logging for Axes. Default: True
 # AXES_USERNAME_FORM_FIELD: the name of the form field that contains your users usernames. Default: username
+
+try:
+    from local_settings import *
+except:
+    pass
