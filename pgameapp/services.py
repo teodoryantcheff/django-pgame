@@ -131,21 +131,3 @@ def sell_coins_to_gc(request, coins):
         game_currency=game_currency
     )
 
-
-# This gets called after account signup
-def create_userprofile(user_email, ref_info={}):
-
-    user = User.objects.get(email=user_email)
-
-    ref_code = ref_info.get('ref_code', '')
-    ref_src = ref_info.get('ref_src', '')
-    ref_cmp = ref_info.get('ref_cmp', '')
-
-    # TODO ref source and ref campaign storage and usage
-
-    try:
-        referrer_user = User.objects.get(profile__referral_id=ref_code)
-    except ObjectDoesNotExist:
-        referrer_user = None
-
-

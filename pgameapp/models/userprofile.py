@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models, IntegrityError
 from django.db.models import Sum
 from django.db.models.signals import post_save
@@ -25,13 +26,21 @@ class UserProfile(models.Model):
     )
 
     """
-    Personal user crypto address -- to send money to
+    Personal user crypto address -- user send to this
     """
     crypto_address = models.CharField(
         # verbose_name='DOGE, bitcoin... address',
         max_length=50,
         blank=True
     )
+
+    # """
+    # User supplied cryto address -- system send to user at this
+    # """
+    # withdrawal_address = models.CharField(
+    #     max_length=50,
+    #     blank=True
+    # )
 
     pin = models.CharField(
         verbose_name='Personal PIN',
@@ -70,6 +79,23 @@ class UserProfile(models.Model):
     last_coin_collection_time = models.DateTimeField(
         auto_now_add=True,
     )
+
+    def set_referral_info(self, ref_code, rec_cource=None, ref_campaign=None):
+        """
+        Sets referral info. Does NOT save() after. Call save() yourself.
+
+        :param ref_code: Referral code
+        :param rec_cource: Referral source
+        :param ref_campaign: Referral campaign
+        :return:
+        """
+        user_model = get_user_model()
+        if ref_code:
+            try:
+                self.referrer = user_model.objects.get(profile__referral_id=ref_code)
+            except user_model.DoesNotExist:
+                print 'Account with referral_id {} does not exist. Ignosring'.format(ref_code)
+                pass
 
     def get_total_actors(self):
         return self.user.useractorownership_set.aggregate(Sum('num_actors')).values()[0]

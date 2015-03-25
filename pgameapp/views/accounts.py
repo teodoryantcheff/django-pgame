@@ -5,13 +5,10 @@ try:
 except ImportError:
     import json
 
-import django.utils.http
-
 import account.views
 import account.forms
 
 import pgameapp.forms
-from pgameapp.services import create_userprofile
 
 __author__ = 'Jailbreaker'
 
@@ -35,7 +32,9 @@ class SignupView(account.views.SignupView):
         tracking_cookie = unquote_plus(tracking_cookie)
         ref_info = json.loads(tracking_cookie)
 
-        # Actually create the user profile
-        create_userprofile(form.cleaned_data['email'], ref_info)
+        # and sed to on the user proifle
+        up = self.created_user.profile
+        up.set_referral_info(ref_code=ref_info.get('ref_code', None))
+        up.save()
 
         super(SignupView, self).after_signup(form)

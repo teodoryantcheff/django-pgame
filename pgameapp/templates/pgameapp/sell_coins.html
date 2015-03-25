@@ -3,33 +3,33 @@
 {% load staticfiles %}
 
 {% block content %}
-    <h2>Sell coins for <b>{{ game_currency }}</b></h2>
+  <h2>Sell coins for <b>{{ game_currency }}</b></h2>
 
-    You have <b>{{ user.profile.balance_coins|floatformat:"1" }}</b> total coins right now. <br/>
-    Rate <b>{{ coin_to_gc_rate }}</b> coins for one <b>{{ game_currency }}</b>
+  You have <b>{{ user.profile.balance_coins|floatformat:"1" }}</b> total coins right now. <br/>
+  Rate <b>{{ coin_to_gc_rate }}</b> coins for one <b>{{ game_currency }}</b>
 
-    <form action="" method="post">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Sell for {{ game_currency }}" />
-    </form>
-
-    {% if coin_conversion_history %}
-      Last 10
-      <table style="width: 80%;">
-        <thead>
-            <td><b>timestamp</b></td><td><b>coins</b></td><td><b>{{ game_currency }}</b></td>
-        </thead>
-        {% for conversion in coin_conversion_history %}
-            <tr>
-                <td>{{ conversion.timestamp|date:"Y-m-d H:i" }}</td>
-                <td>{{ conversion.coins }}</td>
-                <td>{{ conversion.game_currency }}</td>
-            </tr>
-        {% endfor %}
-      </table>
-    {% else %}
-      <p>haven't converted any yet</p>
-    {% endif %}
+  <form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Sell for {{ game_currency }}" />
+  </form>
+  <br/><br/>
+  {% if coin_conversion_history %}
+    Last 10
+    <table style="width: 80%;">
+      <thead>
+      <td><b>timestamp</b></td><td><b>coins</b></td><td><b>{{ game_currency }}</b></td>
+      </thead>
+      {% for conversion in coin_conversion_history %}
+        <tr>
+          <td>{{ conversion.timestamp|date:"Y-m-d H:i" }}</td>
+          <td>{{ conversion.coins }}</td>
+          <td>{{ conversion.game_currency }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>haven't converted any yet</p>
+  {% endif %}
 
 
 {% endblock %}

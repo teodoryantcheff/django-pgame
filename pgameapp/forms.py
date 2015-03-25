@@ -51,7 +51,7 @@ class StoreForm(ContextForm):
 
 
 class SellCoinsForm(ContextForm):
-    coins_to_sell = forms.IntegerField(required=True)
+    coins_to_sell = forms.FloatField(required=True, min_value=0)
 
     def clean(self):
         cleaned_data = super(SellCoinsForm, self).clean()

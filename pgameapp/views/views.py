@@ -34,6 +34,7 @@ class CollectCoinsView(FormView):
         user = self.request.user
 
         # qs = UserActorOwnership.objects\
+        # TODO move to some place else
         qs = user.useractorownership_set\
             .select_related('actor')\
             .order_by('actor__id')

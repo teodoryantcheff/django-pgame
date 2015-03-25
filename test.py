@@ -26,6 +26,7 @@ a = [
 ]
 
 conn = dogecoinrpc.connect_to_local('d:\\doge\\rpc.conf')
+
 # print "Your balance is %f" % (conn.getbalance(),)
 # print conn.validateaddress('DTZJ9v9rCpWaDUtzpfREMLRcLfJHxZQnvT')
 # print conn.getconnectioncount()
