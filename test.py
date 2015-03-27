@@ -1,15 +1,27 @@
 from pprint import pprint
 import timeit
-import dogecoinrpc
+# import dogecoinrpc
 from datetime import datetime
 import sys
 
 
-from pgameapp.services import create_userprofile
 from django.conf import settings
 settings.configure()
 
-create_userprofile('test@test.com')
+# rpc_user and rpc_password are set in the bitcoin.conf file
+from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+import logging
+
+logging.basicConfig()
+logging.getLogger("BitcoinRPC").setLevel(logging.DEBUG)
+rpc_connection = AuthServiceProxy("http://%s:%s@127.0.0.1:44555" % ('dogecoinrpc', 'CRP3FXKN847tXbVNiQ3nAh2A6tjRSJMFzqLUic3EnnGs'))
+print rpc_connection.listreceivedbyaccount()
+
+for t in rpc_connection.listtransactions():
+    pprint(t)
+# print [t['category'] for t in ts]
+
+sys.exit()
 
 
 a = [

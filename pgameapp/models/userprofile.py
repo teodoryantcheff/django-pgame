@@ -26,6 +26,14 @@ class UserProfile(models.Model):
     )
 
     """
+    User's nichname
+    """
+    nickname = models.CharField(
+        max_length=20,
+        blank=True
+    )
+
+    """
     Personal user crypto address -- user send to this
     """
     crypto_address = models.CharField(
@@ -33,14 +41,6 @@ class UserProfile(models.Model):
         max_length=50,
         blank=True
     )
-
-    # """
-    # User supplied cryto address -- system send to user at this
-    # """
-    # withdrawal_address = models.CharField(
-    #     max_length=50,
-    #     blank=True
-    # )
 
     pin = models.CharField(
         verbose_name='Personal PIN',
@@ -52,6 +52,14 @@ class UserProfile(models.Model):
     balance_w = models.FloatField(verbose_name='Withdrawal balance', default=0)
 
     balance_coins = models.FloatField(default=0)
+
+    """
+    Signup IP
+    """
+    signup_ip = models.IPAddressField(
+        default='',
+        blank=True,
+    )
 
     """
     Who brought this user into the game

@@ -2,13 +2,18 @@ from django.conf.urls import patterns, url
 from django.contrib.auth.decorators import login_required as auth
 from django.core.urlresolvers import reverse_lazy
 
-from pgameapp.views import UserProfileView, CollectCoinsView, SellCoinsView, StoreView, ExchangeView, ReferralsView
+from pgameapp.views import UserProfileView, CollectCoinsView, SellCoinsView, StoreView, ExchangeView, ReferralsView, \
+    ProfileEdit
 
 urlpatterns = patterns('',
     # url(r'^$', views.index, name='index'),
 
     url(r'^$', auth(UserProfileView.as_view()),
         name='user-profile'),
+
+    url(r'^profile_edit$', auth(ProfileEdit.as_view(success_url = reverse_lazy('user-profile'))),
+        name='user-profile-edit'),
+
 
     url(r'^collect/$', auth(CollectCoinsView.as_view(success_url = reverse_lazy('user-profile'))),
         name='collect-coins'),

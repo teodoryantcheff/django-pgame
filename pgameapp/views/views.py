@@ -2,11 +2,11 @@ from django.contrib.auth import get_user_model
 from django.db.models import Sum
 
 from django.utils import timezone
-from django.views.generic import DetailView, FormView, ListView
+from django.views.generic import DetailView, FormView, ListView, UpdateView
 
 from pgameapp.forms import SellCoinsForm, CollectCoinsForm, StoreForm, ExchangeForm
 
-from pgameapp.models import UserActorOwnership, Actor, ActorProcurementHistory, CoinConversionHistory
+from pgameapp.models import UserActorOwnership, Actor, ActorProcurementHistory, CoinConversionHistory, UserProfile
 from pgameapp.models.gameconfiguration import GameConfiguration
 
 # _TODO Profile, after login
@@ -89,12 +89,6 @@ class UserProfileView(DetailView):
     def get_object(self, queryset=None):
         return self.request.user.profile
 
-    def get_context_data(self, **kwargs):
-        context = super(UserProfileView, self).get_context_data(**kwargs)
-
-        context['user_referred_count'] = self.request.user.referrals.count()
-
-        return context
 
 
 class StoreView(FormView):
@@ -150,6 +144,15 @@ class ReferralsView(ListView):
     def get_queryset(self):
         return self.request.user.referrals.order_by('-user__date_joined')
 
+
+class ProfileEdit(UpdateView):
+    # form_class = ProfileEditForm
+    # model = UserProfile
+    fields = ['nickname']
+    template_name_suffix = '_update_form'
+
+    def get_object(self, queryset=None):
+        return UserProfile.objects.get(user=self.request.user)
 
 # def get_name(request):
 # # if this is a POST request we need to process the form data

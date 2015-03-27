@@ -6,18 +6,20 @@
     <h2>User Profile</h2>
 
     <ul>
-        <li>email   <b>{{ userprofile.user.email }}</b></li>
-        <li>crypto  <b>{{ userprofile.crypto_address|default_if_none:"not set" }}</b></li>
-        <li>PIN  <b>{{ userprofile.pin|default:"Not set" }}</b></li>
+        <li>email <b>{{ userprofile.user.email }}</b></li>
+        <li>nickname <b>{{ userprofile.nickname }}</b></li>
+        <li>crypto <b>{{ userprofile.crypto_address|default_if_none:"not set" }}</b></li>
+        <li>PIN <b>{{ userprofile.pin|default:"Not set" }}</b></li>
         <li>investment <b>{{ userprofile.balance_i|floatformat:"1" }} {{ game_currency }}</b></li>
         <li>withdrawal <b>{{ userprofile.balance_w|floatformat:"1" }} {{ game_currency }}</b></li>
         <li>coins <b>{{ userprofile.balance_coins|floatformat:"1" }} coins</b></li>
-        <li>referred by  <b>{{ userprofile.referrer|default_if_none:"not referred" }}</b></li>
-        <li>ref code  <b>{{ userprofile.referral_id|default_if_none:"not set" }}</b></li>
-        <li>$ withdrawn  <b>TODO</b></li>
+        <li>referred by <b>{{ userprofile.referrer|default_if_none:"not referred" }}</b></li>
+        <li>singup ip <b>{{ userprofile.signup_ip }}</b></li>
+        <li>ref code <b>{{ userprofile.referral_id|default_if_none:"not set" }}</b></li>
+        <li>$ withdrawn <b>TODO</b></li>
         <li>last coin collection <b>{{ userprofile.last_coin_collection_time|timesince }}</b> ago</li>
     </ul>
 
-    You have referred : <h2>{{ user_referred_count }} users </h2> .
-    
+    You have referred : <h2>{{ user.referrals.count }} users </h2> .
+
 {% endblock %}
