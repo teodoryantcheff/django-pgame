@@ -43,6 +43,7 @@ class UserProfileInline(admin.StackedInline):
     fk_name = 'user'
     can_delete = False
     verbose_name_plural = 'profile'
+    readonly_fields = ('signup_ip',)
 
 
 class UserWithProfileAdmin(EmailUserAdmin):
