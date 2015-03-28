@@ -97,12 +97,12 @@ class UserProfile(models.Model):
         :param ref_campaign: Referral campaign
         :return:
         """
-        user_model = get_user_model()
+        User = get_user_model()
         if ref_code:
             try:
-                self.referrer = user_model.objects.get(profile__referral_id=ref_code)
-            except user_model.DoesNotExist:
-                print 'Account with referral_id {} does not exist. Ignosring'.format(ref_code)
+                self.referrer = User.objects.get(profile__referral_id=ref_code)
+            except User.DoesNotExist:
+                print 'Account with referral_id {} does not exist. Ignoring'.format(ref_code)
 
     def set_crypto_address(self, crypto_adderess):
         self.crypto_address = crypto_adderess

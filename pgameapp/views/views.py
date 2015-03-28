@@ -35,17 +35,17 @@ class CollectCoinsView(FormView):
 
         # qs = UserActorOwnership.objects\
         # TODO move to some place else
-        qs = user.useractorownership_set\
-            .select_related('actor')\
-            .order_by('actor__id')
+        uas = user.useractorownership_set\
+                .select_related('actor')\
+                .order_by('actor__id')
 
         last_collection_datetime = user.profile.last_coin_collection_time
         now = timezone.now()
         seconds = int((now - last_collection_datetime).total_seconds())
 
-        generated = [ua.num_actors * ua.actor.output * int(seconds / 60) for ua in qs]
+        generated = [ua.num_actors * ua.actor.output * int(seconds / 60) for ua in uas]
 
-        context['user_actors'] = zip(qs, generated)
+        context['user_actors'] = zip(uas, generated)
 
         # print 'seconds since last collection', seconds
         context['seconds_since_last_collection'] = seconds
@@ -88,7 +88,6 @@ class UserProfileView(DetailView):
 
     def get_object(self, queryset=None):
         return self.request.user.profile
-
 
 
 class StoreView(FormView):
@@ -142,7 +141,8 @@ class ReferralsView(ListView):
     context_object_name = 'user_referred_accounts'
 
     def get_queryset(self):
-        return self.request.user.referrals.order_by('-user__date_joined')
+        return User.objects.filter(profile__referrer=self.request.user).order_by('-date_joined')
+        # return self.request.user.select_related('referrals').order_by('-user__date_joined')
 
 
 class ProfileEdit(UpdateView):

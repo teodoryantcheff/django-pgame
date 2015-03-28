@@ -13,8 +13,8 @@
         </thead>
         {% for referred in user_referred_accounts %}
             <tr>
-                <td>{{ referred.user.date_joined|date:"Y-m-d H:i" }}</td>
-                <td>{{ referred.user.email }}</td>
+                <td>{{ referred.date_joined|date:"Y-m-d H:i" }}</td>
+                <td>{{ referred.email }}</td>
             </tr>
         {% endfor %}
       </table>
