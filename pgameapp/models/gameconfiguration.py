@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 import solo.models
 
+from . import DECIMAL_DECIMAL_PLACES, DECIMAL_MAX_DIGITS
+
 __author__ = 'Jailbreaker'
 
 
@@ -24,7 +26,7 @@ class GameConfiguration(solo.models.SingletonModel):
     """
     coin_to_gc_rate = models.FloatField(
         verbose_name='coins to GC (game currency) rate',
-        default=1
+        default=1,
     )
 
     """
@@ -40,7 +42,7 @@ class GameConfiguration(solo.models.SingletonModel):
     """
     min_coins_to_sell = models.FloatField(
         verbose_name='minimum coin balance to allow selling for GC',
-        default=100
+        default=100,
     )
 
     """
@@ -56,23 +58,27 @@ class GameConfiguration(solo.models.SingletonModel):
     """
     first_deposit_bonus_percent = models.FloatField(
         verbose_name='% on 1st deposit bonus',
-        default=0
+        default=0,
     )
 
     """
     Minimum withdrawal amount. Less than that cannot be withdrawn
     """
-    min_withdrawal_amount = models.FloatField(
+    min_withdrawal_amount = models.DecimalField(
         verbose_name='minimum withdrawal amount',
-        default=0
+        default=0,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     """
     Minimum deposit amount to allow withdrawals
     """
-    min_withdrawal_deposit_amount = models.FloatField(
+    min_withdrawal_deposit_amount = models.DecimalField(
         verbose_name='minimum deposit amount to allow withdrawals',
-        default=0
+        default=0,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     """

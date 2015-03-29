@@ -3,7 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_save
 
-from . import AUTH_USER_MODEL
+from . import AUTH_USER_MODEL, DECIMAL_DECIMAL_PLACES, DECIMAL_MAX_DIGITS
 
 
 __author__ = 'Jailbreaker'
@@ -42,8 +42,17 @@ class Actor(models.Model):
     dogs / cats / flowers ... cash generators
     """
     name = models.CharField(max_length=50)
-    price = models.FloatField(default=0)
-    output = models.FloatField(default=0, verbose_name='output / h')
+    price = models.DecimalField(
+        default=0,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
+    )
+    output = models.DecimalField(
+        default=0,
+        verbose_name='output / h',
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
+    )
 
     image_path = models.CharField(
         verbose_name='actor image file location',

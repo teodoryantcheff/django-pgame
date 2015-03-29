@@ -1,6 +1,6 @@
 from django.db import models
 
-from . import AUTH_USER_MODEL
+from . import AUTH_USER_MODEL, DECIMAL_DECIMAL_PLACES, DECIMAL_MAX_DIGITS
 from pgameapp.models import Actor
 
 
@@ -30,9 +30,11 @@ class ActorProcurementHistory(models.Model):
         null=False,
     )
 
-    price = models.FloatField(
+    price = models.DecimalField(
         verbose_name='Price of procurement',
         null=False,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     class Meta:
@@ -60,14 +62,18 @@ class CoinConversionHistory(models.Model):
         null=False,
     )
 
-    coins = models.FloatField(
+    coins = models.DecimalField(
         verbose_name='Converted coins',
         null=False,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
-    game_currency = models.FloatField(
+    game_currency = models.DecimalField(
         verbose_name='Received GC',
         null=False,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     class Meta:
@@ -77,6 +83,7 @@ class CoinConversionHistory(models.Model):
         return u'CoinConversionHistory'
 
 
+# TODO make this to be a ledger ?
 class DepositHistory(models.Model):
     """
     Deposits history
@@ -95,14 +102,18 @@ class DepositHistory(models.Model):
         null=False,
     )
 
-    real_currency = models.FloatField(
+    real_currency = models.DecimalField(
         verbose_name='Real money',
         null=False,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
-    game_currency = models.FloatField(
+    game_currency = models.DecimalField(
         verbose_name='Received GC',
         null=False,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     class Meta:
@@ -129,14 +140,18 @@ class WithdrawalHistory(models.Model):
         auto_now_add=True
     )
 
-    real_currency = models.FloatField(
+    real_currency = models.DecimalField(
         verbose_name='Real money received',
         null=False,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
-    game_currency = models.FloatField(
+    game_currency = models.DecimalField(
         verbose_name='GC spent',
         null=False,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     class Meta:

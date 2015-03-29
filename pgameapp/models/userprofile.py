@@ -1,10 +1,10 @@
-from django.contrib.auth import get_user_model
 from django.db import models, IntegrityError
 from django.db.models import Sum
 from django.db.models.signals import post_save
-
-from . import AUTH_USER_MODEL, Actor, UserActorOwnership
+from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
+
+from . import AUTH_USER_MODEL, DECIMAL_DECIMAL_PLACES, DECIMAL_MAX_DIGITS
 
 __author__ = 'Jailbreaker'
 
@@ -48,10 +48,25 @@ class UserProfile(models.Model):
         blank=True
     )
 
-    balance_i = models.FloatField(verbose_name='Investment balance', default=0)
-    balance_w = models.FloatField(verbose_name='Withdrawal balance', default=0)
+    balance_i = models.DecimalField(
+        verbose_name='Investment balance',
+        default=0,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
+    )
 
-    balance_coins = models.FloatField(default=0)
+    balance_w = models.DecimalField(
+        verbose_name='Withdrawal balance',
+        default=0,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
+    )
+
+    balance_coins = models.DecimalField(
+        default=0,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
+    )
 
     """
     Signup IP

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db import IntegrityError
@@ -23,12 +25,12 @@ def buy_actor(request, actor):
     if actor.price > user.profile.balance_i:
         raise ValidationError('Insufficient funds')
 
-    game_config = GameConfiguration.objects.get()
+    game_config = GameConfiguration.objects.get(pk=1)
 
     last_coll = user.profile.last_coin_collection_time
     seconds = int((now - last_coll).total_seconds())
 
-    # If user has actors and hasn;t collected
+    # If user has actors and hasn't collected
     if seconds > game_config.coin_collect_time*60 and user.profile.get_total_actors() > 0:
         raise ValidationError('Go collect your shit first')
 
@@ -90,8 +92,8 @@ def exchange__gc_w_to_i(request, gc_to_exchange):
 
     bonus = (100 + game_config.w_to_i_conversion_bonus_percent) / 100.0
 
-    user.profile.balance_w -= gc_to_exchange
-    user.profile.balance_i += gc_to_exchange * bonus
+    user.profile.balance_w -= Decimal(gc_to_exchange)
+    user.profile.balance_i += Decimal(gc_to_exchange) * Decimal(bonus)
     user.profile.save()
 
     # History.objects.create(
@@ -117,10 +119,10 @@ def sell_coins_to_gc(request, coins):
     investment_gc = game_currency * game_config.investment_balance_percent_on_sale / 100.0
     withdrawal_gc = game_currency - investment_gc
 
-    user.profile.balance_i += investment_gc
-    user.profile.balance_w += withdrawal_gc
+    user.profile.balance_i += Decimal(investment_gc)
+    user.profile.balance_w += Decimal(withdrawal_gc)
 
-    user.profile.balance_coins -= coins
+    user.profile.balance_coins -= Decimal(coins)
     user.profile.save()
 
     now = timezone.now()

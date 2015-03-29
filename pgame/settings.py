@@ -157,6 +157,14 @@ ACCOUNT_LOGIN_REDIRECT_URL = '/'
 ACCOUNT_USER_DISPLAY = lambda user: user.email
 
 
+# Doge wallet config
+CRYPTO_WALLET_PROTO = ''
+CRYPTO_WALLET_IP = ''
+CRYPTO_WALLET_PORT = 0
+CRYPTO_WALLET_USER = ''
+CRYPTO_WALLET_PASSWORD = ''
+
+
 # for django debug toolbar
 INTERNAL_IPS = ('127.0.0.1', '192.168.0.10')
 
