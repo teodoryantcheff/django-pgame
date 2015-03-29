@@ -8,7 +8,8 @@ from solo.admin import SingletonModelAdmin
 
 import account.models
 
-from pgameapp.models import GameConfiguration, UserProfile, Actor, ManualGameStats, CryptoTransaction
+from pgameapp.models import GameConfiguration, UserProfile, Actor, ManualGameStats, CryptoTransaction, \
+    BlockProcessingHistory
 
 
 class ActorAdmin(admin.ModelAdmin):
@@ -83,10 +84,19 @@ class UserWithProfileAdmin(EmailUserAdmin):
 
 
 class CryptoTransactionAdmin(admin.ModelAdmin):
-    list_display = ('timestamp', 'tx_type', 'user', 'crypto_currency', 'game_currency')
+    list_display = ('timestamp', 'tx_type', 'user', 'crypto_currency', 'game_currency', 'crypto_address')
     list_filter = ('tx_type', )
     ordering = ('-timestamp', )
     # readonly_fields = ('image_tag',)
+
+
+class BlockProcessingHistoryAdmin(admin.ModelAdmin):
+    list_display = ('timestamp', 'blockhash', 'blockheight')
+    readonly_fields = ('timestamp', 'blockhash', 'blockheight')
+    ordering = ('-timestamp', )
+
+
+########################################################################################################################
 
 admin.site.site_header = 'MEGASITE Madafaka'
 admin.site.site_title = 'MegaSite'
@@ -107,4 +117,5 @@ admin.site.register(GameConfiguration, SingletonModelAdmin)
 admin.site.register(ManualGameStats, SingletonModelAdmin)
 
 admin.site.register(CryptoTransaction, CryptoTransactionAdmin)
+admin.site.register(BlockProcessingHistory, BlockProcessingHistoryAdmin)
 

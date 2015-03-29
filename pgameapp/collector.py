@@ -49,10 +49,9 @@ __author__ = 'Jailbreaker'
 
 User = get_user_model()
 
-doge = AuthServiceProxy(CRYPTO_WALLET_CONNSTRING)
 
-if __name__ == '__main__':
-
+def main():
+    doge = AuthServiceProxy(CRYPTO_WALLET_CONNSTRING)
     try:
         last_record = BlockProcessingHistory.objects.latest()
         lastblock = last_record.blockhash
@@ -63,6 +62,73 @@ if __name__ == '__main__':
     while True:
         try:
             data = doge.listsinceblock(lastblock, MIN_TX_CONFIRMATIONS)  # TODO proper error handling
+
+            if lastblock == data['lastblock']:
+                sys.stdout.write('.')  # to avoid newlines
+                sleep(SLEEP_TIME)
+                continue
+            print ''  # to add a new line after all the dots
+
+            lastblock = data['lastblock']
+
+            blockinfo = doge.getblock(lastblock) or {}
+            blockheight = blockinfo.get('height', 0)
+
+            transactions = sorted(data['transactions'], key=lambda t: t['time'], reverse=True)
+
+            confirmed = []
+            pending = []
+
+            print 'block:{} TXs:{}'.format(lastblock, len(transactions))
+
+            for tx in transactions:
+                print '{attn}{cat} c:{conf} Ð:{amount:.2} => {addr} ({acc})'.format(
+                    attn='!!' if tx['confirmations'] >= MIN_TX_CONFIRMATIONS else '',
+                    cat='R' if tx['category'] == 'receive' else 'S',
+                    conf=tx['confirmations'],
+                    amount=tx['amount'],
+                    addr=tx['address'],
+                    acc=tx['account']
+                )
+
+                if tx['confirmations'] >= MIN_TX_CONFIRMATIONS and tx['category'] == 'receive':
+                    confirmed.append(tx)
+
+                    try:
+                        user = User.objects.select_related('profile').get(profile__crypto_address=tx['address'])
+
+                        real_currency = tx['amount']
+                        game_currency = real_currency  # TODO optional conversion rate
+                        user.profile.balance_i += game_currency
+
+                        CryptoTransaction.objects.create(
+                            tx_type=CryptoTransaction.RECEIVE,  # since we are in the "== receive" branch
+                            user=user,
+                            crypto_currency=real_currency,
+                            game_currency=game_currency,
+                            crypto_address=tx['address'],
+                            txid=tx['txid']
+                        )
+
+                        user.profile.save()
+
+                        print 'Credited Ð {:.2} to {}'.format(game_currency, user)
+
+                    except User.DoesNotExist:
+                        print 'Owner of "{}" not found. Will credit to catchall address !'. format(tx['address'])  # TODO
+
+                else:
+                    pending.append(tx)
+
+            else:  # Processing transactions done, save blockhash to db as processed
+                print '{} TXs in pending (< {} confs)'.format(len(pending), MIN_TX_CONFIRMATIONS)
+                print 'Done TXs processing until block {} {}'.format(lastblock, blockheight)
+
+                BlockProcessingHistory.objects.create(
+                    blockhash=lastblock,
+                    blockheight=blockheight
+                )
+
         except socket.error:
             print 'Wallet connection error ({wallet_address}). Retrying in {retry_seconds} sec(s)...'.format(
                 wallet_address=CRYPTO_WALLET_ADDRESS,
@@ -72,66 +138,8 @@ if __name__ == '__main__':
             doge = AuthServiceProxy(CRYPTO_WALLET_CONNSTRING)  # retry connecting
             continue
 
-        if lastblock == data['lastblock']:
-            sys.stdout.write('.')  # to avoid newlines
-            sleep(SLEEP_TIME)
-            continue
-        print ''  # to add a new line after all the dots
+        sleep(SLEEP_TIME)
 
-        lastblock = data['lastblock']
-
-        transactions = sorted(data['transactions'], key=lambda t: t['time'], reverse=True)
-
-        confirmed = []
-        pending = []
-
-        print 'block:{} TXs:{}'.format(lastblock, len(transactions))
-
-        for tx in transactions:
-            print '{attn}{cat} c:{conf} Ð:{amount:.2} => {addr} ({acc})'.format(
-                attn='!!' if tx['confirmations'] >= MIN_TX_CONFIRMATIONS else '',
-                cat='R' if tx['category'] == 'receive' else 'S',
-                conf=tx['confirmations'],
-                amount=tx['amount'],
-                addr=tx['address'],
-                acc=tx['account']
-            )
-
-            if tx['confirmations'] >= MIN_TX_CONFIRMATIONS and tx['category'] == 'receive':
-                confirmed.append(tx)
-
-                try:
-                    user = User.objects.select_related('profile').get(profile__crypto_address=tx['address'])
-
-                    real_currency = tx['amount']
-                    game_currency = real_currency  # TODO optional conversion rate
-                    user.profile.balance_i += game_currency
-
-                    CryptoTransaction.objects.create(
-                        tx_type=CryptoTransaction.RECEIVE,  # since we are in the "== receive" branch
-                        user=user,
-                        crypto_currency=real_currency,
-                        game_currency=game_currency,
-                        txid=tx['txid']
-                    )
-
-                    user.profile.save()
-
-                    print 'Credited Ð {:.2} to {}'.format(game_currency, user)
-
-                except User.DoesNotExist:
-                    print 'Owner of "{}" not found. Will credit to catchall address !'. format(tx['address'])  # TODO
-
-            else:
-                pending.append(tx)
-
-        else:  # Processing transactions done, save blockhash to db as processed
-            print '{} TXs in pending (< {} confs)'.format(len(pending), MIN_TX_CONFIRMATIONS)
-            print 'Done TXs processing until block {}'.format(lastblock)
-            BlockProcessingHistory.objects.create(blockhash=lastblock)
-
-
-        
         # Eccel "interface"
         # with open('data.csv', 'w+') as f:
         #     w = csv.DictWriter(f, ['time', 'blocktime', 'account', 'address',
@@ -141,4 +149,6 @@ if __name__ == '__main__':
         #     w.writerows(transactions)
         #     #f.close()
 
-        sleep(SLEEP_TIME)
+
+if __name__ == '__main__':
+    main()

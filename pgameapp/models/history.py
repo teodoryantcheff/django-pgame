@@ -148,6 +148,13 @@ class CryptoTransaction(models.Model):
     )
 
     """
+    Source or destination address of the transaction
+    """
+    crypto_address = models.CharField(
+        max_length=48
+    )
+
+    """
     Transaction ID
     """
     txid = models.CharField(
