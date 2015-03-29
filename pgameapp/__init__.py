@@ -10,6 +10,7 @@
 # TODO in site games
 # TODO tests
 # TODO user action history
+# ^ https://django-simple-history.readthedocs.org/en/latest/
 # TODO https://github.com/tomatohater/django-unfriendly
 # TODO https://docs.djangoproject.com/en/1.7/ref/contrib/admin/actions/
 # TODO http://www.revsys.com/blog/2014/nov/21/recommended-django-project-layout/

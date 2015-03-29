@@ -25,6 +25,7 @@ class BlockProcessingHistory(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+        get_latest_by = 'timestamp'
 
     def __unicode__(self):  # __str__ on python 3
         return u'BlockProcessingHistory'

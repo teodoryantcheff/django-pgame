@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from django.contrib.auth.models import Group, Permission
 from django.utils.translation import ugettext as _
@@ -9,7 +8,7 @@ from solo.admin import SingletonModelAdmin
 
 import account.models
 
-from pgameapp.models import GameConfiguration, UserProfile, Actor, ManualGameStats
+from pgameapp.models import GameConfiguration, UserProfile, Actor, ManualGameStats, CryptoTransaction
 
 
 class ActorAdmin(admin.ModelAdmin):
@@ -83,6 +82,12 @@ class UserWithProfileAdmin(EmailUserAdmin):
     balance_coins.short_description = 'Coins'
 
 
+class CryptoTransactionAdmin(admin.ModelAdmin):
+    list_display = ('timestamp', 'tx_type', 'user', 'crypto_currency', 'game_currency')
+    list_filter = ('tx_type', )
+    ordering = ('-timestamp', )
+    # readonly_fields = ('image_tag',)
+
 admin.site.site_header = 'MEGASITE Madafaka'
 admin.site.site_title = 'MegaSite'
 
@@ -97,8 +102,9 @@ admin.site.unregister(account.models.Account)
 admin.site.unregister(account.models.SignupCode)
 admin.site.unregister(account.models.EmailAddress)
 
-
 admin.site.register(Actor, ActorAdmin)
 admin.site.register(GameConfiguration, SingletonModelAdmin)
 admin.site.register(ManualGameStats, SingletonModelAdmin)
+
+admin.site.register(CryptoTransaction, CryptoTransactionAdmin)
 

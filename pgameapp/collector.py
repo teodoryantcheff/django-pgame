@@ -8,7 +8,7 @@ from time import sleep
 
 import django
 from django.contrib.auth import get_user_model
-from pgameapp.models import DepositHistory
+from pgameapp.models import CryptoTransaction
 
 django.setup()
 
@@ -54,7 +54,7 @@ doge = AuthServiceProxy(CRYPTO_WALLET_CONNSTRING)
 if __name__ == '__main__':
 
     try:
-        last_record = BlockProcessingHistory.objects.all()[0]
+        last_record = BlockProcessingHistory.objects.latest()
         lastblock = last_record.blockhash
     except BlockProcessingHistory.DoesNotExist:
         lastblock = ''
@@ -105,12 +105,14 @@ if __name__ == '__main__':
 
                     real_currency = tx['amount']
                     game_currency = real_currency  # TODO optional conversion rate
-                    user.profile.balance_i += float(game_currency)
+                    user.profile.balance_i += game_currency
 
-                    DepositHistory.objects.create(
+                    CryptoTransaction.objects.create(
+                        tx_type=CryptoTransaction.RECEIVE,  # since we are in the "== receive" branch
                         user=user,
-                        real_currency=real_currency,
-                        game_currency=game_currency
+                        crypto_currency=real_currency,
+                        game_currency=game_currency,
+                        txid=tx['txid']
                     )
 
                     user.profile.save()
