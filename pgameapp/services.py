@@ -59,7 +59,7 @@ def buy_actor(request, actor):
 
 def collect_coins(request):
     user = request.user
-    game_config = GameConfiguration.objects.get()
+    game_config = GameConfiguration.objects.get(pk=1)
 
     last_coll = user.profile.last_coin_collection_time
     now = timezone.now()
@@ -85,7 +85,7 @@ def collect_coins(request):
 
 def exchange__gc_w_to_i(request, gc_to_exchange):
     user = request.user
-    game_config = GameConfiguration.objects.get()
+    game_config = GameConfiguration.objects.get(pk=1)
 
     if gc_to_exchange > user.profile.balance_w:
         raise ValidationError('Not enough withdrdawal balance')
@@ -106,7 +106,7 @@ def exchange__gc_w_to_i(request, gc_to_exchange):
 
 def sell_coins_to_gc(request, coins):
     user = request.user
-    game_config = GameConfiguration.objects.get()
+    game_config = GameConfiguration.objects.get(pk=1)
 
     if coins < game_config.min_coins_to_sell:
         raise ValidationError('Need to sell at least {}'.format(game_config.min_coins_to_sell))

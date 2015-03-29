@@ -128,7 +128,7 @@ class ExchangeView(FormView):
     def get_context_data(self, **kwargs):
         context = super(ExchangeView, self).get_context_data(**kwargs)
 
-        game_config = GameConfiguration.objects.get()
+        game_config = GameConfiguration.objects.get(pk=1)
 
         context['game_currency'] = game_config.game_currency
         context['w_to_i_conversion_bonus_percent'] = game_config.w_to_i_conversion_bonus_percent
