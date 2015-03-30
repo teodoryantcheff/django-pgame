@@ -37,7 +37,7 @@ class CollectCoinsView(FormView):
         # TODO move to some place else
         uas = user.useractorownership_set\
                 .select_related('actor')\
-                .order_by('actor__id')
+                .order_by('actor__price')
 
         last_collection_datetime = user.profile.last_coin_collection_time
         now = timezone.now()
