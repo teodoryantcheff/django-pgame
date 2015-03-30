@@ -74,7 +74,7 @@ def collect_coins(request):
     actors = user.useractorownership_set.select_related('actor')
     sum_coins_generated = 0
     for actor in actors:
-        sum_coins_generated += actor.num_actors * actor.actor.output * int(seconds/60)
+        sum_coins_generated += actor.num_actors * actor.actor.output * int(seconds/60)  # TODO
 
     print('total collected {}'.format(sum_coins_generated))
 
@@ -90,10 +90,11 @@ def exchange__gc_w_to_i(request, gc_to_exchange):
     if gc_to_exchange > user.profile.balance_w:
         raise ValidationError('Not enough withdrdawal balance')
 
-    bonus = (100 + game_config.w_to_i_conversion_bonus_percent) / 100.0
+    gc_to_exchange = Decimal(gc_to_exchange)
+    bonus = Decimal(100 + game_config.w_to_i_conversion_bonus_percent) / Decimal(100.0)
 
-    user.profile.balance_w -= Decimal(gc_to_exchange)
-    user.profile.balance_i += Decimal(gc_to_exchange) * Decimal(bonus)
+    user.profile.balance_w -= gc_to_exchange
+    user.profile.balance_i += gc_to_exchange * bonus
     user.profile.save()
 
     # History.objects.create(
