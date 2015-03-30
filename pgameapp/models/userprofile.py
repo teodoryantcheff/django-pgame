@@ -147,4 +147,8 @@ def create_userprofile(sender, instance, created, **kwargs):
             except IntegrityError:
                 continue  # referral_id is not unique, try again
 
-post_save.connect(create_userprofile, sender=AUTH_USER_MODEL, dispatch_uid='post_save__User__create_userprofile')
+post_save.connect(
+    create_userprofile,
+    sender=AUTH_USER_MODEL,
+    dispatch_uid='post_save__User__create_userprofile'
+)
