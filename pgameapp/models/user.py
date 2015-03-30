@@ -10,7 +10,7 @@ class AdminsManager(models.Manager):
         return super(AdminsManager, self).get_queryset().filter(is_staff=True)
 
 
-class HUIUser(EmailUser):
+class User(EmailUser):
     class Meta:
         proxy = True
 
@@ -18,4 +18,4 @@ class HUIUser(EmailUser):
     admins = AdminsManager()
 
     def test(self):
-        print '{} test on HUIUser'.format(self)
+        print '{} test on TUser'.format(self)

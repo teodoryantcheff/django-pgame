@@ -147,6 +147,7 @@ TEMPLATE_DIRS = (
 
 
 AUTH_USER_MODEL = 'custom_user.EmailUser'
+# AUTH_USER_MODEL = 'pgameapp.TUser'
 
 
 # django-accounts

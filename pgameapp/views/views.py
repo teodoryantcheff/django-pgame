@@ -6,7 +6,8 @@ from django.views.generic import DetailView, FormView, ListView, UpdateView
 
 from pgameapp.forms import SellCoinsForm, CollectCoinsForm, StoreForm, ExchangeForm
 
-from pgameapp.models import UserActorOwnership, Actor, ActorProcurementHistory, CoinConversionHistory, UserProfile
+from pgameapp.models import UserActorOwnership, Actor, ActorProcurementHistory, CoinConversionHistory, UserProfile, \
+    CryptoTransaction
 from pgameapp.models.gameconfiguration import GameConfiguration
 
 # _TODO Profile, after login
@@ -143,6 +144,16 @@ class ReferralsView(ListView):
     def get_queryset(self):
         return User.objects.filter(profile__referrer=self.request.user).order_by('-date_joined')
         # return self.request.user.select_related('referrals').order_by('-user__date_joined')
+
+
+class RefillView(ListView):
+    template_name = 'pgameapp/refill.html'
+    context_object_name = 'transactions'
+
+    def get_queryset(self):
+        return CryptoTransaction.objects.filter(user=self.request.user)
+        # return self.request.user.select_related('referrals').order_by('-user__date_joined')
+
 
 
 class ProfileEdit(UpdateView):

@@ -111,7 +111,8 @@ def create_initial_uas_for_user(sender, instance, created, **kwargs):
     if created:
         # print 'Adding actors to user', instance
         UserActorOwnership.objects.bulk_create(
-            [UserActorOwnership(user=instance, actor=actor, num_actors=actor.num_as_bonus) for actor in Actor.objects.all()]
+            [UserActorOwnership(user=instance, actor=actor, num_actors=actor.num_as_bonus)
+             for actor in Actor.objects.all()]
         )
 
 
@@ -124,14 +125,15 @@ def add_uas_to_users_on_new_actor(sender, instance, created, **kwargs):
     if created:
         # Add actor to all users
         UserActorOwnership.objects.bulk_create(
-            [UserActorOwnership(user=user, actor=instance) for user in get_user_model().objects.all()]
+            [UserActorOwnership(user=user, actor=instance, num_actors=0)
+             for user in get_user_model().objects.all()]
         )
 
 
 post_save.connect(
     create_initial_uas_for_user,
     sender=AUTH_USER_MODEL,
-    dispatch_uid='post_save__User__create_blank_uas_for_user'
+    dispatch_uid='post_save__User__create_initial_uas_for_user'
 )
 
 post_save.connect(

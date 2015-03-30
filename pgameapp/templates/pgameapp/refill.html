@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+  <h2>Transactions</h2>
+
+  <div style="display:inline-block;
+               margin: 20px;
+               padding:20px;
+               background-color: #bbffc8;
+               text-align: center;
+               font-size:x-large;
+               border: 5px double #2a6524;
+               border-radius: 10px; ">
+
+  Send your Ð to <b>{{ user.profile.crypto_address }}</b>
+  </div>
+
+  <br/><br/><br/>
+
+  {% if transactions %}
+    Total <b>{{ transactions|length }}</b>
+    <table style="width: 90%;text-align: center;font-size: smaller">
+      <thead>
+        <td><b>timestamp</b></td>
+        <td><b>type</b></td>
+        <td><b>crypto</b></td>
+        <td><b>game</b></td>
+        <td><b>address</b></td>
+        <td><b>tx info</b></td>
+      </thead>
+      {% for tx in transactions %}
+        <tr>
+          <td>{{ tx.timestamp|date:"Y-m-d H:i:s" }}</td>
+          <td>{{ tx.tx_type }}</td>
+          <td>Ð {{ tx.crypto_currency }}</td>
+          <td>{{ tx.game_currency }}</td>
+          <td>{{ tx.crypto_address }}</td>
+          <td><a href="https://chain.so/tx/DOGE/{{ tx.txid }}" target="_blank">info</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+      <p>You don't have any transactions yet</p>
+  {% endif %}
+{% endblock %}

@@ -82,7 +82,7 @@ class GameConfiguration(solo.models.SingletonModel):
     )
 
     """
-    Affiliate deposit percent
+    Affiliate deposit percent -- % of every payment given as bonus to the guy who bought the payer into the game
     """
     affiliate_deposit_percent = models.FloatField(
         verbose_name='affiliate deposit percent',

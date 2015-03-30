@@ -1,6 +1,6 @@
 # coding=utf-8
 
-import csv
+from decimal import Decimal
 import socket
 import sys
 
@@ -8,7 +8,7 @@ from time import sleep
 
 import django
 from django.contrib.auth import get_user_model
-from pgameapp.models import CryptoTransaction
+from pgameapp.models import CryptoTransaction, GameConfiguration
 
 django.setup()
 
@@ -33,7 +33,7 @@ CRYPTO_WALLET_ADDRESS = '{proto}://{address}:{port}'.format(
     port=settings.CRYPTO_WALLET_PORT
 )
 
-MIN_TX_CONFIRMATIONS = 3
+MIN_TX_CONFIRMATIONS = 1
 SLEEP_TIME = 5
 
 __author__ = 'Jailbreaker'
@@ -51,6 +51,7 @@ User = get_user_model()
 
 
 def main():
+    game_config = GameConfiguration.objects.get(pk=1)
     doge = AuthServiceProxy(CRYPTO_WALLET_CONNSTRING)
     try:
         last_record = BlockProcessingHistory.objects.latest()
@@ -95,24 +96,45 @@ def main():
                     confirmed.append(tx)
 
                     try:
-                        user = User.objects.select_related('profile').get(profile__crypto_address=tx['address'])
+                        user = User.objects.\
+                            select_related('profile__referrer__profile').\
+                            get(profile__crypto_address=tx['address'])
 
-                        real_currency = tx['amount']
-                        game_currency = real_currency  # TODO optional conversion rate
-                        user.profile.balance_i += game_currency
+                        num_deposits = CryptoTransaction.objects.filter(
+                            user=user,
+                            tx_type=CryptoTransaction.RECEIVE
+                        ).count()
+
+                        paid_real_currency = Decimal(tx['amount'])
+                        paid_game_currency = paid_real_currency  # TODO optional conversion rate
+                        user.profile.balance_i += Decimal(paid_game_currency)
+
+                        if num_deposits < 1:
+                            bonus = paid_game_currency * Decimal(game_config.first_deposit_bonus_percent) / 100
+                            user.profile.balance_i += bonus
+                            print 'Added first deposit bonus of {:.2}'.format(bonus)
 
                         CryptoTransaction.objects.create(
                             tx_type=CryptoTransaction.RECEIVE,  # since we are in the "== receive" branch
                             user=user,
-                            crypto_currency=real_currency,
-                            game_currency=game_currency,
+                            crypto_currency=paid_real_currency,
+                            game_currency=paid_game_currency,
                             crypto_address=tx['address'],
                             txid=tx['txid']
                         )
 
                         user.profile.save()
 
-                        print 'Credited Ð {:.2} to {}'.format(game_currency, user)
+                        if user.profile.referrer:
+                            refp = user.profile.referrer.profile
+
+                            referral_bounus = paid_game_currency * Decimal(game_config.affiliate_deposit_percent) / 100
+                            refp.balance_i += referral_bounus
+
+                            refp.save()
+                            print 'Add referral bonus of {:.2} to to user {}'.format(referral_bounus, refp.user)
+
+                        print 'Credited Ð {:.2} to {}'.format(paid_game_currency, user)
 
                     except User.DoesNotExist:
                         print 'Owner of "{}" not found. Will credit to catchall address !'. format(tx['address'])  # TODO

@@ -81,8 +81,8 @@ class UserProfile(models.Model):
     """
     referrer = models.ForeignKey(
         to=AUTH_USER_MODEL,
-        null=True,
         blank=True,
+        null=True,
         related_name='referrals',
     )
 
