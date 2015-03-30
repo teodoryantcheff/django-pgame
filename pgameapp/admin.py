@@ -28,7 +28,6 @@ class ActorAdmin(admin.ModelAdmin):
 
 
 # class UserProfileAdmin(admin.ModelAdmin):
-#     # TODO http://stackoverflow.com/questions/14130174/django-foreign-key-value-in-a-list-display-admin
 #     inlines = (UserInline, )
 #
 #     list_display = ('user', 'balance_i', 'balance_w', 'balance_coins')

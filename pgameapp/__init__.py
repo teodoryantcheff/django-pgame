@@ -2,11 +2,11 @@
 # TODO https://github.com/dyve/django-bootstrap3
 # _TODO signups
 # _TODO login ip
-# TODO select_related vs prefetch_related
+# _TODO select_related vs prefetch_related
 # TODO Referrals management and reports
-# TODO dogecoin interfaces
+# _TODO dogecoin interfaces
 # TODO test transactions management
-# TODO bonuses
+# _TODO bonuses
 # TODO in site games
 # TODO tests
 # TODO user action history
@@ -23,6 +23,7 @@
 # TODO http://mauveweb.co.uk/posts/2014/08/organising-django-projects.html
 
 from django.db.backends.signals import connection_created
+
 
 def activate_foreign_keys(sender, connection, **kwargs):
     """Enable integrity constraint with sqlite."""
