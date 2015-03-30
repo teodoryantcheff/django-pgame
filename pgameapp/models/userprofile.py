@@ -103,12 +103,12 @@ class UserProfile(models.Model):
         auto_now_add=True,
     )
 
-    def set_referral_info(self, ref_code, rec_cource=None, ref_campaign=None):
+    def set_referral_info(self, ref_code, ref_source=None, ref_campaign=None):
         """
         Sets referral info. Does NOT save() after. Call save() yourself.
 
         :param ref_code: Referral code
-        :param rec_cource: Referral source
+        :param rec_source: Referral source
         :param ref_campaign: Referral campaign
         :return:
         """

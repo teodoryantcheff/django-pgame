@@ -57,8 +57,8 @@ class SignupView(account.views.SignupView):
         # up.set_referral_info(ref_code=ref_info.get('ref_code', None))
         up.set_referral_info(
             ref_code=self.request.session.get('ref_code', None),
-            ref_src=self.request.session.get('ref_src', None),
-            ref_cmp=self.request.session.get('ref_cmp', None),
+            ref_source=self.request.session.get('ref_src', None),
+            ref_campaign=self.request.session.get('ref_cmp', None),
         )
 
         conn = dogecoinrpc.connect_to_local('d:\\doge\\rpc.conf')
