@@ -102,7 +102,7 @@ class Actor(models.Model):
         return self.name
 
 
-def create_blank_uas_for_user(sender, instance, created, **kwargs):
+def create_initial_uas_for_user(sender, instance, created, **kwargs):
     """
     Creates blank UserActorOwnership entries for a newly added User
     Intended to be called in a signal receiver on post_save for User (EmailUser in this case)
@@ -111,7 +111,7 @@ def create_blank_uas_for_user(sender, instance, created, **kwargs):
     if created:
         # print 'Adding actors to user', instance
         UserActorOwnership.objects.bulk_create(
-            [UserActorOwnership(user=instance, actor=actor, num_actors=0) for actor in Actor.objects.all()]
+            [UserActorOwnership(user=instance, actor=actor, num_actors=actor.num_as_bonus) for actor in Actor.objects.all()]
         )
 
 
@@ -129,7 +129,7 @@ def add_uas_to_users_on_new_actor(sender, instance, created, **kwargs):
 
 
 post_save.connect(
-    create_blank_uas_for_user,
+    create_initial_uas_for_user,
     sender=AUTH_USER_MODEL,
     dispatch_uid='post_save__User__create_blank_uas_for_user'
 )
