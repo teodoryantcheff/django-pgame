@@ -51,7 +51,6 @@ User = get_user_model()
 
 
 def main():
-    game_config = GameConfiguration.objects.get(pk=1)
     doge = AuthServiceProxy(CRYPTO_WALLET_CONNSTRING)
     try:
         last_record = BlockProcessingHistory.objects.latest()
@@ -61,6 +60,7 @@ def main():
         # lastblock = '03d74a6dec6983bc37287b12b5ef8fdc8ab9dfa5030b8982d131a9b5f67ead55'
 
     while True:
+        game_config = GameConfiguration.objects.get(pk=1)
         try:
             data = doge.listsinceblock(lastblock, MIN_TX_CONFIRMATIONS)  # TODO proper error handling
 
