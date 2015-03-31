@@ -1,3 +1,5 @@
+import socket
+
 try:
     import simplejson as json
 except ImportError:
@@ -56,14 +58,18 @@ class SignupView(account.views.SignupView):
         up = user.profile
         # up.set_referral_info(ref_code=ref_info.get('ref_code', None))
         up.set_referral_info(
-            ref_code=self.request.session.get('ref_code', None),
-            ref_source=self.request.session.get('ref_src', None),
-            ref_campaign=self.request.session.get('ref_cmp', None),
+            ref_code=self.request.session.get('ref_code') or '',
+            ref_source=self.request.session.get('ref_src') or '',
+            ref_campaign=self.request.session.get('ref_cmp') or '',
         )
 
-        conn = dogecoinrpc.connect_to_local('d:\\doge\\rpc.conf')
-        crypto_address = conn.getnewaddress(account=user.email)
-        up.crypto_address = crypto_address
+        try:
+            conn = dogecoinrpc.connect_to_local('d:\\doge\\rpc.conf')
+            crypto_address = conn.getnewaddress(account=user.email)
+            up.crypto_address = crypto_address
+        except socket.error:
+            # TODO Proper error handling here
+            up.crypto_address = '<pending>'
 
         up.signup_ip = utils.get_client_ip(self.request) or ''
         up.nickname = user.email.split('@')[0][:20]

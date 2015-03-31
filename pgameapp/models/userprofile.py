@@ -23,6 +23,7 @@ class UserProfile(models.Model):
         primary_key=True,
         null=False,
         blank=False
+        # TODO unique = True
     )
 
     """
@@ -77,13 +78,31 @@ class UserProfile(models.Model):
     )
 
     """
-    Who brought this user into the game
+    Who brought this user into the game. Taken on account creation based on ref_code and put here as a FK to a User
     """
     referrer = models.ForeignKey(
         to=AUTH_USER_MODEL,
-        blank=True,
         null=True,
         related_name='referrals',
+    )
+
+    """
+    source and campaign as set by the REFERRER who brings the guy into the game. Used
+    for referral statistics generation
+    """
+    ref_source = models.CharField(
+        max_length=64,
+        default='',
+        blank=True
+    )
+
+    """
+    See ref_source
+    """
+    ref_campaign = models.CharField(
+        max_length=64,
+        default='',
+        blank=True
     )
 
     """
@@ -103,12 +122,12 @@ class UserProfile(models.Model):
         auto_now_add=True,
     )
 
-    def set_referral_info(self, ref_code, ref_source=None, ref_campaign=None):
+    def set_referral_info(self, ref_code, ref_source='', ref_campaign=''):
         """
         Sets referral info. Does NOT save() after. Call save() yourself.
 
         :param ref_code: Referral code
-        :param rec_source: Referral source
+        :param ref_source: Referral source
         :param ref_campaign: Referral campaign
         :return:
         """
@@ -116,6 +135,8 @@ class UserProfile(models.Model):
         if ref_code:
             try:
                 self.referrer = User.objects.get(profile__referral_id=ref_code)
+                self.ref_source = ref_source
+                self.ref_campaign = ref_campaign
             except User.DoesNotExist:
                 print 'Account with referral_id {} does not exist. Ignoring'.format(ref_code)
 
