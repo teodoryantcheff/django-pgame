@@ -1,12 +1,26 @@
 from pprint import pprint
+from time import sleep
 import timeit
 # import dogecoinrpc
 from datetime import datetime
 import sys
+from pgameapp.models import Actor
 
 
-from django.conf import settings
-settings.configure()
+
+
+import django
+# from django.conf import settings
+# settings.configure()
+django.setup()
+
+while True:
+    a = Actor.objects.get(pk=2)
+    print a.price, a.output
+    sleep(1)
+
+sys.exit()
+
 
 # rpc_user and rpc_password are set in the bitcoin.conf file
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
