@@ -103,7 +103,6 @@ class GameConfiguration(solo.models.SingletonModel):
     game_start_datetime = models.DateTimeField(
         verbose_name='Date of "official" game start',
         auto_now_add=True,
-        default=timezone.now()
     )
 
     def __unicode__(self):  # __str__ on python 3
