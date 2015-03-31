@@ -64,6 +64,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    # 'pgameapp.middleware.ProfileMiddleware',
+
     'account.middleware.LocaleMiddleware',
     'account.middleware.TimezoneMiddleware',
 
@@ -159,7 +161,7 @@ ACCOUNT_LOGIN_REDIRECT_URL = '/'
 ACCOUNT_USER_DISPLAY = lambda user: user.email
 
 
-# Doge wallet config
+# Crypto wallet config
 CRYPTO_WALLET_PROTO = ''
 CRYPTO_WALLET_IP = ''
 CRYPTO_WALLET_PORT = 0
@@ -169,6 +171,22 @@ CRYPTO_WALLET_PASSWORD = ''
 
 # for django debug toolbar
 INTERNAL_IPS = ('127.0.0.1', '192.168.0.10')
+
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'debug_toolbar.panels.profiling.ProfilingDebugPanel',
+)
 
 
 # axes
