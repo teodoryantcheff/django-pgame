@@ -42,7 +42,7 @@ class UserProfileInline(admin.StackedInline):
     fk_name = 'user'
     can_delete = False
     verbose_name_plural = 'profile'
-    readonly_fields = ('signup_ip',)
+    readonly_fields = ('signup_ip', 'referrer')
 
 
 class UserWithProfileAdmin(EmailUserAdmin):
@@ -86,7 +86,7 @@ class CryptoTransactionAdmin(admin.ModelAdmin):
     list_display = ('timestamp', 'tx_type', 'user', 'crypto_currency', 'game_currency', 'crypto_address')
     list_filter = ('tx_type', )
     ordering = ('-timestamp', )
-    # readonly_fields = ('image_tag',)
+    readonly_fields = ('user',)
 
 
 class BlockProcessingHistoryAdmin(admin.ModelAdmin):
