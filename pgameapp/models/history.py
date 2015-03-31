@@ -7,10 +7,27 @@ from pgameapp.models import Actor
 __author__ = 'Jailbreaker'
 
 
-class ActorProcurementHistory(models.Model):
+class AbstractBaseHistory(models.Model):
     """
-    History of actor procurement
+    Abstract model class that only has a timestamp field
     """
+    class Meta:
+        abstract = True
+        ordering = ['-timestamp']
+        get_latest_by = 'timestamp'
+
+    timestamp = models.DateTimeField(
+        auto_now_add=True,
+        null=False,
+    )
+
+
+class AbstractBaseUserHistory(AbstractBaseHistory):
+    """
+    Abstract model class that extends AbstractBaseHistory and only adds a FK to user
+    """
+    class Meta:
+        abstract = True
 
     """
     FK to User
@@ -20,10 +37,11 @@ class ActorProcurementHistory(models.Model):
         null=False,
     )
 
-    timestamp = models.DateTimeField(
-        auto_now_add=True,
-        null=False,
-    )
+
+class ActorProcurementHistory(AbstractBaseUserHistory):
+    """
+    History of actor procurement
+    """
 
     actor = models.ForeignKey(
         to=Actor,
@@ -37,31 +55,14 @@ class ActorProcurementHistory(models.Model):
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
-    class Meta:
-        ordering = ['-timestamp']
-        get_latest_by = 'timestamp'
-
     def __unicode__(self):  # __str__ on python 3
         return u'ActorProcurementHistory'
 
 
-class CoinConversionHistory(models.Model):
+class CoinConversionHistory(AbstractBaseUserHistory):
     """
     History of coin conversions
     """
-
-    """
-    FK to User
-    """
-    user = models.ForeignKey(
-        to=AUTH_USER_MODEL,
-        null=False,
-    )
-
-    timestamp = models.DateTimeField(
-        auto_now_add=True,
-        null=False,
-    )
 
     coins = models.DecimalField(
         verbose_name='Converted coins',
@@ -77,10 +78,6 @@ class CoinConversionHistory(models.Model):
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
-    class Meta:
-        ordering = ['-timestamp']
-        get_latest_by = 'timestamp'
-
     def __unicode__(self):  # __str__ on python 3
         return u'CoinConversionHistory'
 
@@ -95,7 +92,7 @@ class TransactionsReceivedManager(models.Manager):
         return super(TransactionsReceivedManager, self).get_queryset().filter(tx_type='R')
 
 
-class CryptoTransaction(models.Model):
+class CryptoTransaction(AbstractBaseUserHistory):
     """
     Transactions history to and from a crypto currency -- bitcoin, litecoin, doge, etc, etc
     """
@@ -112,20 +109,6 @@ class CryptoTransaction(models.Model):
         (ORPHAN, "orphan"),
         (IMMATURE, "immature"),
         (GENERATE, "generate"),
-    )
-
-    """
-    FK to User txn got mapped to
-    """
-    user = models.ForeignKey(
-        to=AUTH_USER_MODEL,
-        null=False,
-    )
-
-    """
-    """
-    timestamp = models.DateTimeField(
-        auto_now_add=True,
     )
 
     """
@@ -172,10 +155,6 @@ class CryptoTransaction(models.Model):
     objects = models.Manager()
     sent = TransactionsSentManager()
     received = TransactionsReceivedManager()
-
-    class Meta:
-        ordering = ['-timestamp']
-        get_latest_by = 'timestamp'
 
     def __unicode__(self):  # __str__ on python 3
         return u'TX {type} {amount:.2} {user}'.format(
