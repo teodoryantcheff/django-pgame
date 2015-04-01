@@ -21,12 +21,12 @@
 
   {% if transactions %}
     Total <b>{{ transactions|length }}</b>
-    <table style="width: 90%;text-align: center;font-size: smaller">
+    <table class="data-table">
       <thead>
         <td><b>timestamp</b></td>
         <td><b>type</b></td>
         <td><b>crypto</b></td>
-        <td><b>game</b></td>
+{#        <td><b>game</b></td>#}
         <td><b>address</b></td>
         <td><b>tx info</b></td>
       </thead>
@@ -34,10 +34,10 @@
         <tr>
           <td>{{ tx.timestamp|date:"Y-m-d H:i:s" }}</td>
           <td>{{ tx.tx_type }}</td>
-          <td>Ð {{ tx.crypto_currency }}</td>
-          <td>{{ tx.game_currency }}</td>
-          <td>{{ tx.crypto_address }}</td>
-          <td><a href="https://chain.so/tx/DOGE/{{ tx.txid }}" target="_blank">info</a></td>
+          <td>Ð {{ tx.amount }}</td>
+{#          <td>{{ tx.game_currency }}</td>#}
+          <td>{{ tx.address }}</td>
+          <td><a href="https://chain.so/tx/DOGE/{{ tx.txid }}" target="_blank">{{ tx.txid|truncatechars:"10" }}</a></td>
         </tr>
       {% endfor %}
     </table>

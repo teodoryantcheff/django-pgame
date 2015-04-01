@@ -105,13 +105,10 @@ table, th, td {
     border-collapse: collapse;
 }
 
-/*.sidemenu nav {*/
-    /*background: mediumseagreen;*/
-    /*border-radius: 10px;*/
-/*}*/
+.data-table {
+    width: 90%;
+    text-align: center;
+    font-size: smaller
+}
 
-/*.sidemenu nav ul {*/
-    /*list-style: none;*/
-    /*margin: 0 auto;*/
-/*}*/
 
