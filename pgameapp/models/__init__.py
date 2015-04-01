@@ -12,9 +12,9 @@ from userprofile import UserProfile
 from gameconfiguration import GameConfiguration
 from manualgamestats import ManualGameStats
 
-from user import User
 
 from history import *
+from user import User
 from models import *
 
-from wallet import *
+from wallet import BlockProcessingHistory, CryptoTransaction
