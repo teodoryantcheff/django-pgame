@@ -57,9 +57,9 @@
           <div class="userprofile">
             {% if user.is_authenticated %}
               <ul>
-                <li>investment: <b>{{ user.profile.balance_i|floatformat:"1" }}</b></li>
-                <li>withdrawal: <b>{{ user.profile.balance_w|floatformat:"1" }}</b></li>
-                <li>coins: <b>{{ user.profile.balance_coins|floatformat:"1" }}</b></li>
+                <li>investment: <b>{{ user.profile.balance_i|floatformat:"2" }}</b></li>
+                <li>withdrawal: <b>{{ user.profile.balance_w|floatformat:"2" }}</b></li>
+                <li>coins: <b>{{ user.profile.balance_coins|floatformat:"2" }}</b></li>
               </ul>
             {% else %}
               <p>Login to see account balance</p>
@@ -72,7 +72,7 @@
             <li>Total users: <b>{{ gamestats.users_total }}</b></li>
             <li>Last 24 h: <b>{{ gamestats.users_new_last_24h }}</b></li>
 {#            <li>Cash Paid: <b>{{ gamestats.cash_total_paid }}</b></li>#}
-            <li>Cash reserve: <b>{{ gamestats.cash_reserve }}</b></li>
+            <li>Cash reserve: <b>{{ gamestats.cash_reserve|floatformat:"2" }}</b></li>
 {#            <li>Duration: <b>{{ gamestats.project_duration_days }}</b></li>#}
           </ul>
           {% endblock %}

@@ -9,7 +9,7 @@ from solo.admin import SingletonModelAdmin
 import account.models
 
 from pgameapp.models import GameConfiguration, UserProfile, Actor, ManualGameStats, CryptoTransaction, \
-    BlockProcessingHistory
+    BlockProcessingHistory, ReferralStats
 
 
 class ActorAdmin(admin.ModelAdmin):
@@ -83,16 +83,21 @@ class UserWithProfileAdmin(EmailUserAdmin):
 
 
 class CryptoTransactionAdmin(admin.ModelAdmin):
-    list_display = ('timestamp', 'tx_type', 'user', 'crypto_currency', 'game_currency', 'crypto_address')
-    list_filter = ('tx_type', )
+    list_display = ('timestamp', 'tx_type', 'amount', 'address')
+    list_filter = ('tx_type', 'timestamp')
     ordering = ('-timestamp', )
-    readonly_fields = ('user',)
+    # readonly_fields = ('user',)
 
 
 class BlockProcessingHistoryAdmin(admin.ModelAdmin):
     list_display = ('timestamp', 'blockhash', 'blockheight')
     readonly_fields = ('timestamp', 'blockhash', 'blockheight')
     ordering = ('-timestamp', )
+
+
+class ReferralStatsAdmin(admin.ModelAdmin):
+    list_display = ('timestamp', 'user', 'amount', 'referred_user', 'ref_source', 'ref_campaign')
+    # readonly_fields = ('timestamp', 'blockhash', 'blockheight')
 
 
 ########################################################################################################################
@@ -114,6 +119,8 @@ admin.site.unregister(account.models.EmailAddress)
 admin.site.register(Actor, ActorAdmin)
 admin.site.register(GameConfiguration, SingletonModelAdmin)
 admin.site.register(ManualGameStats, SingletonModelAdmin)
+
+admin.site.register(ReferralStats, ReferralStatsAdmin)
 
 admin.site.register(CryptoTransaction, CryptoTransactionAdmin)
 admin.site.register(BlockProcessingHistory, BlockProcessingHistoryAdmin)

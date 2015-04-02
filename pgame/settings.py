@@ -64,7 +64,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # 'pgameapp.middleware.ProfileMiddleware',
+    'pgameapp.middleware.CastToCustomUserMiddleware',
 
     'account.middleware.LocaleMiddleware',
     'account.middleware.TimezoneMiddleware',
@@ -149,7 +149,7 @@ TEMPLATE_DIRS = (
 
 
 AUTH_USER_MODEL = 'custom_user.EmailUser'
-# AUTH_USER_MODEL = 'pgameapp.TUser'
+# AUTH_USER_MODEL = 'pgameapp.User'
 
 
 # django-accounts

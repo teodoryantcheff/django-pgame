@@ -1,37 +1,30 @@
+# coding=utf-8
 from decimal import Decimal
 
-from django.contrib.auth import get_user_model
 from django.utils import timezone
-from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 
-from django.utils.crypto import get_random_string
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
-
-from pgameapp.models import GameConfiguration, Actor, ActorProcurementHistory, CoinConversionHistory, UserProfile
+from pgameapp.models import GameConfiguration, ActorProcurementHistory, CoinConversionHistory, ReferralStats, User
 from pgameapp.models import UserActorOwnership
+from pgameapp.models.history import UserLedger
 
 __author__ = 'Jailbreaker'
 
-User = get_user_model()  # TODO fixme
 
-
-def buy_actor(request, actor):
+def buy_actor(user, actor):
     if not actor:
         raise ValidationError('Invalid Actor')
-
-    user = request.user
-    now = timezone.now()
 
     if actor.price > user.profile.balance_i:
         raise ValidationError('Insufficient funds')
 
     game_config = GameConfiguration.objects.get(pk=1)
 
-    last_coll = user.profile.last_coin_collection_time
-    seconds = int((now - last_coll).total_seconds())
+    now = timezone.now()
+    seconds = (now - user.profile.last_coin_collection_time).total_seconds()
 
     # If user has actors and hasn't collected
-    if seconds > game_config.coin_collect_time*60 and user.profile.get_total_actors() > 0:
+    if seconds > game_config.coin_collect_time*60 and user.get_total_actors() > 0:
         raise ValidationError('Go collect your shit first')
 
     ua, created = UserActorOwnership.objects.get_or_create(
@@ -57,8 +50,7 @@ def buy_actor(request, actor):
     )
 
 
-def collect_coins(request):
-    user = request.user
+def collect_coins(user):
     game_config = GameConfiguration.objects.get(pk=1)
 
     last_coll = user.profile.last_coin_collection_time
@@ -69,22 +61,16 @@ def collect_coins(request):
     if seconds < game_config.coin_collect_time*60:
         raise ValidationError('Too soon')
 
-    # TODO move this and the one in the view to a proper place
-    # actors = user.actors.select_related('user', 'actor')
-    actors = user.useractorownership_set.select_related('actor')
-    sum_coins_generated = 0
-    for actor in actors:
-        sum_coins_generated += actor.num_actors * actor.actor.output * int(seconds/60)  # TODO
+    uas, total = user.get_coins_generated()
 
-    print('total collected {}'.format(sum_coins_generated))
+    print('total collected {}'.format(total))
 
-    user.profile.balance_coins += sum_coins_generated
+    user.profile.balance_coins += total
     user.profile.last_coin_collection_time = now
     user.profile.save()
 
 
-def exchange__gc_w_to_i(request, gc_to_exchange):
-    user = request.user
+def exchange__gc_w_to_i(user, gc_to_exchange):
     game_config = GameConfiguration.objects.get(pk=1)
 
     if gc_to_exchange > user.profile.balance_w:
@@ -105,8 +91,7 @@ def exchange__gc_w_to_i(request, gc_to_exchange):
     # ).save()
 
 
-def sell_coins_to_gc(request, coins):
-    user = request.user
+def sell_coins_to_gc(user, coins):
     game_config = GameConfiguration.objects.get(pk=1)
 
     if coins < game_config.min_coins_to_sell:
@@ -117,13 +102,13 @@ def sell_coins_to_gc(request, coins):
 
     game_currency = coins / game_config.coin_to_gc_rate
 
-    investment_gc = game_currency * game_config.investment_balance_percent_on_sale / 100.0
+    investment_gc = game_currency * game_config.investment_balance_percent_on_sale / 100
     withdrawal_gc = game_currency - investment_gc
 
-    user.profile.balance_i += Decimal(investment_gc)
-    user.profile.balance_w += Decimal(withdrawal_gc)
+    user.profile.balance_i += investment_gc
+    user.profile.balance_w += withdrawal_gc
 
-    user.profile.balance_coins -= Decimal(coins)
+    user.profile.balance_coins -= coins
     user.profile.save()
 
     now = timezone.now()
@@ -134,3 +119,56 @@ def sell_coins_to_gc(request, coins):
         game_currency=game_currency
     )
 
+
+def apply_payment(address, amount, transaction):
+    """
+
+    :param address:
+    :param amount:
+    :return:
+    """
+
+    game_config = GameConfiguration.objects.get(pk=1)
+
+    try:
+        # TODO real crypto to GC conversion rate needs to be added here too
+        # amount = amount
+
+        user = User.objects.\
+            select_related('profile__referrer__profile').\
+            get(profile__crypto_address=address)
+
+        user.credit(amount, UserLedger.PAYMENT, transaction)
+
+        num_deposits = user.get_num_deposits()
+
+        if num_deposits < 1:
+            bonus = amount * Decimal(game_config.first_deposit_bonus_percent) / 100
+            user.credit(bonus, UserLedger.BONUS_FIRST_PAYMENT, transaction)
+            print 'Added first deposit bonus of {:.2}'.format(bonus)
+
+        user.profile.save()
+
+        if user.profile.referrer:
+            referrer = user.profile.referrer
+            referrer.__class__ = User  # "cast" to proxy User model
+
+            referral_bonus = amount * Decimal(game_config.affiliate_deposit_percent) / 100
+
+            referrer.credit(referral_bonus, UserLedger.BONUS_REFERRAL_PAYMENT, transaction)
+
+            ReferralStats.objects.create(
+                user=referrer,
+                referred_user=user,
+                ref_source=user.profile.ref_source,
+                ref_campaign=user.profile.ref_campaign,
+                amount=referral_bonus
+            )
+
+            referrer.save()
+            print 'Added referral bonus of {:.2} to to user {}'.format(referral_bonus, referrer)
+
+        print 'Credited Ð {:.2} to {}'.format(amount, user)
+
+    except User.DoesNotExist:
+        print 'Owner of "{}" not found. Will credit to catchall address !'. format(address)  # TODO

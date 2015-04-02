@@ -1,19 +1,16 @@
 import socket
+from bitcoinrpc.authproxy import AuthServiceProxy
+from pgameapp import wallet
 
 try:
     import simplejson as json
 except ImportError:
     import json
 
-from urllib import unquote_plus
-
-import dogecoinrpc
-
 import account.views
 import account.forms
 
 import pgameapp.forms
-
 from pgameapp import utils
 
 __author__ = 'Jailbreaker'
@@ -32,7 +29,7 @@ class SignupView(account.views.SignupView):
             if not self.request.session.get(ref_param):
                 self.request.session[ref_param] = self.request.GET.get(ref_param, None)
 
-        # TODO
+        # TODO logging
         print 'Referral parameters ref_code:"{}" ref_src:"{}" ref_cmp:"{}"'.format(
             self.request.session.get('ref_code'),
             self.request.session.get('ref_src'),
@@ -55,25 +52,24 @@ class SignupView(account.views.SignupView):
 
         # and set that on the user profile
         user = self.created_user
-        up = user.profile
         # up.set_referral_info(ref_code=ref_info.get('ref_code', None))
-        up.set_referral_info(
+        user.set_referral_info(
             ref_code=self.request.session.get('ref_code') or '',
             ref_source=self.request.session.get('ref_src') or '',
             ref_campaign=self.request.session.get('ref_cmp') or '',
         )
 
         try:
-            conn = dogecoinrpc.connect_to_local('d:\\doge\\rpc.conf')
-            crypto_address = conn.getnewaddress(account=user.email)
-            up.crypto_address = crypto_address
+            w = AuthServiceProxy(wallet.CRYPTO_WALLET_CONNSTRING)
+            crypto_address = w.getnewaddress(account=user.email)
+            user.set_crypto_address(crypto_address)
         except socket.error:
             # TODO Proper error handling here
-            up.crypto_address = '<pending>'
+            user.profile.crypto_address = '<pending>'
 
-        up.signup_ip = utils.get_client_ip(self.request) or ''
-        up.nickname = user.email.split('@')[0][:20]
+        user.profile.signup_ip = utils.get_client_ip(self.request) or ''
+        user.profile.nickname = user.email.split('@')[0][:20]
 
-        up.save()
+        user.profile.save()
 
         super(SignupView, self).after_signup(form)

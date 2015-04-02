@@ -7,7 +7,6 @@
     {% for actor in sellable_actors %}
       <form action="" method="post">{% csrf_token %}
         <li>
-          You have <b>{{ actor.sum_user_owned }}</b> of
           <img src="{% static actor.image_path %}">"{{ actor.name }}"
           <i>price</i> <b>{{ actor.price|floatformat:"0" }}</b> {{ game_currency }}
           <i>ouput</i> <b>{{ actor.output|floatformat:"0" }}</b> coins/hour
@@ -19,7 +18,18 @@
       </form>
     {% endfor %}
     <b style="color: red">{{ form.non_field_errors }}</b>
-    <br/><br/><br/>
+    <br/>
+    <div style="border: 1px solid black; width: 100%">
+      {% for owned in owned_actors %}
+        <div style="display: inline-block; padding: 5px 15px; margin: 5px 5px ; border: 1px dashed green; border-radius: 5px; background-color: #c0e8c7 ">
+          {# TODO styles to style.css #}
+          <img src="{% static owned.actor.image_path %}" alt="" style="vertical-align: middle"/>
+          <span><b style="font-size: xx-large;vertical-align: middle">{{ owned.num_actors }}</b></span>
+        </div>
+      {% endfor %}
+      
+    </div>
+    <br/><br/>
     {% if actor_procurement_history %}
       Last 10
       <table class="data-table">

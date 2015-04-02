@@ -1,10 +1,9 @@
 from django.db import models, IntegrityError
-from django.db.models import Sum
 from django.db.models.signals import post_save
-from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
 
 from . import AUTH_USER_MODEL, DECIMAL_DECIMAL_PLACES, DECIMAL_MAX_DIGITS
+
 
 __author__ = 'Jailbreaker'
 
@@ -21,13 +20,11 @@ class UserProfile(models.Model):
         to=AUTH_USER_MODEL,
         related_name='profile',
         primary_key=True,
-        null=False,
-        blank=False
         # TODO unique = True
     )
 
     """
-    User's nichname
+    User's nickname
     """
     nickname = models.CharField(
         max_length=20,
@@ -111,7 +108,6 @@ class UserProfile(models.Model):
     referral_id = models.CharField(
         max_length=30,
         unique=True,
-        null=False,
         blank=False
     )
 
@@ -121,30 +117,6 @@ class UserProfile(models.Model):
     last_coin_collection_time = models.DateTimeField(
         auto_now_add=True,
     )
-
-    def set_referral_info(self, ref_code, ref_source='', ref_campaign=''):
-        """
-        Sets referral info. Does NOT save() after. Call save() yourself.
-
-        :param ref_code: Referral code
-        :param ref_source: Referral source
-        :param ref_campaign: Referral campaign
-        :return:
-        """
-        User = get_user_model()
-        if ref_code:
-            try:
-                self.referrer = User.objects.get(profile__referral_id=ref_code)
-                self.ref_source = ref_source
-                self.ref_campaign = ref_campaign
-            except User.DoesNotExist:
-                print 'Account with referral_id {} does not exist. Ignoring'.format(ref_code)
-
-    def set_crypto_address(self, crypto_adderess):
-        self.crypto_address = crypto_adderess
-
-    def get_total_actors(self):
-        return self.user.useractorownership_set.aggregate(Sum('num_actors')).values()[0]
 
     class Meta:
         verbose_name = 'UserProfile'
@@ -157,11 +129,11 @@ class UserProfile(models.Model):
 def create_userprofile(sender, instance, created, **kwargs):
     if created:
         up, created = UserProfile.objects.get_or_create(user=instance)
-        up.pin = get_random_string(6)
 
+        up.pin = get_random_string(6)
+        # generate referral_id
         while True:
-            # generate referral_id
-            up.referral_id = get_random_string(length=12)
+            up.referral_id = get_random_string(length=12)  # TODO make length an option
             try:
                 up.save()
                 break  # generated referral_id is unique and user profile got saved

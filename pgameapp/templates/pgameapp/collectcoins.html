@@ -6,10 +6,10 @@
     <h2>Collect coins</h2>
 
     <p>last coin collection <b>{{ user.profile.last_coin_collection_time|timesince }}</b> ago</p>
-    <ul>{% for ua, output in user_actors %}
-        <li><b>{{ ua.num_actors }} X</b> <img src="{% static ua.actor.image_path %}">"{{ ua.actor.name }}" <i>generated:</i> <b>{{ output|floatformat:"0" }}</b> {{ game_currency }}</li>
+    <ul>{% for ua, output in user_actors_generated %}
+        <p><b>{{ ua.num_actors }} X</b> <img src="{% static ua.actor.image_path %}">"{{ ua.actor.name }}" <i>generated:</i> <b>{{ output|floatformat:"2" }}</b> {{ game_currency }}</p>
     {% endfor %}</ul>
-
+    Total: <b style="font-size: x-large">{{ total_generated|floatformat:"2" }}</b> coins.
 {#    <br/><br/><br/>#}
 
     <form action="" method="post">{% csrf_token %}

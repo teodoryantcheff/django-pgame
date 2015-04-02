@@ -3,22 +3,69 @@
 {% load staticfiles %}
 
 {% block content %}
-    <h2>Referrals list</h2>
+  <h2>Referrals Stats</h2>
 
-    {% if user_referred_accounts %}
-      Total <b>{{ user_referred_accounts|length }}</b>
-      <table class="data-table">
-        <thead>
-            <td><b>date joined</b></td><td><b>account</b></td>
-        </thead>
-        {% for referred in user_referred_accounts %}
-            <tr>
-                <td>{{ referred.date_joined|date:"Y-m-d H:i" }}</td>
-                <td>{{ referred.email }}</td>
-            </tr>
-        {% endfor %}
-      </table>
-    {% else %}
-        <p>Nobody has signed up with your referal links yet</p>
-    {% endif %}
+  <h4>By income</h4>
+  {% if referral_payment_stats %}
+    <table class="data-table">
+      <thead>
+        <td><b>source</b></td>
+        <td><b>campaign</b></td>
+  {#      <td><b>singups</b></td>#}
+        <td><b>payments</b></td>
+        <td><b>sum</b></td>
+      </thead>
+      {% for rs in referral_payment_stats %}
+        <tr>
+          <td>{{ rs.ref_source }}</td>
+          <td>{{ rs.ref_campaign }}</td>
+{#          <td>{{ rs.signups }}</td>#}
+          <td>{{ rs.count }}</td>
+          <td>{{ rs.sum|floatformat:"2" }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    No stats yet
+  {% endif %}
+
+  <br/>
+  <h4>By signups</h4>
+  {% if referral_signup_stats %}
+    <table class="data-table">
+      <thead>
+      <td><b>source</b></td>
+      <td><b>campaign</b></td>
+      <td><b>signups</b></td>
+      </thead>
+      {% for rs in referral_signup_stats %}
+        <tr>
+          <td>{{ rs.ref_source }}</td>
+          <td>{{ rs.ref_campaign }}</td>
+          <td>{{ rs.signups }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    No stats yet
+  {% endif %}
+
+  <br/>
+
+  {% if user_referred_accounts %}
+    Total <b>{{ user_referred_accounts|length }}</b>. Here are the last 10.
+    <table class="data-table">
+      <thead>
+      <td><b>date joined</b></td><td><b>account</b></td>
+      </thead>
+      {% for referred in user_referred_accounts|slice:":10" %}
+        <tr>
+          <td>{{ referred.date_joined|date:"Y-m-d H:i" }}</td>
+          <td>{{ referred.email|truncatechars:"10" }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>Nobody has signed up with your referal links yet</p>
+  {% endif %}
 {% endblock %}

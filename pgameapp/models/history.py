@@ -1,7 +1,15 @@
-from django.db import models
+# coding=utf-8
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
-from . import AUTH_USER_MODEL, DECIMAL_DECIMAL_PLACES, DECIMAL_MAX_DIGITS
+from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+
 from pgameapp.models import Actor
+from . import AUTH_USER_MODEL, DECIMAL_DECIMAL_PLACES, DECIMAL_MAX_DIGITS
 
 
 __author__ = 'Jailbreaker'
@@ -28,6 +36,8 @@ class AbstractBaseUserHistory(AbstractBaseHistory):
     """
     class Meta:
         abstract = True
+        ordering = ['-timestamp']
+        get_latest_by = 'timestamp'
 
     """
     FK to User
@@ -35,6 +45,8 @@ class AbstractBaseUserHistory(AbstractBaseHistory):
     user = models.ForeignKey(
         to=AUTH_USER_MODEL,
         null=False,
+        # related_name="%(app_label)s_%(class)s_related"
+        related_name="%(class)s_related"
     )
 
 
@@ -43,14 +55,10 @@ class ActorProcurementHistory(AbstractBaseUserHistory):
     History of actor procurement
     """
 
-    actor = models.ForeignKey(
-        to=Actor,
-        null=False,
-    )
+    actor = models.ForeignKey(Actor)
 
     price = models.DecimalField(
         verbose_name='Price of procurement',
-        null=False,
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
@@ -66,14 +74,12 @@ class CoinConversionHistory(AbstractBaseUserHistory):
 
     coins = models.DecimalField(
         verbose_name='Converted coins',
-        null=False,
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     game_currency = models.DecimalField(
         verbose_name='Received GC',
-        null=False,
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
@@ -82,83 +88,114 @@ class CoinConversionHistory(AbstractBaseUserHistory):
         return u'CoinConversionHistory'
 
 
-class TransactionsSentManager(models.Manager):
-    def get_queryset(self):
-        return super(TransactionsSentManager, self).get_queryset().filter(tx_type='S')
-
-
-class TransactionsReceivedManager(models.Manager):
-    def get_queryset(self):
-        return super(TransactionsReceivedManager, self).get_queryset().filter(tx_type='R')
-
-
-class CryptoTransaction(AbstractBaseUserHistory):
-    """
-    Transactions history to and from a crypto currency -- bitcoin, litecoin, doge, etc, etc
-    """
-    SEND = "S"
-    RECEIVE = "R"
-    MOVE = "M"
-    ORPHAN = "O"
-    IMMATURE = "I"
-    GENERATE = "G"
-    TX_TYPE_CHOICES = (
-        (SEND, "send"),
-        (RECEIVE, "receive"),
-        (MOVE, "move"),
-        (ORPHAN, "orphan"),
-        (IMMATURE, "immature"),
-        (GENERATE, "generate"),
+class UserLedger(AbstractBaseUserHistory):
+    PAYMENT = 'pmt'
+    BONUS_REFERRAL_PAYMENT = 'b_rp'
+    BONUS_FIRST_PAYMENT = 'b_fp'
+    _TYPE_CHOICES = (
+        (PAYMENT, 'payment'),
+        (BONUS_REFERRAL_PAYMENT, 'referral payment'),
+        (BONUS_FIRST_PAYMENT, '1st payment bonus'),
     )
 
-    """
-    crypto sent or received
-    """
-    crypto_currency = models.DecimalField(
-        verbose_name='Real money',
-        null=False,
+    amount = models.DecimalField(
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     """
-    GC received or sent
+    Type. Types defined in _TYPE_CHOICES
     """
-    game_currency = models.DecimalField(
-        null=False,
+    type = models.CharField(
+        max_length=10,
+        choices=_TYPE_CHOICES,
+    )
+
+    object_type1 = models.ForeignKey(ContentType,  related_name='log_items1', null=True)
+    object_id1 = models.PositiveIntegerField(null=True)
+    object1 = GenericForeignKey("object_type1", "object_id1")
+
+    object_type2 = models.ForeignKey(ContentType,  related_name='log_items2', null=True)
+    object_id2 = models.PositiveIntegerField(null=True)
+    object2 = GenericForeignKey("object_type2", "object_id2")
+
+    object_type3 = models.ForeignKey(ContentType,  related_name='log_items3', null=True)
+    object_id3 = models.PositiveIntegerField(null=True)
+    object3 = GenericForeignKey("object_type3", "object_id3")
+
+    serialized_data = models.TextField(null=True)
+
+    # objects =
+    _data = None
+
+    class Meta:
+        ordering = ("timestamp", )
+
+    @property
+    def data(self):
+        if self._data is None and self.serialized_data is not None:
+            self._data = json.loads(self.serialized_data)
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        self._data = value
+        self.serialized_data = None
+
+    def save(self, *args, **kwargs):
+        if self._data is not None and self.serialized_data is None:
+            self.serialized_data = json.dumps(self._data)
+        super(UserLedger, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return u'UserLedger <{}> {} $:{}'.format(self.user, self.type, self.amount)
+
+
+# r = ReferralStats.objects.values('ref_source','ref_campaign').distinct().annotate(Count('id'), Sum('amount'))
+# r = ReferralStats.objects.
+# values('referred_user__profile__ref_source','referred_user__profile__ref_campaign').
+# distinct().
+# annotate(num=Count('id'), sum=Sum('amount'))
+class ReferralStats(AbstractBaseUserHistory):
+    """
+
+    Note: As per https://docs.djangoproject.com/en/1.8/ref/contrib/contenttypes/#generic-relations-and-aggregation
+    aggregations are not possible with GenericFK fields hence this table. ref_source and ref_campaign are copied here
+    from the user profile they come from, just for speed.
+    """
+    referred_user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        related_name='+'
+    )
+
+    amount = models.DecimalField(
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     """
-    Source or destination address of the transaction
+    source and campaign as set by the REFERRER who brings the guy into the game. Used
+    for referral statistics generation
     """
-    crypto_address = models.CharField(
-        max_length=48
+    ref_source = models.CharField(
+        max_length=64,
+        default='',
+        blank=True
     )
 
     """
-    Transaction ID
+    See ref_source
     """
-    txid = models.CharField(
-        max_length=128
+    ref_campaign = models.CharField(
+        max_length=64,
+        default='',
+        blank=True
     )
 
-    """
-    Type (category) of this transaction. Types defined in TX_TYPE_CHOICES
-    """
-    tx_type = models.CharField(
-        max_length=1,
-        choices=TX_TYPE_CHOICES,
-    )
-
-    objects = models.Manager()
-    sent = TransactionsSentManager()
-    received = TransactionsReceivedManager()
+    class Meta:
+        verbose_name_plural = 'ReferralStats'
 
     def __unicode__(self):  # __str__ on python 3
-        return u'TX {type} {amount:.2} {user}'.format(
-            type=self.tx_type,
-            amount=self.crypto_currency,
-            user=self.user
-        )
+        return u'ReferralStats'
+
+

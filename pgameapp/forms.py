@@ -19,47 +19,29 @@ class ContextForm(forms.Form):
         super(ContextForm, self).__init__(*args, **kwargs)
 
 
-# class BuyForm(forms.ModelForm):
-#     class Meta:
-#         model = UserActorOwnership
-#         exclude = ('num_actors',)
-#
-#     def clean(self):
-#         super(BuyForm, self).clean()
-
 class CollectCoinsForm(ContextForm):
     def clean(self):
-        collect_coins(self.request)
+        collect_coins(self.request.user)
 
 
 class StoreForm(ContextForm):
-    # class Meta:
-    #     model = UserActorOwnership
-    #     exclude = ('num_actors', )
-    #
-    # def __init__(self, *args, **kwargs):
-    #     self.request = kwargs.pop('request', None)
-    #     super(StoreForm, self).__init__(*args, **kwargs)
-
     def clean(self):
-        # cleaned_data = super(StoreForm, self).clean()
-        actor = int(self.data['actor'])
-        print actor
+        cleaned_data = super(StoreForm, self).clean()
+        # TODO error handling
+        actor_id = int(self.data['actor'])
+        print actor_id
         # print cleaned_data['actor']
-        actor = Actor.objects.get(pk=actor)
-        buy_actor(self.request, actor)
+        actor = Actor.objects.get(pk=actor_id)
+        buy_actor(self.request.user, actor)
 
 
 class SellCoinsForm(ContextForm):
-    coins_to_sell = forms.FloatField(required=True, min_value=0)
+    coins_to_sell = forms.DecimalField(required=True, min_value=0)
 
     def clean(self):
         cleaned_data = super(SellCoinsForm, self).clean()
-
-        # coins_to_sell = self.cleaned_data['coins_to_sell']
-        # coins_to_sell = self.cleaned_data.get('coins_to_sell', 0)
         coins_to_sell = cleaned_data.get('coins_to_sell')
-        sell_coins_to_gc(self.request, coins_to_sell)
+        sell_coins_to_gc(self.request.user, coins_to_sell)
 
 
 class ExchangeForm(ContextForm):
@@ -72,7 +54,7 @@ class ExchangeForm(ContextForm):
         cleaned_data = super(ExchangeForm, self).clean()
 
         gc_to_exchange = cleaned_data.get('gc_to_exchange')
-        exchange__gc_w_to_i(self.request, gc_to_exchange)
+        exchange__gc_w_to_i(self.request.user, gc_to_exchange)
 
 
 class SignupForm(forms.Form):

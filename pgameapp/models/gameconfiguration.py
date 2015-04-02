@@ -24,9 +24,11 @@ class GameConfiguration(solo.models.SingletonModel):
     """
     coin to GC (game currency) rate
     """
-    coin_to_gc_rate = models.FloatField(
+    coin_to_gc_rate = models.DecimalField(
         verbose_name='coins to GC (game currency) rate',
         default=1,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     """
@@ -40,9 +42,11 @@ class GameConfiguration(solo.models.SingletonModel):
     """
     Minimum coin balance to allow selling for GC
     """
-    min_coins_to_sell = models.FloatField(
+    min_coins_to_sell = models.DecimalField(
         verbose_name='minimum coin balance to allow selling for GC',
         default=100,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     """
@@ -56,9 +60,11 @@ class GameConfiguration(solo.models.SingletonModel):
     """
     Bonus percent @ first deposit
     """
-    first_deposit_bonus_percent = models.FloatField(
+    first_deposit_bonus_percent = models.DecimalField(
         verbose_name='% on 1st deposit bonus',
         default=0,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     """
@@ -84,9 +90,11 @@ class GameConfiguration(solo.models.SingletonModel):
     """
     Affiliate deposit percent -- % of every payment given as bonus to the guy who bought the payer into the game
     """
-    affiliate_deposit_percent = models.FloatField(
+    affiliate_deposit_percent = models.DecimalField(
         verbose_name='affiliate deposit percent',
-        default=0
+        default=0,
+        max_digits=DECIMAL_MAX_DIGITS,
+        decimal_places=DECIMAL_DECIMAL_PLACES
     )
 
     """

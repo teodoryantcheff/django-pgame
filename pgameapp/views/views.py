@@ -7,7 +7,7 @@ from django.views.generic import DetailView, FormView, ListView, UpdateView
 from pgameapp.forms import SellCoinsForm, CollectCoinsForm, StoreForm, ExchangeForm
 
 from pgameapp.models import UserActorOwnership, Actor, ActorProcurementHistory, CoinConversionHistory, UserProfile, \
-    CryptoTransaction
+    CryptoTransaction, User
 from pgameapp.models.gameconfiguration import GameConfiguration
 
 # _TODO Profile, after login
@@ -17,12 +17,10 @@ from pgameapp.models.gameconfiguration import GameConfiguration
 # TODO GAMES
 # _TODO Exchange - withdrawal GC to investment GC
 # TODO referrer stats
-# TODO Top up balance (doge transfer confirmation)
+# _TODO Top up balance (doge transfer confirmation)
 # TODO Request payout / withdrawal
 # TODO Profile settings
 # _TODO game stats box
-
-User = get_user_model()  # TODO fixme
 
 
 class CollectCoinsView(FormView):
@@ -34,24 +32,16 @@ class CollectCoinsView(FormView):
         context = super(CollectCoinsView, self).get_context_data(**kwargs)
         user = self.request.user
 
-        # qs = UserActorOwnership.objects\
-        # TODO move to some place else
-        uas = user.useractorownership_set\
-                .select_related('actor')\
-                .order_by('actor__price')
-
-        last_collection_datetime = user.profile.last_coin_collection_time
         now = timezone.now()
-        seconds = int((now - last_collection_datetime).total_seconds())
+        # uacg = user actors coins generated
+        uacg, total = user.get_coins_generated(until=now)
+        context['user_actors_generated'] = uacg
+        context['total_generated'] = total
 
-        generated = [ua.num_actors * ua.actor.output * int(seconds / 60) for ua in uas]
+        # TODO remove, debug only
+        context['seconds_since_last_collection'] = (now - user.profile.last_coin_collection_time).total_seconds()
 
-        context['user_actors'] = zip(uas, generated)
-
-        # print 'seconds since last collection', seconds
-        context['seconds_since_last_collection'] = seconds
-
-        context['last_collection_datetime'] = last_collection_datetime
+        context['last_collection_datetime'] = user.profile.last_coin_collection_time
         context['now'] = now
 
         return context
@@ -104,14 +94,10 @@ class StoreView(FormView):
     def get_context_data(self, **kwargs):
         context = super(StoreView, self).get_context_data(**kwargs)
 
-        context['sellable_actors'] = Actor.objects\
-            .filter(is_active=True, users=self.request.user)\
-            .annotate(sum_user_owned=Sum('useractorownership__num_actors'))
-
-        context['actor_procurement_history'] = ActorProcurementHistory.objects\
-            .filter(user=self.request.user) \
-            .order_by('-timestamp') \
-            .select_related('actor')[:10]
+        user = self.request.user
+        context['sellable_actors'] = Actor.sellable.all()
+        context['owned_actors'] = user.get_owned_actors()
+        context['actor_procurement_history'] = user.get_actor_procurement_history()
 
         return context
 
@@ -142,18 +128,23 @@ class ReferralsView(ListView):
     context_object_name = 'user_referred_accounts'
 
     def get_queryset(self):
-        return User.objects.filter(profile__referrer=self.request.user).order_by('-date_joined')
-        # return self.request.user.select_related('referrals').order_by('-user__date_joined')
+        return self.request.user.get_referrals()
 
+    def get_context_data(self, **kwargs):
+        context = super(ReferralsView, self).get_context_data(**kwargs)
+
+        context['referral_payment_stats'] = self.request.user.get_referral_payment_stats()
+        context['referral_signup_stats'] = self.request.user.get_referral_signup_stats()
+
+        return context
 
 class RefillView(ListView):
     template_name = 'pgameapp/refill.html'
     context_object_name = 'transactions'
 
     def get_queryset(self):
-        return CryptoTransaction.objects.filter(user=self.request.user)
+        return CryptoTransaction.objects.all()  #filter(user=self.request.user)
         # return self.request.user.select_related('referrals').order_by('-user__date_joined')
-
 
 
 class ProfileEdit(UpdateView):

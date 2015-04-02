@@ -1,6 +1,6 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 
 from . import AUTH_USER_MODEL, DECIMAL_DECIMAL_PLACES, DECIMAL_MAX_DIGITS
@@ -32,9 +32,15 @@ class UserActorOwnership(models.Model):
 
     class Meta:
         unique_together = (('user', 'actor'),)
+        ordering = ('actor__price',)
 
     def __unicode__(self):  # __str__ on python 3
         return u'UA <{}> {}x"{}"'.format(self.user, self.num_actors, self.actor)
+
+
+class SellableActorManager(models.Manager):
+    def get_queryset(self):
+        return super(SellableActorManager, self).get_queryset().filter(is_active=True)
 
 
 class Actor(models.Model):
@@ -97,6 +103,9 @@ class Actor(models.Model):
 
     class Meta:
         ordering = ['price']
+
+    objects = models.Manager()
+    sellable = SellableActorManager()
 
     def __unicode__(self):  # __str__ on python 3
         return self.name
