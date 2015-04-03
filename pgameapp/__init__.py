@@ -11,6 +11,19 @@
 # TODO tests
 # TODO user action history
 # ^ https://django-simple-history.readthedocs.org/en/latest/
+
+# _TODO Profile, after login
+# _TODO Shop - buy actors
+# _TODO Sklad - convert coins to silver
+# _TODO Sell to GC
+# _TODO Exchange - withdrawal GC to investment GC
+# _TODO referrer stats
+# _TODO Top up balance (doge transfer confirmation)
+# TODO Request payout / withdrawal
+# TODO Profile settings
+# _TODO game stats box
+
+
 # TODO https://github.com/tomatohater/django-unfriendly
 # TODO https://docs.djangoproject.com/en/1.7/ref/contrib/admin/actions/
 # TODO http://www.revsys.com/blog/2014/nov/21/recommended-django-project-layout/

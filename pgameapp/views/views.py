@@ -6,19 +6,6 @@ from pgameapp.models import Actor, UserProfile, CryptoTransaction
 from pgameapp.models.gameconfiguration import GameConfiguration
 
 
-# _TODO Profile, after login
-# _TODO Shop - buy actors
-# _TODO Sklad - convert coins to silver
-# _TODO Sell to GC
-# TODO GAMES
-# _TODO Exchange - withdrawal GC to investment GC
-# TODO referrer stats
-# _TODO Top up balance (doge transfer confirmation)
-# TODO Request payout / withdrawal
-# TODO Profile settings
-# _TODO game stats box
-
-
 class CollectCoinsView(FormView):
     template_name = 'pgameapp/collectcoins.html'
     form_class = CollectCoinsForm

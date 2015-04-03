@@ -49,44 +49,6 @@ class AbstractBaseUserHistory(AbstractBaseHistory):
         related_name="%(class)s_related"
     )
 
-# TODO delete
-# class ActorProcurementHistory(AbstractBaseUserHistory):
-#     """
-#     History of actor procurement
-#     """
-#
-#     actor = models.ForeignKey(Actor)
-#
-#     price = models.DecimalField(
-#         verbose_name='Price of procurement',
-#         max_digits=DECIMAL_MAX_DIGITS,
-#         decimal_places=DECIMAL_DECIMAL_PLACES
-#     )
-#
-#     def __unicode__(self):  # __str__ on python 3
-#         return u'ActorProcurementHistory'
-#
-#
-# class CoinConversionHistory(AbstractBaseUserHistory):
-#     """
-#     History of coin conversions
-#     """
-#
-#     coins = models.DecimalField(
-#         verbose_name='Converted coins',
-#         max_digits=DECIMAL_MAX_DIGITS,
-#         decimal_places=DECIMAL_DECIMAL_PLACES
-#     )
-#
-#     game_currency = models.DecimalField(
-#         verbose_name='Received GC',
-#         max_digits=DECIMAL_MAX_DIGITS,
-#         decimal_places=DECIMAL_DECIMAL_PLACES
-#     )
-#
-#     def __unicode__(self):  # __str__ on python 3
-#         return u'CoinConversionHistory'
-
 
 class UserLedgerManager(models.Manager):
 
