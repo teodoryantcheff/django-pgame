@@ -35,7 +35,7 @@ class UserActorOwnership(models.Model):
         ordering = ('actor__price',)
 
     def __unicode__(self):  # __str__ on python 3
-        return u'UA <{}> {}x"{}"'.format(self.user, self.num_actors, self.actor)
+        return u'<{}> has {} of "{}"'.format(self.user, self.num_actors, self.actor)
 
 
 class SellableActorManager(models.Manager):
@@ -49,13 +49,14 @@ class Actor(models.Model):
     """
     name = models.CharField(max_length=50)
     price = models.DecimalField(
+        verbose_name='price (GC)',
         default=0,
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
     output = models.DecimalField(
         default=0,
-        verbose_name='output / h',
+        verbose_name='output / h (GC)',
         max_digits=DECIMAL_MAX_DIGITS,
         decimal_places=DECIMAL_DECIMAL_PLACES
     )
@@ -79,7 +80,7 @@ class Actor(models.Model):
     How many of those to give as bonus to users
     """
     num_as_bonus = models.PositiveIntegerField(
-        verbose_name='as bonus',
+        verbose_name='give as bonus',
         default=0,
     )
 
@@ -113,7 +114,7 @@ class Actor(models.Model):
 
 def create_initial_uas_for_user(sender, instance, created, **kwargs):
     """
-    Creates blank UserActorOwnership entries for a newly added User
+    Creates blank (only bonus actors added) UserActorOwnership entries for a newly added User
     Intended to be called in a signal receiver on post_save for User (EmailUser in this case)
     """
 
@@ -150,17 +151,3 @@ post_save.connect(
     sender=Actor,
     dispatch_uid='add_uas_to_users_on_new_actor'
 )
-
-
-#
-# def delete_uas_from_users(sender, instance, using, **kwargs):
-#     """
-#     Triggered by a signal on Actor deletion. Deletes all UserActorOwnership referring the to be deleted Actor
-#     """
-#     UserActorOwnership.objects.filter(actor=instance).delete()
-#
-# pre_delete.connect(
-#     delete_uas_from_users,
-#     sender=Actor,
-#     dispatch_uid='delete_uas_from_users'
-# )

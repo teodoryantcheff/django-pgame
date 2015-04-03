@@ -1,10 +1,12 @@
 # coding=utf-8
 from decimal import Decimal
+from datetime import timedelta
+from django.db.models import Sum
 
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-from pgameapp.models import GameConfiguration, ActorProcurementHistory, CoinConversionHistory, ReferralStats, User
+from pgameapp.models import GameConfiguration, ReferralBonusPayment, User
 from pgameapp.models import UserActorOwnership
 from pgameapp.models.history import UserLedger
 
@@ -42,12 +44,7 @@ def buy_actor(user, actor):
     user.profile.last_coin_collection_time = now
     user.profile.save()
 
-    ActorProcurementHistory.objects.create(
-        user=user,
-        timestamp=now,
-        actor=actor,
-        price=actor.price
-    )
+    UserLedger.objects.log(user, UserLedger.BUY_ACTOR, -actor.price, data={'name': actor.name})
 
 
 def collect_coins(user):
@@ -61,7 +58,7 @@ def collect_coins(user):
     if seconds < game_config.coin_collect_time*60:
         raise ValidationError('Too soon')
 
-    uas, total = user.get_coins_generated()
+    uas, total = user.get_coins_generated(until=now)
 
     print('total collected {}'.format(total))
 
@@ -78,17 +75,13 @@ def exchange__gc_w_to_i(user, gc_to_exchange):
 
     gc_to_exchange = Decimal(gc_to_exchange)
     bonus = Decimal(100 + game_config.w_to_i_conversion_bonus_percent) / Decimal(100.0)
+    to_receive = gc_to_exchange * bonus
 
     user.profile.balance_w -= gc_to_exchange
-    user.profile.balance_i += gc_to_exchange * bonus
+    user.profile.balance_i += to_receive
     user.profile.save()
 
-    # History.objects.create(
-    #     user=user,
-    #     timestamp=now,
-    #     actor=a,
-    #     price=a.price
-    # ).save()
+    UserLedger.objects.log(user, UserLedger.W2I_EXCHANGE, to_receive, data={'gc_exchanged': gc_to_exchange})
 
 
 def sell_coins_to_gc(user, coins):
@@ -111,13 +104,7 @@ def sell_coins_to_gc(user, coins):
     user.profile.balance_coins -= coins
     user.profile.save()
 
-    now = timezone.now()
-    CoinConversionHistory.objects.create(
-        user=user,
-        timestamp=now,
-        coins=coins,
-        game_currency=game_currency
-    )
+    UserLedger.objects.log(user, UserLedger.SELL_COINS, investment_gc, data={'coins': coins})
 
 
 def apply_payment(address, amount, transaction):
@@ -138,13 +125,15 @@ def apply_payment(address, amount, transaction):
             select_related('profile__referrer__profile').\
             get(profile__crypto_address=address)
 
-        user.credit(amount, UserLedger.PAYMENT, transaction)
+        user.credit(amount)
+        UserLedger.objects.log(user, UserLedger.PAYMENT, amount, transaction)
 
-        num_deposits = user.get_num_deposits()
-
-        if num_deposits < 1:
+        if user.get_num_deposits() < 1:
             bonus = amount * Decimal(game_config.first_deposit_bonus_percent) / 100
-            user.credit(bonus, UserLedger.BONUS_FIRST_PAYMENT, transaction)
+
+            user.credit(bonus)
+            UserLedger.objects.log(user, UserLedger.BONUS_FIRST_PAYMENT, bonus, transaction)
+
             print 'Added first deposit bonus of {:.2}'.format(bonus)
 
         user.profile.save()
@@ -155,9 +144,10 @@ def apply_payment(address, amount, transaction):
 
             referral_bonus = amount * Decimal(game_config.affiliate_deposit_percent) / 100
 
-            referrer.credit(referral_bonus, UserLedger.BONUS_REFERRAL_PAYMENT, transaction)
+            referrer.credit(referral_bonus)  #, UserLedger.BONUS_REFERRAL_PAYMENT, transaction)
+            UserLedger.objects.log(referrer, UserLedger.BONUS_REFERRAL_PAYMENT, referral_bonus, transaction)
 
-            ReferralStats.objects.create(
+            ReferralBonusPayment.objects.create(
                 user=referrer,
                 referred_user=user,
                 ref_source=user.profile.ref_source,
@@ -172,3 +162,16 @@ def apply_payment(address, amount, transaction):
 
     except User.DoesNotExist:
         print 'Owner of "{}" not found. Will credit to catchall address !'. format(address)  # TODO
+
+
+def get_game_stats():
+    now = timezone.now()
+    return (
+        # Total users
+        User.objects.count(),
+        # query_users_new_last_24h
+        User.objects.filter(date_joined__gt=(now - timedelta(hours=24))).count(),
+        # query_cash_reserve
+        User.objects.all().aggregate(Sum('profile__balance_i')).values()[0] + \
+        User.objects.all().aggregate(Sum('profile__balance_w')).values()[0]
+    )

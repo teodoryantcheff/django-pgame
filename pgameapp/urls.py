@@ -15,10 +15,10 @@ urlpatterns = patterns('',
         name='user-profile-edit'),
 
 
-    url(r'^collect/$', auth(CollectCoinsView.as_view(success_url = reverse_lazy('user-profile'))),
+    url(r'^collect/$', auth(CollectCoinsView.as_view(success_url = reverse_lazy('collect-coins'))),
         name='collect-coins'),
 
-    url(r'^sell/$', auth(SellCoinsView.as_view(success_url = reverse_lazy('user-profile'))),
+    url(r'^sell/$', auth(SellCoinsView.as_view(success_url = reverse_lazy('sell-coins'))),
         name='sell-coins'),
 
     url(r'^store/$', auth(StoreView.as_view(success_url = reverse_lazy('store'))),
@@ -30,7 +30,7 @@ urlpatterns = patterns('',
     # url(r'^store2/$', auth(StoreView2.as_view()), name='store2'),
     # url(r'^buy/$', auth(BuyFormView.as_view(success_url = reverse_lazy('store'))), name='buy'),
 
-    url(r'^exchange/$', auth(ExchangeView.as_view(success_url = reverse_lazy('user-profile'))),
+    url(r'^exchange/$', auth(ExchangeView.as_view(success_url = reverse_lazy('exchange'))),
         name='exchange'),
 
     url(r'^referrals/$', auth(ReferralsView.as_view()),

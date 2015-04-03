@@ -1,14 +1,10 @@
-from django.contrib.auth import get_user_model
-from django.db.models import Sum
-
 from django.utils import timezone
 from django.views.generic import DetailView, FormView, ListView, UpdateView
 
 from pgameapp.forms import SellCoinsForm, CollectCoinsForm, StoreForm, ExchangeForm
-
-from pgameapp.models import UserActorOwnership, Actor, ActorProcurementHistory, CoinConversionHistory, UserProfile, \
-    CryptoTransaction, User
+from pgameapp.models import Actor, UserProfile, CryptoTransaction
 from pgameapp.models.gameconfiguration import GameConfiguration
+
 
 # _TODO Profile, after login
 # _TODO Shop - buy actors
@@ -70,7 +66,7 @@ class SellCoinsView(FormView):
         context['coin_to_gc_rate'] = game_config.coin_to_gc_rate
         context['game_currency'] = game_config.game_currency
         context['coin_collect_time'] = game_config.coin_collect_time
-        context['coin_conversion_history'] = CoinConversionHistory.objects.filter(user=self.request.user)[:10]
+        context['coin_conversion_history'] = self.request.user.get_coin_conversion_history()
         return context
 
 
@@ -98,6 +94,7 @@ class StoreView(FormView):
         context['sellable_actors'] = Actor.sellable.all()
         context['owned_actors'] = user.get_owned_actors()
         context['actor_procurement_history'] = user.get_actor_procurement_history()
+
 
         return context
 
@@ -133,10 +130,12 @@ class ReferralsView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ReferralsView, self).get_context_data(**kwargs)
 
-        context['referral_payment_stats'] = self.request.user.get_referral_payment_stats()
-        context['referral_signup_stats'] = self.request.user.get_referral_signup_stats()
+        # context['referral_payment_stats'] = self.request.user.get_referral_payment_stats()
+        context['referral_stats'] = self.request.user.get_referral_stats()
+        # context['referral_signup_stats'] = self.request.user.get_referral_signup_stats()
 
         return context
+
 
 class RefillView(ListView):
     template_name = 'pgameapp/refill.html'
@@ -155,51 +154,3 @@ class ProfileEdit(UpdateView):
 
     def get_object(self, queryset=None):
         return UserProfile.objects.get(user=self.request.user)
-
-# def get_name(request):
-# # if this is a POST request we need to process the form data
-# if request.method == 'POST':
-# # create a form instance and populate it with data from the request:
-#         form = NameForm(request.POST)
-#         # check whether it's valid:
-#         if form.is_valid():
-#             # process the data in form.cleaned_data as required
-#             # ...
-#             # redirect to a new URL:
-#             return HttpResponseRedirect('/thanks/')
-#
-#     # if a GET (or any other method) we'll create a blank form
-#     else:
-#         form = NameForm()
-#
-#     return render(request, 'name.html', {'form': form})
-
-# class StoreView2(ListView):
-#     template_name = 'pgameapp/store2.html'
-#     context_object_name = 'sellable_actors'
-#
-#     def get_queryset(self):
-#         return Actor.objects.filter(is_active=True, users=self.request.user)\
-#             .annotate(sum_user_owned=Sum('useractorownership__num_actors'))
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(StoreView2, self).get_context_data(**kwargs)
-#
-#         context['actor_procurement_history'] = ActorProcurementHistory.objects\
-#             .filter(user=self.request.user) \
-#             .order_by('-timestamp') \
-#             .select_related('actor')[:10]
-#
-#         return context
-#
-#
-# class BuyFormView(FormView):
-#     form_class = BuyForm
-#
-#     def form_valid(self, form):
-#         print 'form_valid'
-#         return super(BuyFormView, self).form_valid(form)
-#
-#     def form_invalid(self, form):
-#         print 'form_invalid'
-#         return super(BuyFormView, self).form_invalid(form)

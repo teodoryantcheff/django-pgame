@@ -1,9 +1,9 @@
 from django.db import models
 from django.db.models import Count, Sum
-
 from custom_user.models import EmailUser
-from django.utils import timezone
-from pgameapp.models import ReferralStats, UserLedger, ActorProcurementHistory, Actor, UserActorOwnership
+
+from pgameapp.models import UserLedger
+
 
 __author__ = 'Jailbreaker'
 
@@ -23,7 +23,7 @@ class User(EmailUser):
     def test(self):
         print '{} test on TUser'.format(self)
 
-    def credit(self, amount, why, transaction):
+    def credit(self, amount):
         """
         Credits user's "investment" balance
 
@@ -33,13 +33,9 @@ class User(EmailUser):
         :return: nothing
         """
         self.profile.balance_i += amount
-        UserLedger.objects.create(
-            user=self,
-            type=why,
-            amount=amount,
-        )
 
-    def debit(self, amount, why, transaction):
+
+    def debit(self, amount):
         """
         Debits user's .... TODO
 
@@ -50,21 +46,30 @@ class User(EmailUser):
         """
         pass
 
-    def get_referral_payment_stats(self):
-        # result = ReferralStats.objects.\
-        #     values('referred_user__profile__ref_source', 'referred_user__profile__ref_campaign').\
-        #     distinct().\
-        #     annotate(count=Count('id'), sum=Sum('amount'), signups=Count('referred_user__profile'))
+    def get_referral_stats(self):
+        return self.referrals.values('ref_source', 'ref_campaign').\
+            distinct().\
+            annotate(
+                signups=Count('user'),
+                amount_paid=Sum('user__ref_payments__amount'),
+                count_payments=Count('user__ref_payments__user'),
+            ).order_by()
 
-        result = ReferralStats.objects.filter(user=self).\
-            values('ref_source', 'ref_campaign').distinct().\
-            annotate(count=Count('user'), sum=Sum('amount')).order_by('-sum')
-        return result
-
-    def get_referral_signup_stats(self):
-        return self.referrals.\
-            values('ref_source', 'ref_campaign').distinct().\
-            annotate(signups=Count('user')).order_by('-signups')
+    # def get_referral_payment_stats(self):
+    #     # result = ReferralBonusPayment.objects.\
+    #     #     values('referred_user__profile__ref_source', 'referred_user__profile__ref_campaign').\
+    #     #     distinct().\
+    #     #     annotate(count=Count('id'), sum=Sum('amount'), signups=Count('referred_user__profile'))
+    #
+    #     result = ReferralBonusPayment.objects.filter(user=self).\
+    #         values('ref_source', 'ref_campaign').distinct().\
+    #         annotate(count=Count('user'), sum=Sum('amount')).order_by('-sum')
+    #     return result
+    #
+    # def get_referral_signup_stats(self):
+    #     return self.referrals.\
+    #         values('ref_source', 'ref_campaign').distinct().\
+    #         annotate(signups=Count('user')).order_by('-signups')
 
     def get_referrals(self):
         return User.objects.filter(profile__referrer=self).order_by('-date_joined')
@@ -80,7 +85,11 @@ class User(EmailUser):
         return self.useractorownership_set.select_related('actor').all()  #.annotate(sum_user_owned=Sum('useractorownership__num_actors'))
 
     def get_actor_procurement_history(self):
-        return ActorProcurementHistory.objects.filter(user=self).select_related('actor')[:10]
+        # return ActorProcurementHistory.objects.filter(user=self).select_related('actor')[:10]
+        return UserLedger.objects.filter(user=self, type=UserLedger.BUY_ACTOR)
+
+    def get_coin_conversion_history(self):
+        return UserLedger.objects.filter(user=self, type=UserLedger.SELL_COINS)[:10]
 
     def get_coins_generated(self, until):
         uas = self.useractorownership_set.select_related('actor').all()

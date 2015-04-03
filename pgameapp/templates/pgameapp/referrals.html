@@ -5,23 +5,23 @@
 {% block content %}
   <h2>Referrals Stats</h2>
 
-  <h4>By income</h4>
-  {% if referral_payment_stats %}
+  <h4>Referral Stats</h4>
+  {% if referral_stats %}
     <table class="data-table">
       <thead>
         <td><b>source</b></td>
         <td><b>campaign</b></td>
-  {#      <td><b>singups</b></td>#}
+        <td><b>signups</b></td>
         <td><b>payments</b></td>
-        <td><b>sum</b></td>
+        <td><b>your bonus</b></td>
       </thead>
-      {% for rs in referral_payment_stats %}
+      {% for rs in referral_stats %}
         <tr>
-          <td>{{ rs.ref_source }}</td>
-          <td>{{ rs.ref_campaign }}</td>
-{#          <td>{{ rs.signups }}</td>#}
-          <td>{{ rs.count }}</td>
-          <td>{{ rs.sum|floatformat:"2" }}</td>
+          <td>{{ rs.ref_source|default:"<i>&lt;none&gt;</i>" }}</td>
+          <td>{{ rs.ref_campaign|default:"<i>&lt;none&gt;</i>" }}</td>
+          <td>{{ rs.signups }}</td>
+          <td>{{ rs.count_payments }}</td>
+          <td>{{ rs.amount_paid|default_if_none:"0"|floatformat:"2" }}</td>
         </tr>
       {% endfor %}
     </table>
@@ -29,26 +29,26 @@
     No stats yet
   {% endif %}
 
-  <br/>
-  <h4>By signups</h4>
-  {% if referral_signup_stats %}
-    <table class="data-table">
-      <thead>
-      <td><b>source</b></td>
-      <td><b>campaign</b></td>
-      <td><b>signups</b></td>
-      </thead>
-      {% for rs in referral_signup_stats %}
-        <tr>
-          <td>{{ rs.ref_source }}</td>
-          <td>{{ rs.ref_campaign }}</td>
-          <td>{{ rs.signups }}</td>
-        </tr>
-      {% endfor %}
-    </table>
-  {% else %}
-    No stats yet
-  {% endif %}
+{#  <br/>#}
+{#  <h4>By signups</h4>#}
+{#  {% if referral_signup_stats %}#}
+{#    <table class="data-table">#}
+{#      <thead>#}
+{#      <td><b>source</b></td>#}
+{#      <td><b>campaign</b></td>#}
+{#      <td><b>signups</b></td>#}
+{#      </thead>#}
+{#      {% for rs in referral_signup_stats %}#}
+{#        <tr>#}
+{#          <td>{{ rs.ref_source }}</td>#}
+{#          <td>{{ rs.ref_campaign }}</td>#}
+{#          <td>{{ rs.signups }}</td>#}
+{#        </tr>#}
+{#      {% endfor %}#}
+{#    </table>#}
+{#  {% else %}#}
+{#    No stats yet#}
+{#  {% endif %}#}
 
   <br/>
 
@@ -61,7 +61,7 @@
       {% for referred in user_referred_accounts|slice:":10" %}
         <tr>
           <td>{{ referred.date_joined|date:"Y-m-d H:i" }}</td>
-          <td>{{ referred.email|truncatechars:"10" }}</td>
+          <td>{% if referred.profile.nickname %}{{ referred.profile.nickname}}{% else %}{{ referred.email|truncatechars:"10" }}{% endif %}</td>
         </tr>
       {% endfor %}
     </table>

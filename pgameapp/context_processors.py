@@ -1,5 +1,6 @@
 from pgameapp import queries
 from pgameapp.models import UserProfile, ManualGameStats, GameConfiguration
+from pgameapp.services import get_game_stats
 
 __author__ = 'Jailbreaker'
 
@@ -22,9 +23,10 @@ def game_currency(request):
 
 def game_statistics(request):
     manual = ManualGameStats.objects.get(pk=1)
+    gs = get_game_stats()
     gamestats = {
-        'users_total': manual.users_total if manual.users_total > 0 else queries.query_users_total,
-        'users_new_last_24h': manual.users_new_last_24 if manual.users_new_last_24 > 0 else queries.query_users_new_last_24h,
-        'cash_reserve': manual.cash_reserve if manual.cash_reserve > 0 else queries.query_cash_reserve
+        'users_total': manual.users_total if manual.users_total > 0 else gs[0],
+        'users_new_last_24h': manual.users_new_last_24 if manual.users_new_last_24 > 0 else gs[1],
+        'cash_reserve': manual.cash_reserve if manual.cash_reserve > 0 else gs[2]
     }
     return {'gamestats': gamestats}

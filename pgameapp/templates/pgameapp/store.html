@@ -21,10 +21,10 @@
     <br/>
     <div style="border: 1px solid black; width: 100%">
       {% for owned in owned_actors %}
-        <div style="display: inline-block; padding: 5px 15px; margin: 5px 5px ; border: 1px dashed green; border-radius: 5px; background-color: #c0e8c7 ">
+        <div style="display: inline-block; padding: 5px 7px; margin: 5px 5px ; border: 1px dashed green; border-radius: 5px; background-color: #c0e8c7 ">
           {# TODO styles to style.css #}
           <img src="{% static owned.actor.image_path %}" alt="" style="vertical-align: middle"/>
-          <span><b style="font-size: xx-large;vertical-align: middle">{{ owned.num_actors }}</b></span>
+          <span><b style="font-size: xx-large;vertical-align: middle">{{ owned.num_actors|stringformat:"02d" }}</b></span>
         </div>
       {% endfor %}
       
@@ -34,18 +34,20 @@
       Last 10
       <table class="data-table">
         <thead>
-            <td><b>timestamp</b></td><td><b>actor</b></td><td><b>price ({{ game_currency }})</b></td>
+            <td><b>timestamp</b></td>
+            <td><b>name</b></td>
+            <td><b>price ({{ game_currency }})</b></td>
         </thead>
         {% for bought in actor_procurement_history %}
             <tr>
-                <td>{{ bought.timestamp|date:"Y-m-d H:i" }}</td>
-                <td>{{ bought.actor.name }}</td>
-                <td>{{ bought.price }}</td>
+                <td>{{ bought.timestamp|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ bought.data.name|default:"<i>deleted</i>" }}</td>
+                <td>{{ bought.amount }}</td>
             </tr>
         {% endfor %}
       </table>
     {% else %}
-      <p>haven't bought any yet</p>
+      <p>You haven't bought any yet</p>
     {% endif %}
 
 {% endblock %}

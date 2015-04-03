@@ -11,7 +11,7 @@ from pgameapp.services import collect_coins, sell_coins_to_gc, buy_actor, exchan
 
 class ContextForm(forms.Form):
     """
-    Generic form that has Context on it. Passed in kwars['request'].
+    Generic form that has Context on it -- passed in kwargs['request'].
     """
 
     def __init__(self, *args, **kwargs):
