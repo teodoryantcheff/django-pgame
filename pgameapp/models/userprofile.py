@@ -123,7 +123,6 @@ class UserProfile(models.Model):
 
     def __unicode__(self):  # __str__ on python 3
         return self.user.get_username()
-        # return 'UserProfile'
 
 
 def create_userprofile(sender, instance, created, **kwargs):

@@ -113,8 +113,8 @@ class GameConfiguration(solo.models.SingletonModel):
         auto_now_add=True,
     )
 
-    def __unicode__(self):  # __str__ on python 3
-        return 'Game Configuration'
-
     class Meta:
         verbose_name = 'game configuration'
+
+    def __unicode__(self):  # __str__ on python 3
+        return 'Game Configuration'

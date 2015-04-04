@@ -35,7 +35,8 @@ class UserActorOwnership(models.Model):
         ordering = ('actor__price',)
 
     def __unicode__(self):  # __str__ on python 3
-        return u'<{}> has {} of "{}"'.format(self.user, self.num_actors, self.actor)
+        return u'<{user}> has {numberof} of "{actor}"'.format(
+            user=self.user, numberof=self.num_actors, actor=self.actor)
 
 
 class SellableActorManager(models.Manager):

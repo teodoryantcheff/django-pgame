@@ -96,7 +96,8 @@ class CryptoTransaction(AbstractBaseHistory):
     received = TransactionsReceivedManager()
 
     def __unicode__(self):  # __str__ on python 3
-        return u'TX {type} {amount:.2}'.format(
+        return u'{timestamp} {type} {amount:.2}'.format(
+            timestamp=self.timestamp,
             type=self.tx_type,
             amount=self.amount,
         )

@@ -31,7 +31,6 @@ class User(EmailUser):
         """
         self.profile.balance_i += amount
 
-
     def debit(self, amount):
         """
         Debits user's .... TODO
