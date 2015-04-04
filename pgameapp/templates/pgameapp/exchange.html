@@ -17,4 +17,26 @@
     <input type="submit" value="Convert" />
   </form>
 
+  <br/><br/>
+  {% if w2i_exchange_history %}
+    Last 10
+    <table class="data-table">
+      <thead>
+      <td><b>timestamp</b></td>
+      <td><b>ex W</b></td>
+      <td><b>got I ({{ game_currency }})</b></td>
+      </thead>
+      {% for ex in w2i_exchange_history %}
+        <tr>
+          <td>{{ ex.timestamp|date:"Y-m-d H:i:s" }}</td>
+          <td>{{ ex.data.gc_exchanged }}</td>
+          <td>{{ ex.amount }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>You haven't bought any yet</p>
+  {% endif %}
+
+
 {% endblock %}

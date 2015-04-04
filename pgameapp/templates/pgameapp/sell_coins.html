@@ -20,12 +20,14 @@
         <td><b>timestamp</b></td>
         <td><b>coins</b></td>
         <td><b>Inv {{ game_currency }}</b></td>
+        <td><b>Wth {{ game_currency }}</b></td>
       </thead>
       {% for conversion in coin_conversion_history %}
         <tr>
           <td>{{ conversion.timestamp|date:"Y-m-d H:i" }}</td>
           <td>{{ conversion.data.coins }}</td>
-          <td>{{ conversion.amount }}</td>
+          <td>{{ conversion.amount|floatformat:"3" }}</td>
+          <td>{{ conversion.data.withdrawal_gc|floatformat:"3"|default:"<i>missing</i>" }}</td>
         </tr>
       {% endfor %}
     </table>

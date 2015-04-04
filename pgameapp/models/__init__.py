@@ -15,6 +15,7 @@ from manualgamestats import ManualGameStats
 
 from history import *
 from user import User
+from ledger import UserLedger
 from models import *
 
 from wallet import BlockProcessingHistory, CryptoTransaction

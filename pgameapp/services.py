@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 
 from pgameapp.models import GameConfiguration, ReferralBonusPayment, User
 from pgameapp.models import UserActorOwnership
-from pgameapp.models.history import UserLedger
+from pgameapp.models import UserLedger
 
 __author__ = 'Jailbreaker'
 
@@ -67,7 +67,7 @@ def collect_coins(user):
     user.profile.save()
 
 
-def exchange__gc_w_to_i(user, gc_to_exchange):
+def exchange__w2i(user, gc_to_exchange):
     game_config = GameConfiguration.objects.get(pk=1)
 
     if gc_to_exchange > user.profile.balance_w:
@@ -104,7 +104,8 @@ def sell_coins_to_gc(user, coins):
     user.profile.balance_coins -= coins
     user.profile.save()
 
-    UserLedger.objects.log(user, UserLedger.SELL_COINS, investment_gc, data={'coins': coins})
+    UserLedger.objects.log(user, UserLedger.SELL_COINS, investment_gc,
+                           data={'coins': coins, 'withdrawal_gc': withdrawal_gc})
 
 
 def apply_payment(address, amount, transaction):

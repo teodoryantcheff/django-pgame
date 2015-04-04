@@ -104,6 +104,8 @@ class ExchangeView(FormView):
         context['game_currency'] = game_config.game_currency
         context['w_to_i_conversion_bonus_percent'] = game_config.w_to_i_conversion_bonus_percent
 
+        context['w2i_exchange_history'] = self.request.user.get_w2i_exchange_history()
+
         return context
 
 

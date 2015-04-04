@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import Count, Sum
 from custom_user.models import EmailUser
 
-from pgameapp.models import UserLedger
+from pgameapp.models.ledger import UserLedger
 
 
 __author__ = 'Jailbreaker'
@@ -19,9 +19,6 @@ class User(EmailUser):
 
     objects = models.Manager()
     admins = AdminsManager()
-
-    def test(self):
-        print '{} test on TUser'.format(self)
 
     def credit(self, amount):
         """
@@ -47,8 +44,7 @@ class User(EmailUser):
         pass
 
     def get_referral_stats(self):
-        return self.referrals.values('ref_source', 'ref_campaign').\
-            distinct().\
+        return self.referrals.values('ref_source', 'ref_campaign').distinct().\
             annotate(
                 signups=Count('user'),
                 amount_paid=Sum('user__ref_payments__amount'),
@@ -89,7 +85,11 @@ class User(EmailUser):
         return UserLedger.objects.filter(user=self, type=UserLedger.BUY_ACTOR)
 
     def get_coin_conversion_history(self):
-        return UserLedger.objects.filter(user=self, type=UserLedger.SELL_COINS)[:10]
+        return UserLedger.objects.filter(user=self, type=UserLedger.SELL_COINS)
+
+    def get_w2i_exchange_history(self):
+        return UserLedger.objects.filter(user=self, type=UserLedger.W2I_EXCHANGE)
+
 
     def get_coins_generated(self, until):
         uas = self.useractorownership_set.select_related('actor').all()

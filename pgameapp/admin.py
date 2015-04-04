@@ -121,6 +121,17 @@ class BlockProcessingHistoryAdmin(admin.ModelAdmin):
     readonly_fields = ('timestamp', 'blockhash', 'blockheight')
     ordering = ('-timestamp', )
 
+    def get_actions(self, request):
+        #Disable delete
+        actions = super(BlockProcessingHistoryAdmin, self).get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
+    def has_delete_permission(self, request, obj=None):
+        #Disable delete
+        return False
+
 
 class ReferralBonusPaymentAdmin(admin.ModelAdmin):
     list_display = ('timestamp', 'user', 'referred_user', 'amount', 'ref_source', 'ref_campaign')

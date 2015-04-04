@@ -6,7 +6,7 @@ from django import forms
 from django.conf import settings
 
 from pgameapp.models import Actor, UserActorOwnership
-from pgameapp.services import collect_coins, sell_coins_to_gc, buy_actor, exchange__gc_w_to_i
+from pgameapp.services import collect_coins, sell_coins_to_gc, buy_actor, exchange__w2i
 
 
 class ContextForm(forms.Form):
@@ -54,7 +54,7 @@ class ExchangeForm(ContextForm):
         cleaned_data = super(ExchangeForm, self).clean()
 
         gc_to_exchange = cleaned_data.get('gc_to_exchange')
-        exchange__gc_w_to_i(self.request.user, gc_to_exchange)
+        exchange__w2i(self.request.user, gc_to_exchange)
 
 
 class SignupForm(forms.Form):
