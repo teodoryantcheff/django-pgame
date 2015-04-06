@@ -6,11 +6,24 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-from pgameapp.models import GameConfiguration, ReferralBonusPayment, User
+from pgameapp.models import GameConfiguration, ReferralBonusPayment, User, WithdrawalRequest
 from pgameapp.models import UserActorOwnership
 from pgameapp.models import UserLedger
 
 __author__ = 'Jailbreaker'
+
+
+def request_withdrawal(user, amount, to_address):
+    print user, amount, to_address
+
+    WithdrawalRequest.objects.create(
+        user=user,
+        amount=amount,
+        to_address=to_address
+    )
+
+    user.profile.balance_w -= amount
+    user.profile.save()
 
 
 def buy_actor(user, actor):

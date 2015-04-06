@@ -1,10 +1,11 @@
 from decimal import Decimal
 from django.utils import timezone
 from django.views.generic import DetailView, FormView, ListView, UpdateView
-from pgameapp.forms import WithdrawForm, CollectCoinsForm, SellCoinsForm, StoreForm, ExchangeForm
+from pgameapp.forms import WithdrawalForm, CollectCoinsForm, SellCoinsForm, StoreForm, ExchangeForm
 
 from pgameapp.models import Actor, UserProfile, CryptoTransaction, UserLedger, WithdrawalRequest
 from pgameapp.models.gameconfiguration import GameConfiguration
+from pgameapp import  services
 
 
 class CollectCoinsView(FormView):
@@ -150,7 +151,7 @@ class RefillView(ListView):
 
 class WithdrawView(FormView):
     template_name = 'pgameapp/withdraw_request.html'
-    form_class = WithdrawForm
+    form_class = WithdrawalForm
     # success_url = reverse_lazy('user-profile')
 
     def get_form_kwargs(self):
@@ -178,14 +179,10 @@ class WithdrawView(FormView):
 
     def form_valid(self, form):
         user = self.request.user
-        WithdrawalRequest.objects.create(
-            user=user,
-            amount=form.cleaned_data['gc_to_withdraw'],
-            to_address=form.cleaned_data['to_address']
-        )
+        to_address = form.cleaned_data.get('to_address')
+        gc_to_withdraw = form.cleaned_data.get('gc_to_withdraw')
 
-        user.profile.balance_w -= form.cleaned_data['gc_to_withdraw']
-        user.profile.save()
+        services.request_withdrawal(user, gc_to_withdraw, to_address)
 
         return super(WithdrawView, self).form_valid(form)
 
