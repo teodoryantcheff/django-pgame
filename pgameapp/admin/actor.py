@@ -12,8 +12,6 @@ class ActorAdmin(admin.ModelAdmin):
     readonly_fields = ('image_tag',)
     # filter_horizontal = ('is_active', )
 
-    # TODO list_select_related = ('useractorpwnership_set__num_actors', )
-
     # noinspection PyMethodMayBeStatic
     def num_owned(self, a):
         return a.useractorownership_set.aggregate(Sum('num_actors')).values()[0]
