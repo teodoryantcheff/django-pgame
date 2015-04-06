@@ -92,10 +92,8 @@ class User(EmailUser):
     def get_w2i_exchange_history(self):
         return UserLedger.objects.filter(user=self, type=UserLedger.W2I_EXCHANGE)
 
-
     def get_withdrawal_request_history(self):
         return WithdrawalRequest.objects.filter(user=self)  #.order_by('status')
-
 
     def get_coins_generated(self, until):
         uas = self.useractorownership_set.select_related('actor').all()

@@ -90,7 +90,7 @@ class UserWithProfileAdmin(EmailUserAdmin):
     list_display = ('email', 'roles', 'is_active', 'balance_i', 'balance_w', 'balance_coins',
                     'date_joined', 'last_login')
     list_filter = ('is_active', 'date_joined', GroupListFilter, 'is_staff')
-    search_fields = ('email', 'date_joined', 'singup_ip')
+    search_fields = ('email', 'date_joined')  #, 'profile__singup_ip')
 
     ordering = ('-date_joined',)
 

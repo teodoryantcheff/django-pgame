@@ -89,7 +89,7 @@ class ReferralBonusPayment(AbstractBaseUserHistory):
         blank=True
     )
 
-    class Meta:
+    class Meta(AbstractBaseUserHistory.Meta):
         pass
         # verbose_name_plural = 'ReferralBonusPayment'
 

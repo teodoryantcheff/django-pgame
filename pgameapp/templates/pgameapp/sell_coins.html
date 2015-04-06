@@ -10,6 +10,7 @@
 
   <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
+    <b style="color: red">{{ form.non_field_errors }}</b>
     <input type="submit" value="Sell for {{ game_currency }}" />
   </form>
   <br/><br/>

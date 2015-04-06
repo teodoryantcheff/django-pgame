@@ -6,18 +6,18 @@ from django.core.exceptions import ValidationError
 from bitcoinrpc.authproxy import AuthServiceProxy
 
 from pgameapp import wallet
-from . import ContextForm
+from . import RequestContextForm
 from pgameapp.models import GameConfiguration, WithdrawalRequest
 
 __author__ = 'Jailbreaker'
 
 
-class WithdrawalForm(ContextForm):
+class WithdrawalForm(RequestContextForm):
     gc_to_withdraw = forms.DecimalField(
         min_value=1,
         required=True,
         label=u'Моля ви са недейте, ама все пак колко :',
-        widget=forms.TextInput(attrs={'size': 5})
+        # widget=forms.TextInput(attrs={'size': 5})
     )
 
     to_address = forms.CharField(

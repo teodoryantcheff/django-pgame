@@ -70,6 +70,7 @@ class WithdrawalRequest(AbstractBaseUserHistory):
 
     class Meta:
         ordering = ('-timestamp',)
+        get_latest_by = 'timestamp'
 
     objects = models.Manager()
     approved = ApprovedWithdrawalRequestManager()

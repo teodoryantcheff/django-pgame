@@ -6,14 +6,14 @@ from django.conf import settings
 from account.models import EmailAddress
 
 
-class ContextForm(forms.Form):
+class RequestContextForm(forms.Form):
     """
     Generic form that has Context on it -- passed in kwargs['request'].
     """
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
-        super(ContextForm, self).__init__(*args, **kwargs)
+        super(RequestContextForm, self).__init__(*args, **kwargs)
 
 
 from collectcoins_form import CollectCoinsForm

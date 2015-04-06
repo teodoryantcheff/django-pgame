@@ -1,17 +1,31 @@
 from decimal import Decimal
+
 from django.utils import timezone
 from django.views.generic import DetailView, FormView, ListView, UpdateView
-from pgameapp.forms import WithdrawalForm, CollectCoinsForm, SellCoinsForm, StoreForm, ExchangeForm
 
-from pgameapp.models import Actor, UserProfile, CryptoTransaction, UserLedger, WithdrawalRequest
+from pgameapp.forms import WithdrawalForm, CollectCoinsForm, SellCoinsForm, StoreForm, ExchangeForm
+from pgameapp.models import Actor, UserProfile, CryptoTransaction, WithdrawalRequest
 from pgameapp.models.gameconfiguration import GameConfiguration
-from pgameapp import  services
+from pgameapp import services
 
 
 class CollectCoinsView(FormView):
     template_name = 'pgameapp/collectcoins.html'
     form_class = CollectCoinsForm
     # success_url = reverse_lazy('user-profile')
+
+    def get_form_kwargs(self):
+        kwargs = super(CollectCoinsView, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['until'] = timezone.now()
+        return kwargs
+
+    def form_valid(self, form):
+        user = self.request.user
+
+        services.collect_coins(user, until=form.until)
+
+        return super(CollectCoinsView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(CollectCoinsView, self).get_context_data(**kwargs)
@@ -31,11 +45,6 @@ class CollectCoinsView(FormView):
 
         return context
 
-    def get_form_kwargs(self):
-        kwargs = super(CollectCoinsView, self).get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
 
 class SellCoinsView(FormView):
     template_name = 'pgameapp/sell_coins.html'
@@ -51,6 +60,14 @@ class SellCoinsView(FormView):
         return {
             'coins_to_sell': self.request.user.profile.balance_coins,
         }
+
+    def form_valid(self, form):
+        coins_to_sell = form.cleaned_data.get('coins_to_sell')
+        user = self.request.user
+
+        services.sell_coins_to_gc(user, coins_to_sell)
+
+        return super(SellCoinsView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(SellCoinsView, self).get_context_data(**kwargs)
@@ -71,6 +88,31 @@ class UserProfileView(DetailView):
         return self.request.user.profile
 
 
+# class StoreView(FormView):
+#     template_name = 'pgameapp/store.html'
+#     form_class = StoreForm
+#     # success_url = reverse_lazy('store')
+#
+#     def get_form_kwargs(self):
+#         kwargs = super(StoreView, self).get_form_kwargs()
+#         kwargs['request'] = self.request
+#         return kwargs
+#
+#     def form_valid(self, form):
+#         # TODO
+#         return super(StoreView, self).form_valid(form)
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(StoreView, self).get_context_data(**kwargs)
+#
+#         user = self.request.user
+#         context['sellable_actors'] = Actor.sellable.all()
+#         context['owned_actors'] = user.get_owned_actors()
+#         context['actor_procurement_history'] = user.get_actor_procurement_history()
+#
+#         return context
+
+
 class StoreView(FormView):
     template_name = 'pgameapp/store.html'
     form_class = StoreForm
@@ -80,6 +122,14 @@ class StoreView(FormView):
         kwargs = super(StoreView, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+    def form_valid(self, form):
+        user = self.request.user
+        actor = form.cleaned_data.get('actor')
+
+        services.buy_actor(user, actor)
+
+        return super(StoreView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(StoreView, self).get_context_data(**kwargs)
@@ -106,6 +156,14 @@ class ExchangeView(FormView):
         return {
             'gc_to_exchange': self.request.user.profile.balance_w,
         }
+
+    def form_valid(self, form):
+        user = self.request.user
+        gc_to_exchange = form.cleaned_data.get('gc_to_exchange')
+
+        services.exchange__w2i(user, gc_to_exchange)
+
+        return super(ExchangeView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(ExchangeView, self).get_context_data(**kwargs)
@@ -145,12 +203,12 @@ class RefillView(ListView):
     context_object_name = 'transactions'
 
     def get_queryset(self):
-        return CryptoTransaction.objects.all()  #filter(user=self.request.user)
+        return CryptoTransaction.objects.all()  # filter(user=self.request.user)
         # return self.request.user.select_related('referrals').order_by('-user__date_joined')
 
 
 class WithdrawView(FormView):
-    template_name = 'pgameapp/withdraw_request.html'
+    template_name = 'pgameapp/withdrawal_request.html'
     form_class = WithdrawalForm
     # success_url = reverse_lazy('user-profile')
 
@@ -167,13 +225,14 @@ class WithdrawView(FormView):
         try:
             last_withdrawal = WithdrawalRequest.objects.\
                 filter(user=user, status=WithdrawalRequest.PAID).\
-                order_by('-timestamp')[0]
+                latest()
+
             to_address = last_withdrawal.to_address
-        except IndexError:
+        except WithdrawalRequest.DoesNotExist:
             to_address = 'enter a new address'
 
         return {
-            'gc_to_withdraw': self.request.user.profile.balance_w,
+            'gc_to_withdraw': 0,  # self.request.user.profile.balance_w,
             'to_address': to_address
         }
 

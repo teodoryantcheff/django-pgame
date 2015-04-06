@@ -13,25 +13,9 @@ from pgameapp.models import UserLedger
 __author__ = 'Jailbreaker'
 
 
-def request_withdrawal(user, amount, to_address):
-    print user, amount, to_address
-
-    WithdrawalRequest.objects.create(
-        user=user,
-        amount=amount,
-        to_address=to_address
-    )
-
-    user.profile.balance_w -= amount
-    user.profile.save()
-
-
 def buy_actor(user, actor):
     if not actor:
         raise ValidationError('Invalid Actor')
-
-    if actor.price > user.profile.balance_i:
-        raise ValidationError('Insufficient funds')
 
     game_config = GameConfiguration.objects.get(pk=1)
 
@@ -60,33 +44,23 @@ def buy_actor(user, actor):
     UserLedger.objects.log(user, UserLedger.BUY_ACTOR, -actor.price, data={'name': actor.name})
 
 
-def collect_coins(user):
-    game_config = GameConfiguration.objects.get(pk=1)
+def collect_coins(user, until):
 
-    last_coll = user.profile.last_coin_collection_time
-    now = timezone.now()
+    uacg, total = user.get_coins_generated(until=until)
 
-    seconds = int((now - last_coll).total_seconds())
-
-    if seconds < game_config.coin_collect_time*60:
-        raise ValidationError('Too soon')
-
-    uas, total = user.get_coins_generated(until=now)
-
-    print('total collected {}'.format(total))
+    print('total harvest {}'.format(total))
+    for ua, output in uacg:
+        print '{}: output {}'.format(ua, output)
 
     user.profile.balance_coins += total
-    user.profile.last_coin_collection_time = now
+    user.profile.last_coin_collection_time = until
     user.profile.save()
 
 
 def exchange__w2i(user, gc_to_exchange):
     game_config = GameConfiguration.objects.get(pk=1)
 
-    if gc_to_exchange > user.profile.balance_w:
-        raise ValidationError('Not enough withdrdawal balance')
-
-    gc_to_exchange = Decimal(gc_to_exchange)
+    # gc_to_exchange = Decimal(gc_to_exchange)
     bonus_percent = Decimal(100 + game_config.w_to_i_conversion_bonus_percent) / Decimal(100.0)
     to_receive = gc_to_exchange * bonus_percent
 
@@ -99,12 +73,6 @@ def exchange__w2i(user, gc_to_exchange):
 
 def sell_coins_to_gc(user, coins):
     game_config = GameConfiguration.objects.get(pk=1)
-
-    if coins < game_config.min_coins_to_sell:
-        raise ValidationError('Need to sell at least {}'.format(game_config.min_coins_to_sell))
-
-    if coins > user.profile.balance_coins:
-        raise ValidationError('Not enough coins in balance')
 
     game_currency = coins / game_config.coin_to_gc_rate
 
@@ -119,6 +87,19 @@ def sell_coins_to_gc(user, coins):
 
     UserLedger.objects.log(user, UserLedger.SELL_COINS, investment_gc,
                            data={'coins': coins, 'withdrawal_gc': withdrawal_gc})
+
+
+def request_withdrawal(user, amount, to_address):
+    print user, amount, to_address
+
+    WithdrawalRequest.objects.create(
+        user=user,
+        amount=amount,
+        to_address=to_address
+    )
+
+    user.profile.balance_w -= amount
+    user.profile.save()
 
 
 def apply_payment(address, amount, transaction):
