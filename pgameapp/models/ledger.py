@@ -78,18 +78,20 @@ class UserLedger(AbstractBaseUserHistory):
     type = models.CharField(
         max_length=10,
         choices=_TYPE_CHOICES,
+        null=False,
+        blank=False
     )
 
-    object_type1 = models.ForeignKey(ContentType,  related_name='log_items1', null=True)
-    object_id1 = models.PositiveIntegerField(null=True)
+    object_type1 = models.ForeignKey(ContentType,  related_name='log_items1', null=True, blank=True)
+    object_id1 = models.PositiveIntegerField(null=True, blank=True)
     object1 = GenericForeignKey("object_type1", "object_id1")
 
-    object_type2 = models.ForeignKey(ContentType,  related_name='log_items2', null=True)
-    object_id2 = models.PositiveIntegerField(null=True)
+    object_type2 = models.ForeignKey(ContentType,  related_name='log_items2', null=True, blank=True)
+    object_id2 = models.PositiveIntegerField(null=True, blank=True)
     object2 = GenericForeignKey("object_type2", "object_id2")
 
-    object_type3 = models.ForeignKey(ContentType,  related_name='log_items3', null=True)
-    object_id3 = models.PositiveIntegerField(null=True)
+    object_type3 = models.ForeignKey(ContentType,  related_name='log_items3', null=True, blank=True)
+    object_id3 = models.PositiveIntegerField(null=True, blank=True)
     object3 = GenericForeignKey("object_type3", "object_id3")
 
     serialized_data = models.TextField(null=True)
@@ -99,8 +101,11 @@ class UserLedger(AbstractBaseUserHistory):
 
     @property
     def data(self):
-        if self._data is None and self.serialized_data is not None:
-            self._data = json.loads(self.serialized_data)
+        try:  # TODO See if this is the best that can be done here
+            if self._data is None and self.serialized_data is not None:
+                self._data = json.loads(self.serialized_data)
+        except ValueError:
+            self._data = None
         return self._data
 
     @data.setter
@@ -113,8 +118,8 @@ class UserLedger(AbstractBaseUserHistory):
             self.serialized_data = json.dumps(self._data)
         super(UserLedger, self).save(*args, **kwargs)
 
-    class Meta:
-        ordering = ("-timestamp", )
+    class Meta(AbstractBaseUserHistory.Meta):
+        pass
 
     def __unicode__(self):
         return u'{} <{}> {} $:{}'.format(self.timestamp, self.user, self.type, self.amount)
