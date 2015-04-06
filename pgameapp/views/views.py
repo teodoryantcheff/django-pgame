@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.core.urlresolvers import reverse
 
 from django.utils import timezone
 from django.views.generic import DetailView, FormView, ListView, UpdateView
@@ -191,10 +192,10 @@ class ReferralsView(ListView):
     def get_context_data(self, **kwargs):
         context = super(ReferralsView, self).get_context_data(**kwargs)
 
+        user = self.request.user
         # context['referral_payment_stats'] = self.request.user.get_referral_payment_stats()
-        context['referral_stats'] = self.request.user.get_referral_stats()
-        # context['referral_signup_stats'] = self.request.user.get_referral_signup_stats()
-
+        context['referral_stats'] = user.get_referral_stats()
+        context['referral_signup_abs_uri'] = self.request.build_absolute_uri(reverse('account_signup'))
         return context
 
 

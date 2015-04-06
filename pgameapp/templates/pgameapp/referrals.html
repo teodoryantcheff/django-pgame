@@ -5,6 +5,19 @@
 {% block content %}
   <h2>Referrals Stats</h2>
 
+  <h4>Referral links</h4>
+
+    <div style="font-size: small">
+      <div class="ref_link">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b></div>
+      <div class="ref_link">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;</div>
+      <div class="ref_link">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;&<b>ref_cmp</b>=&lt;<i>choose</i>&gt;</div>
+    </div>
+
+  <p>How to use the shit above :
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A asperiores at corporis deserunt dignissimos dolorum eos,
+    et fugiat in ipsa laudantium nesciunt omnis praesentium quisquam quos sed sunt unde voluptas!
+  </p>
+
   <h4>Referral Stats</h4>
   {% if referral_stats %}
     <table class="data-table">

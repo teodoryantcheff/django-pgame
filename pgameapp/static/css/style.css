@@ -120,3 +120,12 @@ table, th, td {
     padding-right: 1.3em;
     text-align: right;
 }
+
+.ref_link {
+    border: 1px dotted #222222;
+    border-radius: 5px;
+    padding: 5px 5px;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    background-color: #f8f8f8
+}
