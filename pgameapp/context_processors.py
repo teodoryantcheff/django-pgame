@@ -1,5 +1,4 @@
-from pgameapp import queries
-from pgameapp.models import UserProfile, ManualGameStats, GameConfiguration
+from pgameapp.models import ManualGameStats, GameConfiguration
 from pgameapp.services import get_game_stats
 
 __author__ = 'Jailbreaker'
@@ -17,10 +16,12 @@ def user_profile(request):
     return {'userprofile_tp': profile}
 
 
+# noinspection PyUnusedLocal
 def game_currency(request):
     return {'game_currency': GameConfiguration.objects.get(pk=1).game_currency}
 
 
+# noinspection PyUnusedLocal
 def game_statistics(request):
     manual = ManualGameStats.objects.get(pk=1)
     gs = get_game_stats()
