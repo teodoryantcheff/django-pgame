@@ -3,7 +3,7 @@
 # _TODO signups
 # _TODO login ip
 # _TODO select_related vs prefetch_related
-# TODO Referrals management and reports
+# _TODO Referrals management and reports
 # _TODO dogecoin interfaces
 # TODO test transactions management
 # _TODO bonuses
@@ -19,7 +19,7 @@
 # _TODO Exchange - withdrawal GC to investment GC
 # _TODO referrer stats
 # _TODO Top up balance (doge transfer confirmation)
-# TODO Request payout / withdrawal
+# _TODO Request payout / withdrawal
 # TODO Profile settings
 # _TODO game stats box
 
