@@ -25,9 +25,9 @@
       {% for conversion in coin_conversion_history %}
         <tr>
           <td>{{ conversion.timestamp|date:"Y-m-d H:i" }}</td>
-          <td>{{ conversion.data.coins }}</td>
-          <td>{{ conversion.amount|floatformat:"3" }}</td>
-          <td>{{ conversion.data.withdrawal_gc|floatformat:"3"|default:"<i>missing</i>" }}</td>
+          <td class="numeric">{{ conversion.data.coins }}</td>
+          <td class="numeric">{{ conversion.amount|floatformat:"3" }}</td>
+          <td class="numeric">{{ conversion.data.withdrawal_gc|floatformat:"3"|default:"<i>missing</i>" }}</td>
         </tr>
       {% endfor %}
     </table>

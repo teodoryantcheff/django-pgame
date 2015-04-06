@@ -14,7 +14,7 @@
                border: 5px double #2a6524;
                border-radius: 10px; ">
 
-  Send your Ð to <b>{{ user.profile.crypto_address }}</b>
+  Send your Ð to <b style="font-family: monospace, monospace; font-size: xx-large">{{ user.profile.crypto_address }}</b>
   </div>
 
   <br/><br/><br/>
@@ -26,18 +26,18 @@
         <td><b>timestamp</b></td>
         <td><b>type</b></td>
         <td><b>crypto</b></td>
-{#        <td><b>game</b></td>#}
         <td><b>address</b></td>
         <td><b>tx info</b></td>
       </thead>
       {% for tx in transactions %}
         <tr>
-          <td>{{ tx.timestamp|date:"Y-m-d H:i:s" }}</td>
+          <td>{{ tx.timestamp|date:"y-m-d H:i" }}</td>
           <td>{{ tx.tx_type }}</td>
-          <td>Ð {{ tx.amount }}</td>
-{#          <td>{{ tx.game_currency }}</td>#}
-          <td>{{ tx.address }}</td>
-          <td><a href="https://chain.so/tx/DOGE/{{ tx.txid }}" target="_blank">{{ tx.txid|truncatechars:"10" }}</a></td>
+          <td class="numeric">Ð {{ tx.amount }}</td>
+          <td class="crypto_address">{{ tx.address }}</td>
+          <td><a class="crypto_address" href="https://chain.so/tx/DOGE/{{ tx.txid }}" target="_blank">
+            {{ tx.txid|truncatechars:"15" }}
+          </a></td>
         </tr>
       {% endfor %}
     </table>

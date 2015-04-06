@@ -1,8 +1,9 @@
+from decimal import Decimal
 from django.utils import timezone
 from django.views.generic import DetailView, FormView, ListView, UpdateView
+from pgameapp.forms import WithdrawForm, CollectCoinsForm, SellCoinsForm, StoreForm, ExchangeForm
 
-from pgameapp.forms import SellCoinsForm, CollectCoinsForm, StoreForm, ExchangeForm
-from pgameapp.models import Actor, UserProfile, CryptoTransaction
+from pgameapp.models import Actor, UserProfile, CryptoTransaction, UserLedger, WithdrawalRequest
 from pgameapp.models.gameconfiguration import GameConfiguration
 
 
@@ -45,6 +46,11 @@ class SellCoinsView(FormView):
         kwargs['request'] = self.request
         return kwargs
 
+    def get_initial(self):
+        return {
+            'coins_to_sell': self.request.user.profile.balance_coins,
+        }
+
     def get_context_data(self, **kwargs):
         context = super(SellCoinsView, self).get_context_data(**kwargs)
 
@@ -82,7 +88,6 @@ class StoreView(FormView):
         context['owned_actors'] = user.get_owned_actors()
         context['actor_procurement_history'] = user.get_actor_procurement_history()
 
-
         return context
 
 
@@ -96,6 +101,11 @@ class ExchangeView(FormView):
         kwargs['request'] = self.request
         return kwargs
 
+    def get_initial(self):
+        return {
+            'gc_to_exchange': self.request.user.profile.balance_w,
+        }
+
     def get_context_data(self, **kwargs):
         context = super(ExchangeView, self).get_context_data(**kwargs)
 
@@ -103,6 +113,9 @@ class ExchangeView(FormView):
 
         context['game_currency'] = game_config.game_currency
         context['w_to_i_conversion_bonus_percent'] = game_config.w_to_i_conversion_bonus_percent
+
+        bonus_percent = Decimal(100 + game_config.w_to_i_conversion_bonus_percent) / Decimal(100.0)
+        context['would_receive'] = self.request.user.profile.balance_w * bonus_percent
 
         context['w2i_exchange_history'] = self.request.user.get_w2i_exchange_history()
 
@@ -133,6 +146,66 @@ class RefillView(ListView):
     def get_queryset(self):
         return CryptoTransaction.objects.all()  #filter(user=self.request.user)
         # return self.request.user.select_related('referrals').order_by('-user__date_joined')
+
+
+class WithdrawView(FormView):
+    template_name = 'pgameapp/withdraw_request.html'
+    form_class = WithdrawForm
+    # success_url = reverse_lazy('user-profile')
+
+    def get_form_kwargs(self):
+        kwargs = super(WithdrawView, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def get_initial(self):
+        user = self.request.user
+        # noinspection PyUnusedLocal
+        to_address = ''
+
+        try:
+            last_withdrawal = WithdrawalRequest.objects.\
+                filter(user=user, status=WithdrawalRequest.PAID).\
+                order_by('-timestamp')[0]
+            to_address = last_withdrawal.to_address
+        except IndexError:
+            to_address = 'enter a new address'
+
+        return {
+            'gc_to_withdraw': self.request.user.profile.balance_w,
+            'to_address': to_address
+        }
+
+    def form_valid(self, form):
+        user = self.request.user
+        WithdrawalRequest.objects.create(
+            user=user,
+            amount=form.cleaned_data['gc_to_withdraw'],
+            to_address=form.cleaned_data['to_address']
+        )
+
+        user.profile.balance_w -= form.cleaned_data['gc_to_withdraw']
+        user.profile.save()
+
+        return super(WithdrawView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(WithdrawView, self).get_context_data(**kwargs)
+
+        user = self.request.user
+
+        game_config = GameConfiguration.objects.get(pk=1)
+        context['game_config'] = game_config
+
+        count_deposits, sum_deposits = user.get_deposits_info()
+        context['count_deposits'] = count_deposits
+        context['sum_deposits'] = sum_deposits
+
+        context['withdrawal_request_history'] = user.get_withdrawal_request_history()
+
+        context['game_currency'] = game_config.game_currency
+
+        return context
 
 
 class ProfileEdit(UpdateView):

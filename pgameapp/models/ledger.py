@@ -120,4 +120,4 @@ class UserLedger(AbstractBaseUserHistory):
         return u'{} <{}> {} $:{}'.format(self.timestamp, self.user, self.type, self.amount)
 
 
-
+log_leger = UserLedger.objects.log

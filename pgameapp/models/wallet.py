@@ -32,14 +32,14 @@ class BlockProcessingHistory(AbstractBaseHistory):
         return u'BlockProcessingHistory at {}'.format(self.blockheight)
 
 
-class TransactionsSentManager(models.Manager):
+class TransactionsSendManager(models.Manager):
     def get_queryset(self):
-        return super(TransactionsSentManager, self).get_queryset().filter(tx_type='S')
+        return super(TransactionsSendManager, self).get_queryset().filter(tx_type=CryptoTransaction.SEND)
 
 
 class TransactionsReceivedManager(models.Manager):
     def get_queryset(self):
-        return super(TransactionsReceivedManager, self).get_queryset().filter(tx_type='R')
+        return super(TransactionsReceivedManager, self).get_queryset().filter(tx_type=CryptoTransaction.RECEIVE)
 
 
 class CryptoTransaction(AbstractBaseHistory):
@@ -92,7 +92,7 @@ class CryptoTransaction(AbstractBaseHistory):
     )
 
     objects = models.Manager()
-    sent = TransactionsSentManager()
+    sent = TransactionsSendManager()
     received = TransactionsReceivedManager()
 
     def __unicode__(self):  # __str__ on python 3

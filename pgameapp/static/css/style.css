@@ -109,7 +109,14 @@ table, th, td {
 .data-table {
     width: 90%;
     text-align: center;
-    font-size: smaller
+    font-size: smaller;
 }
 
+.data-table .crypto_address {
+    font-family: monospace, monospace;
+}
 
+.data-table .numeric {
+    padding-right: 1.3em;
+    text-align: right;
+}

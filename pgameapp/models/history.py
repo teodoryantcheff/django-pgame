@@ -45,6 +45,7 @@ class AbstractBaseUserHistory(AbstractBaseHistory):
         related_name="%(class)s_related"
     )
 
+
 # r = ReferralBonusPayment.objects.values('ref_source','ref_campaign').distinct().annotate(Count('id'), Sum('amount'))
 # r = ReferralBonusPayment.objects.
 # values('referred_user__profile__ref_source','referred_user__profile__ref_campaign').

@@ -5,9 +5,11 @@
 {% block content %}
   <h2>Withdrawal GC -> Investment GC</h2>
 
-  Withdrawal <b>{{ user.profile.balance_w|floatformat:"0" }}</b> {{ game_currency }}<br/>
-  Investment <b>{{ user.profile.balance_i|floatformat:"0" }}</b> {{ game_currency }}.
-  Bonus percent <b>{{ w_to_i_conversion_bonus_percent }}%</b>
+  Withdrawal <b>{{ user.profile.balance_w|floatformat:"0" }}</b> {{ game_currency }}. Bonus percent <b>{{ w_to_i_conversion_bonus_percent }}%</b>
+  <br/><br/>
+  Exchanging all will get you <b style="font-size: x-large">{{ would_receive|floatformat:"3" }}</b> {{ game_currency }} !!!
+
+{#  Investment <b>{{ user.profile.balance_i|floatformat:"0" }}</b> {{ game_currency }}. <br/>#}
 
   <br/><br/>
 
@@ -29,8 +31,8 @@
       {% for ex in w2i_exchange_history %}
         <tr>
           <td>{{ ex.timestamp|date:"Y-m-d H:i:s" }}</td>
-          <td>{{ ex.data.gc_exchanged }}</td>
-          <td>{{ ex.amount }}</td>
+          <td class="numeric">{{ ex.data.gc_exchanged|floatformat:"3" }}</td>
+          <td class="numeric">{{ ex.amount|floatformat:"3" }}</td>
         </tr>
       {% endfor %}
     </table>

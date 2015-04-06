@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Count, Sum
 from custom_user.models import EmailUser
+from pgameapp.models import WithdrawalRequest
 
 from pgameapp.models.ledger import UserLedger
 
@@ -69,8 +70,10 @@ class User(EmailUser):
     def get_referrals(self):
         return User.objects.filter(profile__referrer=self).order_by('-date_joined')
 
-    def get_num_deposits(self):
-        return UserLedger.objects.filter(user=self, type=UserLedger.PAYMENT).count()
+    def get_deposits_info(self):
+        return tuple(UserLedger.objects.filter(user=self, type=UserLedger.PAYMENT).
+                     aggregate(count=Count('id'), sum=Sum('amount')).
+                     values())
 
     def get_total_actors(self):
         return self.useractorownership_set.aggregate(Sum('num_actors')).values()[0]
@@ -88,6 +91,10 @@ class User(EmailUser):
 
     def get_w2i_exchange_history(self):
         return UserLedger.objects.filter(user=self, type=UserLedger.W2I_EXCHANGE)
+
+
+    def get_withdrawal_request_history(self):
+        return WithdrawalRequest.objects.filter(user=self)  #.order_by('status')
 
 
     def get_coins_generated(self, until):

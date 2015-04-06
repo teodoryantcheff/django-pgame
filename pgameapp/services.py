@@ -74,8 +74,8 @@ def exchange__w2i(user, gc_to_exchange):
         raise ValidationError('Not enough withdrdawal balance')
 
     gc_to_exchange = Decimal(gc_to_exchange)
-    bonus = Decimal(100 + game_config.w_to_i_conversion_bonus_percent) / Decimal(100.0)
-    to_receive = gc_to_exchange * bonus
+    bonus_percent = Decimal(100 + game_config.w_to_i_conversion_bonus_percent) / Decimal(100.0)
+    to_receive = gc_to_exchange * bonus_percent
 
     user.profile.balance_w -= gc_to_exchange
     user.profile.balance_i += to_receive
@@ -129,7 +129,7 @@ def apply_payment(address, amount, transaction):
         user.credit(amount)
         UserLedger.objects.log(user, UserLedger.PAYMENT, amount, transaction)
 
-        if user.get_num_deposits() < 1:
+        if user.get_deposits_info() < 1:
             bonus = amount * Decimal(game_config.first_deposit_bonus_percent) / 100
 
             user.credit(bonus)

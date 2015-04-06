@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+  <h2>Withdrawal Request</h2>
+
+  You have <b>{{ user.profile.balance_w|floatformat:"3" }}</b> withdrawal {{ game_currency }} total <br/>
+  Minimum withdrawal amount <b>{{ game_config.min_withdrawal_amount }}</b> <br/>
+  Minimum deposit amount to withdraw <b>{{ game_config.min_withdrawal_deposit_amount }}</b>. <br/>
+  You have deposited <b>{{ sum_deposits|floatformat:"3" }}</b> {{ game_currency }} over <b>{{ count_deposits }}</b> deposits. <br/>
+{#  Investment <b>{{ user.profile.balance_i|floatformat:"0" }}</b> {{ game_currency }}.#}
+
+  <br/>
+
+  <form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <b style="color: red">{{ form.non_field_errors }}</b>
+    <input type="submit" value="Request" />
+  </form>
+
+  <br/><br/>
+  {% if withdrawal_request_history %}
+    <table class="data-table">
+      <thead>
+      <td><b>timestamp</b></td>
+      <td><b>amount</b></td>
+      <td><b>to address</b></td>
+      <td><b>status</b></td>
+      </thead>
+      {% for wr in withdrawal_request_history %}
+        <tr>
+          <td>{{ wr.timestamp|date:"Y-m-d H:i:s" }}</td>
+          <td class="numeric">{{ wr.amount|floatformat:"3" }}</td>
+          <td class="crypto_address">{{ wr.to_address }}</td>
+          <td>{{ wr.get_status_display }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>You haven't any yet</p>
+  {% endif %}
+
+
+{% endblock %}

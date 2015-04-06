@@ -16,7 +16,9 @@
 
 <body>
 <div class="header">
-  {% block header %} HEADER block {% endblock %}
+  {% block header %}
+
+  {% endblock %}
 </div>
 
 <div class="wrap">
@@ -57,8 +59,8 @@
           <li><a href="#">Game</a></li>
           <li><a href="{% url 'exchange' %}">Exchange</a></li>
           <li><a href="{% url 'referrals' %}">Referrals</a></li>
-          <li><a href="{% url 'refill' %}">Account Refill</a></li>
-          <li><a href="#">Request payout</a></li>
+          <li><a href="{% url 'deposit' %}">Deposit</a></li>
+          <li><a href="{% url 'withdraw' %}">Withdraw</a></li>
           <li><a href="{% url 'user-profile-edit' %}">Profile Edit</a></li>
           {#              <li><a href="{% url 'account_logout' %}">Logout</a></li>#}
         </ul></nav>
@@ -87,7 +89,7 @@
 
 <div class="footer">
   {% block footer %}
-    FOOTER BLOCK <small>(Remote IP :  {{ remote_ip }})</small>
+    <small>(Remote IP :  {{ remote_ip }})</small>
   {% endblock %}
 </div>
 </body>

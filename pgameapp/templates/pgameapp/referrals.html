@@ -19,9 +19,9 @@
         <tr>
           <td>{{ rs.ref_source|default:"<i>&lt;none&gt;</i>" }}</td>
           <td>{{ rs.ref_campaign|default:"<i>&lt;none&gt;</i>" }}</td>
-          <td>{{ rs.signups }}</td>
-          <td>{{ rs.count_payments }}</td>
-          <td>{{ rs.amount_paid|default_if_none:"0"|floatformat:"2" }}</td>
+          <td class="numeric">{{ rs.signups }}</td>
+          <td class="numeric">{{ rs.count_payments }}</td>
+          <td class="numeric">{{ rs.amount_paid|default_if_none:"0"|floatformat:"3" }}</td>
         </tr>
       {% endfor %}
     </table>
