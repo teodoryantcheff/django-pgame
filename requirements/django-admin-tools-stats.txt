@@ -1,0 +1,8 @@
+django-admin-tools-stats
+python-dateutil
+django-jsonfield
+django-qsstats-magic
+django-cache-utils
+django-admin-tools
+django-nvd3
+django-bower
