@@ -50,7 +50,10 @@ THIRD_PARTY_APPS = (
     'django_extensions',  # django-extensions
     'solo',               # model singletons
     'account',            # django-user-accounts
-    # 'axes',  # TODO django-axes
+    # 'axes',             # TODO django-axes
+    'djangobower',
+    'admin_tools_stats',
+    'django_nvd3',
 )
 
 # Apps defined in the project
@@ -142,7 +145,6 @@ USE_TZ = True
 
 DATETIME_FORMAT = 'Y-m-d H:i:s'
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_URL = '/static/'
@@ -168,8 +170,8 @@ ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 ACCOUNT_LOGIN_REDIRECT_URL = '/'
 ACCOUNT_USER_DISPLAY = lambda user: user.email
 
-
 # Crypto wallet config
+# Overriden in local_settings
 CRYPTO_WALLET_PROTO = ''
 CRYPTO_WALLET_IP = ''
 CRYPTO_WALLET_PORT = 0
@@ -196,8 +198,44 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.profiling.ProfilingDebugPanel',
 )
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    'djangobower.finders.BowerFinder',
+)
+
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), ".."),
+)
+
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/var/www/example.com/static/"
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 's')
+
+# django-bower
+# ============
+# Specifie path to components root (you need to use absolute path)
+BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
+
+BOWER_INSTALLED_APPS = (
+    'jquery#2.0.3',
+    'jquery-ui#~1.10.3',
+    'd3#3.3.6',
+    'nvd3#1.1.12-beta',
+)
+
+#DJANGO-ADMIN-TOOL
+#=================
+ADMIN_TOOLS_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'dashboard.CustomAppIndexDashboard'
+# ADMIN_TOOLS_MENU = 'menu.CustomMenu'
+
 
 # axes
+#=================
 # AXES_LOGIN_FAILURE_LIMIT: The number of login attempts allowed before a record is created for the failed logins. Default: 3
 # AXES_LOCK_OUT_AT_FAILURE: After the number of allowed login attempts are exceeded, should we lock out this IP (and optional user agent)? Default: True
 # AXES_USE_USER_AGENT: If True, lock out / log based on an IP address AND a user agent. This means requests from different user agents but from the same IP are treated differently. Default: False
@@ -208,6 +246,9 @@ DEBUG_TOOLBAR_PANELS = (
 # AXES_VERBOSE: If True, you'll see slightly more logging for Axes. Default: True
 # AXES_USERNAME_FORM_FIELD: the name of the form field that contains your users usernames. Default: username
 
+#IMPORT LOCAL SETTINGS
+#=====================
+# noinspection PyBroadException
 try:
     from local_settings import *
 except:

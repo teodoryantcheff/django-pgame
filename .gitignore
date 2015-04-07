@@ -10,6 +10,10 @@ __pycache__/
 .idea
 local_settings.py
 
+components/*
+# TODO statis ignores
+s/*
+
 # Distribution / packaging
 .Python
 env/
