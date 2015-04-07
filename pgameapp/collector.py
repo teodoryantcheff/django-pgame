@@ -9,16 +9,16 @@ import django
 from django.contrib.auth import get_user_model
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pgame.settings")
-# settings.configure()
-from django.conf import settings
-django.setup()
-
 from pgameapp.models import CryptoTransaction, GameConfiguration
 from pgameapp.models.wallet import BlockProcessingHistory
 from pgameapp.services import apply_payment
 
 import wallet
+
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pgame.settings")
+# settings.configure()
+from django.conf import settings
+django.setup()
 
 __author__ = 'Jailbreaker'
 
@@ -109,20 +109,11 @@ def main():
                 retry_seconds=SLEEP_TIME
             )
             w = AuthServiceProxy(wallet.CRYPTO_WALLET_CONNSTRING)  # retry connecting
+        except JSONRPCException as jsone:
+            print '!!!!! JSONRPCException:', jsone.error
 
         sleep(SLEEP_TIME)
 
 
 if __name__ == '__main__':
     main()
-
-
-
-        # Eccel "interface"
-        # with open('data.csv', 'w+') as f:
-        #     w = csv.DictWriter(f, ['time', 'blocktime', 'account', 'address',
-        #                            'amount', 'fee', 'category', 'confirmations'],
-        #                        extrasaction='ignore')
-        #     w.writeheader()
-        #     w.writerows(transactions)
-        #     #f.close()
