@@ -2,6 +2,8 @@ __author__ = 'Jailbreaker'
 
 from django.conf import settings
 
+# Fee = Normal fee / ((500kB - size) / 500kB) = Normal fee / (1 - size / 500kB)
+
 CRYPTO_WALLET_CONNSTRING = '{proto}://{user}:{password}@{address}:{port}'.format(
     proto=settings.CRYPTO_WALLET_PROTO,
     user=settings.CRYPTO_WALLET_USER,
@@ -15,3 +17,6 @@ CRYPTO_WALLET_ADDRESS = '{proto}://{address}:{port}'.format(
     address=settings.CRYPTO_WALLET_IP,
     port=settings.CRYPTO_WALLET_PORT
 )
+
+# Account to move money to after reception
+MOVE_TO_ACCOUNT = 'xxxYYYxxx'

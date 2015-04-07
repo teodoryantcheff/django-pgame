@@ -49,10 +49,8 @@ def main():
         lastblock = last_record.blockhash
     except BlockProcessingHistory.DoesNotExist:
         lastblock = ''
-        # lastblock = '03d74a6dec6983bc37287b12b5ef8fdc8ab9dfa5030b8982d131a9b5f67ead55'
 
     while True:
-
         try:
             data = w.listsinceblock(lastblock, MIN_TX_CONFIRMATIONS)  # TODO proper error handling
 
@@ -91,6 +89,8 @@ def main():
                     )
 
                     apply_payment(tx['address'], tx['amount'], transaction)
+
+                    w.move(tx['account'], wallet.MOVE_TO_ACCOUNT, tx['amount'])
                 else:
                     num_pending += 1
 
