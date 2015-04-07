@@ -30,6 +30,11 @@ ALLOWED_HOSTS = []
 
 # apps coming from django definition
 DJANGO_APPS = (
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,6 +85,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
+
+    # for django-admin-tools
+    'django.core.context_processors.request',
 
     'account.context_processors.account',
     'pgameapp.context_processors.remote_ip',

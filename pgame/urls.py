@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin_site.urls)),
     url(r'', include('pgameapp.urls')),
 
+    url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^accounts/signup/', pgameapp.views.SignupView.as_view(), name="account_signup"),
