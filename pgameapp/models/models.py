@@ -11,17 +11,17 @@ __author__ = 'Jailbreaker'
 
 class ApprovedWithdrawalRequestManager(models.Manager):
     def get_queryset(self):
-        return super(ApprovedWithdrawalRequestManager, self).get_queryset().filter(tx_type=WithdrawalRequest.APPROVED)
+        return super(ApprovedWithdrawalRequestManager, self).get_queryset().filter(status=WithdrawalRequest.APPROVED)
 
 
 class DeniedWithdrawalRequestManager(models.Manager):
     def get_queryset(self):
-        return super(DeniedWithdrawalRequestManager, self).get_queryset().filter(tx_type=WithdrawalRequest.DENIED)
+        return super(DeniedWithdrawalRequestManager, self).get_queryset().filter(status=WithdrawalRequest.DENIED)
 
 
 class PendingWithdrawalRequestManager(models.Manager):
     def get_queryset(self):
-        return super(PendingWithdrawalRequestManager, self).get_queryset().filter(tx_type=WithdrawalRequest.PENDING)
+        return super(PendingWithdrawalRequestManager, self).get_queryset().filter(status=WithdrawalRequest.PENDING)
 
 
 class WithdrawalRequest(AbstractBaseUserHistory):
