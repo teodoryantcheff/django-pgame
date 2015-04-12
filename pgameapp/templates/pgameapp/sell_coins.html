@@ -11,12 +11,12 @@
   <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
     <b style="color: red">{{ form.non_field_errors }}</b>
-    <input type="submit" value="Sell for {{ game_currency }}" />
+    <input type="submit" class="btn btn-lg btn-success" value="Sell for {{ game_currency }}" />
   </form>
   <br/><br/>
   {% if coin_conversion_history %}
     Last 10
-    <table class="data-table">
+    <table class="table table-hover table-condensed">
       <thead>
         <td><b>timestamp</b></td>
         <td><b>coins</b></td>

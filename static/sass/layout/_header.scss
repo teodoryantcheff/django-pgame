@@ -1,0 +1,38 @@
+@import 'compass';
+@import '../base/variables';
+@import '../utils/mixins';
+
+.header {
+  clear: both;
+  background: image-url($header-background) no-repeat top left;
+  width: 100%;
+  height: image_height($header-background);
+  position: relative;
+  z-index: 10;
+
+  &::after {
+    @include wave-after(top);
+  }
+}
+
+.sub-header {
+  background: image-url($sub-header-background) repeat-x;
+  position: relative;
+  height: $sub-header-height;
+  clear: both;
+
+  z-index: 5;
+  @include box-shadow(25px 25px 20px 0px rgba(0,0,0,0.4) inset);
+
+  &::after {
+    @include wave-after(top);
+  }
+
+    padding: 50px auto;
+}
+
+.top-menu {
+  width: $central-width;
+  margin: 0 auto;
+  @include centre();
+}

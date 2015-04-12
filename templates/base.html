@@ -2,102 +2,89 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
+  <meta charset=utf-8>
 
-<head>
-  <link rel="stylesheet" href="{% static "css/screen.css" %}" type="text/css" media="screen, projection" />
-  <link rel="stylesheet" href="{% static "css/style.css" %}"/>
+  <link rel="stylesheet" href="{% static "css/main.css" %}" type="text/css" media="screen, projection" />
+
 
   <!--[if IE]>
      <link href="{% static "css/ie.css" %}" media="screen, projection" rel="stylesheet" type="text/css" />
   <![endif]-->
 
+  <title>{% block title %}MEGA page title TEST{% endblock %}</title>
+
+  <header class="header">
+    {% block header %}
+    {% endblock %}
+  </header>
+
+  <div class="sub-header">
+    <div class="top-menu">
+      <ul class="nav nav-justified">
+        <li role="presentation"><a href="{% url 'user-profile' %}" style="position: relative;z-index: 10">Profile</a></li>
+        <li role="presentation"><a href="{% url 'collect-coins' %}">Collect</a></li>
+        <li role="presentation" class="active"><a href="{% url 'sell-coins' %}">Sell</a></li>
+        <li role="presentation"><a href="{% url 'store' %}">Store</a></li>
+        <li role="presentation"><a href="#">Game</a></li>
+        <li role="presentation"><a href="{% url 'exchange' %}">Exchange</a></li>
+        <li role="presentation"><a href="{% url 'referrals' %}">Referrals</a></li>
+        <li role="presentation"><a href="{% url 'deposit' %}">Deposit</a></li>
+        <li role="presentation"><a href="{% url 'withdraw' %}">Withdraw</a></li>
+        <li role="presentation"><a href="{% url 'user-profile-edit' %}">Edit</a></li>
+{#        <li role="presentation"><i class="fa fa-camera-retro fa-5x"></i> fa-5x</li>#}
+      </ul>
+    </div>
+  </div>
+
+  <div id="gamestats">
+    {% block gamestats %}
+      <ul>
+        <li>Total users: <b>{{ gamestats.users_total }}</b></li>
+        <li>Last 24 h: <b>{{ gamestats.users_new_last_24h }}</b></li>
+        {#            <li>Cash Paid: <b>{{ gamestats.cash_total_paid }}</b></li>#}
+        <li>Cash reserve: <b>{{ gamestats.cash_reserve|floatformat:"2" }}</b></li>
+        {#            <li>Duration: <b>{{ gamestats.project_duration_days }}</b></li>#}
+      </ul>
+    {% endblock %}
+  </div>
+
+  <div id="userprofile">
+    {% if user.is_authenticated %}
+      {% trans "Logged in" %}: {{ user }}
+      <br/>
+      <small>
+        (<a href="{% url 'account_logout' %}">{% trans "Log out" %}</a> |
+        <a href="{% url 'account_password_reset' %}">{% trans "Change password" %}</a>)
+      </small>
+      <ul>
+        <li>investment: <b>{{ user.profile.balance_i|floatformat:"2" }}</b></li>
+        <li>withdrawal: <b>{{ user.profile.balance_w|floatformat:"2" }}</b></li>
+        <li>coins: <b>{{ user.profile.balance_coins|floatformat:"2" }}</b></li>
+      </ul>
+    {% else %}
+      <a href="{% url 'account_login' %}">{% trans "Log in" %}</a> | <a href="{% url 'account_signup' %}">{% trans "Register" %}</a>
+      <p>Login to see account balance</p>
+    {% endif %}
+  </div>
+
+  <div class=content>
+    {% block content %} CONTENT block {% endblock %}
+  </div>
+
+
+  <footer class=footer>
+    {% block footer %}
+      <small>(Remote IP :  {{ remote_ip }})</small>
+    {% endblock %}
+  </footer>
+
+  <!-- JS -->
+
   <script src="{% static "js/jquery-1.11.2.min.js" %}"></script>
   <script src="{% static "js/jquery.cookie.js" %}"></script>
   <script src="{% static "js/querystring-0.9.0-min.js" %}"></script>
 
-  <title>{% block title %}MEGA page title TEST{% endblock %}</title>
-
-</head>
-
-<body>
-<div class="header">
-  {% block header %}
-
-  {% endblock %}
-</div>
-
-<div class="wrap">
-  <div class="sidebar">
-    <div class="sidemenu">
-      {% block sidemenu %}
-        {% if user.is_authenticated %}
-          {% trans "Logged in" %}: {{ user }}
-          <br/>
-          <small>
-            (<a href="{% url 'account_logout' %}">{% trans "Log out" %}</a> |
-            <a href="{% url 'account_password_reset' %}">{% trans "Change password" %}</a>)
-          </small>
-        {% else %}
-          <a href="{% url 'account_login' %}">{% trans "Log in" %}</a> | <a href="{% url 'account_signup' %}">{% trans "Register" %}</a>
-        {% endif %}
-
-        <div class="userprofile">
-          {% if user.is_authenticated %}
-            <ul>
-              <li>investment: <b>{{ user.profile.balance_i|floatformat:"2" }}</b></li>
-              <li>withdrawal: <b>{{ user.profile.balance_w|floatformat:"2" }}</b></li>
-              <li>coins: <b>{{ user.profile.balance_coins|floatformat:"2" }}</b></li>
-            </ul>
-          {% else %}
-            <p>Login to see account balance</p>
-          {% endif %}
-        </div>
-
-        <br/>
-        Side menu :
-        <nav><ul>
-          <li><a href="{% url 'user-profile' %}">Profile</a></li>
-          <li><a href="{% url 'collect-coins' %}">Collect</a></li>
-          <li><a href="{% url 'sell-coins' %}">Sell coins</a></li>
-          <li><a href="{% url 'store' %}">Store</a></li>
-{#          <li><a href="{% url 'store2' %}">=-=-=- Store2 -=-=-=</a></li>#}
-          {#              <li><a href="{% url 'store2' %}">MEGA Store</a></li>#}
-          <li><a href="#">Game</a></li>
-          <li><a href="{% url 'exchange' %}">Exchange</a></li>
-          <li><a href="{% url 'referrals' %}">Referrals</a></li>
-          <li><a href="{% url 'deposit' %}">Deposit</a></li>
-          <li><a href="{% url 'withdraw' %}">Withdraw</a></li>
-          <li><a href="{% url 'user-profile-edit' %}">Profile Edit</a></li>
-          {#              <li><a href="{% url 'account_logout' %}">Logout</a></li>#}
-        </ul></nav>
-      {% endblock %}
-    </div>
-    <div class="gamestats">
-      {% block gamestats %}
-        <ul>
-          <li>Total users: <b>{{ gamestats.users_total }}</b></li>
-          <li>Last 24 h: <b>{{ gamestats.users_new_last_24h }}</b></li>
-          {#            <li>Cash Paid: <b>{{ gamestats.cash_total_paid }}</b></li>#}
-          <li>Cash reserve: <b>{{ gamestats.cash_reserve|floatformat:"2" }}</b></li>
-          {#            <li>Duration: <b>{{ gamestats.project_duration_days }}</b></li>#}
-        </ul>
-      {% endblock %}
-    </div>
-    <div> <!-- Shit below the side bar -->
-      <img src="{% static "img/dogecoin.png" %}" alt="doge accepted here image" width="100%"/>
-    </div>
-  </div>
-
-  <div class="content">
-    {% block content %} CONTENT block {% endblock %}
-  </div>
-</div>
-
-<div class="footer">
-  {% block footer %}
-    <small>(Remote IP :  {{ remote_ip }})</small>
-  {% endblock %}
-</div>
-</body>
+  <!-- Latest compiled and minified JavaScript -->
+{#  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>#}
 
 </html>

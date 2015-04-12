@@ -16,13 +16,13 @@
   <form action="" method="post">{% csrf_token %}
     {{ form }}
     <b style="color: red">{{ form.non_field_errors }}</b>
-    <input type="submit" value="Exchange" />
+    <input type="submit" class="btn btn-lg btn-success" value="Exchange" />
   </form>
 
   <br/><br/>
   {% if w2i_exchange_history %}
     Last 10
-    <table class="data-table">
+    <table class="table table-hover table-condensed">
       <thead>
       <td><b>timestamp</b></td>
       <td><b>ex W</b></td>

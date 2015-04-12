@@ -1,0 +1,30 @@
+@import 'compass';
+@import '../base/variables';
+
+//noinspection SassScssUnresolvedFunction
+@mixin centre($axis: 'both'){
+  position:absolute;
+  @if $axis == 'y' {
+    top:50%;
+    @include transform(translateY(-50%));
+  }
+  @if $axis == 'x' {
+    left:50%;
+    @include transform(translateX(-50%));
+  }
+  @if $axis == 'both' {
+    top:50%;
+    left:50%;
+    @include transform(translate(-50%, -50%));
+  }
+}
+
+@mixin wave-after($pos) {
+  background: image-url($wave-img) repeat-x left $pos;
+  position: absolute;
+  height: 22px;
+  bottom: -11px;
+
+  width: 100%;
+  content: '';
+}

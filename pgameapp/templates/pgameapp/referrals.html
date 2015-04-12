@@ -8,9 +8,9 @@
   <h4>Referral links</h4>
 
     <div style="font-size: small">
-      <div class="ref_link">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b></div>
-      <div class="ref_link">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;</div>
-      <div class="ref_link">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;&<b>ref_cmp</b>=&lt;<i>choose</i>&gt;</div>
+      <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b></div></div>
+      <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;</div></div>
+      <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;&<b>ref_cmp</b>=&lt;<i>choose</i>&gt;</div></div>
     </div>
 
   <p>How to use the shit above :
@@ -20,7 +20,7 @@
 
   <h4>Referral Stats</h4>
   {% if referral_stats %}
-    <table class="data-table">
+    <table class="table table-hover table-condensed">
       <thead>
         <td><b>source</b></td>
         <td><b>campaign</b></td>
@@ -67,7 +67,7 @@
 
   {% if user_referred_accounts %}
     Total <b>{{ user_referred_accounts|length }}</b>. Here are the last 10.
-    <table class="data-table">
+    <table class="table table-hover table-condensed">
       <thead>
       <td><b>date joined</b></td><td><b>account</b></td>
       </thead>

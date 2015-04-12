@@ -1,0 +1,11 @@
+@import 'compass';
+@import '../base/variables';
+
+.footer {
+  clear: both;
+  background: image_url($footer-background) no-repeat;
+  height: image_height($footer-background);
+  width: 100%;
+  position: absolute;
+  z-index: 10;
+}

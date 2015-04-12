@@ -62,13 +62,13 @@ body {
     /*left: 0;*/
 }
 
-.header {
-    clear: both;
-    background: url("/static/img/header_bg.jpg") no-repeat;
-    width: 100%;
-    height: 230px;
-    margin-bottom: 20px;
-}
+/*.header {*/
+    /*clear: both;*/
+    /*background: url("/static/img/header_bg.jpg") no-repeat;*/
+    /*width: 100%;*/
+    /*height: 230px;*/
+    /*margin-bottom: 20px;*/
+/*}*/
 
 .userprofile {
     width: 75%;

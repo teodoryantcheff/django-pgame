@@ -13,7 +13,7 @@
           &nbsp;&nbsp;&nbsp;
           <input type="hidden" id="id_actor" class="hidden_id" name="actor" value="{{ actor.pk }}" />
 {#          <input type="hidden" id="id_user" class="hidden_id" name="user" value="{{ user.pk }}" />#}
-          <input type="submit" value="Buy for {{ actor.price }}"  />
+          <input type="submit" class="btn btn-success" value="Buy for {{ actor.price }}"  />
         </li>
       </form>
     {% endfor %}
@@ -32,7 +32,7 @@
     <br/><br/>
     {% if actor_procurement_history %}
       Last 10
-      <table class="data-table">
+      <table class="table table-hover table-condensed">
         <thead>
             <td><b>timestamp</b></td>
             <td><b>name</b></td>

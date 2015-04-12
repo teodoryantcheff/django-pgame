@@ -1,0 +1,36 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link rel="stylesheet" href="{% static "css/main.css" %}" type="text/css" media="screen, projection" /> */
+
+@import 'compass/reset';
+
+// Import Bootstrap Compass integration
+@import 'bootstrap-compass';
+
+// Import custom Bootstrap variables
+@import
+  'utils/bootstrap-variables';
+
+// Import Bootstrap for Sass
+@import 'bootstrap';
+
+@import "font-awesome-compass";
+@import "font-awesome";
+
+// ############################################################
+
+@import
+  'base/variables';
+
+@import
+  'utils/mixins';
+
+@import
+  'layout/layout',
+  'layout/header',
+  'layout/footer',
+  'layout/content';
+
+@import
+  'components/components';
