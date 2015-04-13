@@ -15,8 +15,8 @@
 // Import Bootstrap for Sass
 @import 'bootstrap';
 
-@import "font-awesome-compass";
-@import "font-awesome";
+//@import "font-awesome-compass";
+//@import "font-awesome";
 
 // ############################################################
 
@@ -35,4 +35,5 @@
   'layout/content';
 
 @import
-  'components/components';
+  'components/components',
+  'components/top_menu_item';

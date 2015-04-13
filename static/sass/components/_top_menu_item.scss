@@ -1,0 +1,9 @@
+@import 'compass/css3';
+
+.top-menu-item {
+  font-size: 1.3em;
+  font-weight: bold;
+
+  @include single-text-shadow(3px, 3px, 15px, false, #222);
+//  text-shadow: 3px 3px 15px;
+}
