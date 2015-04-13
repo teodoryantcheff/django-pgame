@@ -10,7 +10,7 @@
 
 // Import custom Bootstrap variables
 @import
-  'utils/bootstrap-variables';
+  'vendor/bootstrap-variables';
 
 // Import Bootstrap for Sass
 @import 'bootstrap';
@@ -24,7 +24,9 @@
   'base/variables';
 
 @import
-  'utils/mixins';
+  'utils/mixins',
+  'utils/functions',
+  'utils/transitions';
 
 @import
   'layout/layout',
