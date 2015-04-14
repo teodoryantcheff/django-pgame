@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required as auth
 from django.core.urlresolvers import reverse_lazy
 
 from pgameapp.views import UserProfileView, CollectCoinsView, SellCoinsView, StoreView, ExchangeView, ReferralsView, \
-    ProfileEdit, RefillView, WithdrawView
+    ProfileEdit, DepositView, WithdrawView
 
 urlpatterns = patterns('',
     # url(r'^$', views.index, name='index'),
@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     url(r'^store/$', auth(StoreView.as_view(success_url = reverse_lazy('store'))),
         name='store'),
 
-    url(r'^deposit/$', auth(RefillView.as_view()),
+    url(r'^deposit/$', auth(DepositView.as_view()),
         name='deposit'),
 
     url(r'^exchange/$', auth(ExchangeView.as_view(success_url = reverse_lazy('exchange'))),

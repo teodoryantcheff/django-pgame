@@ -199,8 +199,8 @@ class ReferralsView(ListView):
         return context
 
 
-class RefillView(ListView):
-    template_name = 'pgameapp/refill.html'
+class DepositView(ListView):
+    template_name = 'pgameapp/deposit.html'
     context_object_name = 'transactions'
 
     def get_queryset(self):
