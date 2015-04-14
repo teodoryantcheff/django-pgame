@@ -28,11 +28,16 @@
     @include wave-after(top);
   }
 
-  padding: 50px auto;
+//  padding: 50px auto;
 }
 
-.top-menu {
+.help {
   width: $central-width;
-  margin: 0 auto;
-  @include centre();
+  border: 2px dashed #FBDC87;
+  margin: 20px auto 0 auto;
+
+  z-index: 5;
+
+  padding: 20px 20px;
+  @include border-radius(20px);;
 }
