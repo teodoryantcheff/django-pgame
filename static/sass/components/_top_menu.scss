@@ -1,0 +1,48 @@
+@import 'compass/css3';
+@import '../base/variables';
+
+.top-menu {
+  font-size: 1.3em;
+  font-weight: bold;
+
+  display: flex;
+  justify-content: space-between;
+
+  float: none;
+  width: $central-width;
+  height: 100%;
+  margin: 0 auto;
+
+  li {
+    display: inline;
+
+    @include transition(all 0.2s ease 0s);
+
+    &:hover {
+      background-color: rgba(#A7D058, 0.8);
+    }
+  }
+
+  a {
+    padding: 10px 15px;
+//    border: 1px solid #000000;
+    border-radius: 5px;
+
+    white-space: nowrap;
+    text-decoration: none; // undo bootstap
+//    color: inherit; // undo bootstrap link styling
+
+    /* These two are a hack to center vertiacally */
+    height: $sub-header-height;
+    line-height: $sub-header-height;
+
+    /* Drop shadow effect */
+    @include single-text-shadow(3px, 3px, 15px, false, #333);
+
+    @include transition(all 0.3s ease 0s);
+    &:hover, &:focus {
+//      text-decoration: none; // undo bootstap
+      @include single-text-shadow(0px, 0px, 0px);
+    }
+  }
+}
