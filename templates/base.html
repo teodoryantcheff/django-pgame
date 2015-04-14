@@ -14,41 +14,23 @@
   <title>{% block title %}MEGA page title TEST{% endblock %}</title>
 
   <header class="header">
-    {% block header %}
-    {% endblock %}
+  {% block header %} <span style="position: absolute;">Content goes in here</span>  {% endblock %}
   </header>
 
-  <div class="sub-header">
-    <div class="top-menu">
-      <ul class="nav nav-justified top-menu-item">
-        <li role="presentation"><a href="{% url 'user-profile' %}">Profile</a></li>
-        <li role="presentation"><a href="{% url 'collect-coins' %}">Collect</a></li>
-        <li role="presentation"><a href="{% url 'sell-coins' %}">Sell</a></li>
-        <li role="presentation"><a href="{% url 'store' %}">Store</a></li>
-        <li role="presentation"><a href="#">Game</a></li>
-        <li role="presentation"><a href="{% url 'exchange' %}">Exchange</a></li>
-        <li role="presentation"><a href="{% url 'referrals' %}">Referrals</a></li>
-        <li role="presentation"><a href="{% url 'deposit' %}">Deposit</a></li>
-        <li role="presentation"><a href="{% url 'withdraw' %}">Withdraw</a></li>
-        <li role="presentation"><a href="{% url 'user-profile-edit' %}">Edit</a></li>
-{#        <li role="presentation"><i class="fa fa-camera-retro fa-5x"></i> fa-5x</li>#}
-      </ul>
-    </div>
-  </div>
-
   <div id="gamestats">
-    {% block gamestats %}
-      <ul>
-        <li>Total users: <b>{{ gamestats.users_total }}</b></li>
-        <li>Last 24 h: <b>{{ gamestats.users_new_last_24h }}</b></li>
-        {#            <li>Cash Paid: <b>{{ gamestats.cash_total_paid }}</b></li>#}
-        <li>Cash reserve: <b>{{ gamestats.cash_reserve|floatformat:"2" }}</b></li>
-        {#            <li>Duration: <b>{{ gamestats.project_duration_days }}</b></li>#}
-      </ul>
-    {% endblock %}
+  {% block gamestats %}
+    <ul>
+      <li>Total users: <b>{{ gamestats.users_total }}</b></li>
+      <li>Last 24 h: <b>{{ gamestats.users_new_last_24h }}</b></li>
+      {#            <li>Cash Paid: <b>{{ gamestats.cash_total_paid }}</b></li>#}
+      <li>Cash reserve: <b>{{ gamestats.cash_reserve|floatformat:"2" }}</b></li>
+      {#            <li>Duration: <b>{{ gamestats.project_duration_days }}</b></li>#}
+    </ul>
+  {% endblock %}
   </div>
 
   <div id="userprofile">
+  {% block userprofile %}
     {% if user.is_authenticated %}
       {% trans "Logged in" %}: {{ user }}
       <br/>
@@ -65,17 +47,50 @@
       <a href="{% url 'account_login' %}">{% trans "Log in" %}</a> | <a href="{% url 'account_signup' %}">{% trans "Register" %}</a>
       <p>Login to see account balance</p>
     {% endif %}
+  {% endblock %}
+  </div>
+
+  <div class="sub-header">
+  {% block top-menu %}
+{#          <div class="top-menu">#}
+{#      <ul class="nav nav-justified top-menu-item">#}
+    <ul class="top-menu">
+      <li><a href="{% url 'user-profile' %}">Profile</a></li>
+      <li><a href="{% url 'collect-coins' %}">Collect</a></li>
+      <li><a href="{% url 'sell-coins' %}">Sell</a></li>
+      <li><a href="{% url 'store' %}">Store</a></li>
+      <li><a href="#">Game</a></li>
+      <li><a href="{% url 'exchange' %}">Exchange</a></li>
+      <li><a href="{% url 'referrals' %}">Referrals</a></li>
+      <li><a href="{% url 'deposit' %}">Deposit</a></li>
+      <li><a href="{% url 'withdraw' %}">Withdraw</a></li>
+      <li><a href="{% url 'user-profile-edit' %}">Edit</a></li>
+{#        <li role="presentation"><i class="fa fa-camera-retro fa-5x"></i> fa-5x</li>#}
+    </ul>
+{#    </div>#}
+  {% endblock %}
+  </div>
+
+  <div class="help">
+  {% block help %}
+    <strong>This is the help placeholder</strong><br/>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid atque cupiditate dolores ea earum eos et inventore minus placeat
+    praesentium provident quam quod, rerum similique tenetur ut veniam vitae voluptate?
+  {% endblock %}
   </div>
 
   <div class=content>
-    {% block content %} CONTENT block {% endblock %}
+  {% block content %} CONTENT block {% endblock %}
   </div>
 
 
+  <div class="above-footer-container">
+    <div class="above-footer-section">Ads and banners. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, nobis, rem! Ab asperiores, assumenda atque cumque deleniti dolor dolore ea earum eos eveniet excepturi fugiat, ipsa minus ratione sunt vel.</div>
+    <div class="above-footer-section">Ads and banners. A ab accusamus aliquam aperiam blanditiis consequatur doloremque eaque est facere illum itaque iusto laudantium mollitia nam natus nisi, reprehenderit, sed veritatis.blanditiis consequatur doloremque eaque est facere illum itaque iusto laudantium mollitia nam natus nisi, reprehenderit, sed veritatis.</div>
+  </div>
+
   <footer class=footer>
-    {% block footer %}
-      <small>(Remote IP :  {{ remote_ip }})</small>
-    {% endblock %}
+    {% block footer %} Default footer content placeholder <br/>  <small>(Remote IP :  {{ remote_ip }})</small> {% endblock %}
   </footer>
 
   <!-- JS -->
