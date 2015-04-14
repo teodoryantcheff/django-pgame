@@ -22,8 +22,8 @@
 @mixin wave-after($pos) {
   background: image-url($wave-img) repeat-x left $pos;
   position: absolute;
-  height: 22px;
-  bottom: -11px;
+  height: image_height($wave-img); // 22px;
+  bottom: -(image_height($wave-img) / 2); //-11px;
 
   width: 100%;
   content: '';
