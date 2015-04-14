@@ -11,11 +11,11 @@
     <form id="login_form" method="post" action="{% url "account_login" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
         <header>{% trans "Login" %}</header>
         {% csrf_token %}
-        {{ form.as_ul }}
+        {{ form.as_p }}
         {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <button type="submit" class="btn btn-primary">{% trans "Login" %}</button>
+        <button type="submit" class="btn btn-primary btn-success">{% trans "Login" %}</button>
     </form>
     {% if ACCOUNT_OPEN_SIGNUP %}
         <p class="login-signup">

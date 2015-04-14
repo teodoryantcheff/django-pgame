@@ -11,7 +11,7 @@
         <fieldset>
             {% csrf_token %}
             <p>{% blocktrans with email=confirmation.email_address.email %}Confirm email address <b>{{ email }}</b>?{% endblocktrans %}</p>
-            <button type="submit" class="btn btn-primary">{% trans "Confirm" %}</button>
+            <button type="submit" class="btn btn-primary btn-success">{% trans "Confirm" %}</button>
         </fieldset>
     </form>
 {% endblock %}
