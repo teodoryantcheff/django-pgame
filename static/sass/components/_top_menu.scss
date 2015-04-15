@@ -2,47 +2,45 @@
 @import '../base/variables';
 
 .top-menu {
+  display: flex;
+  float: none;
   font-size: 1.3em;
   font-weight: bold;
-
-  display: flex;
-  justify-content: space-between;
-
-  float: none;
-  width: $central-width;
   height: 100%;
+  justify-content: space-between;
   margin: 0 auto;
+  width: $central-width;
 
   li {
+    @include transition(all .2s ease 0s);
+
     display: inline;
 
-    @include transition(all 0.2s ease 0s);
-
     &:hover {
-      background-color: rgba(#A7D058, 0.8);
+      background-color: rgba(#a7d058, .8);
     }
   }
 
   a {
-    padding: (($sub-header-height / 2) - image_height($wave-img)) 15px;
-//    border: 1px solid #000000;
-    border-radius: 5px;
-
-    white-space: nowrap;
-    text-decoration: none; // undo bootstap
-//    color: inherit; // undo bootstrap link styling
-
-    /* These two are a hack to center vertiacally */
-    height: $sub-header-height;
-    line-height: $sub-header-height;
-
-    /* Drop shadow effect */
+    // Drop shadow effect */
     @include single-text-shadow(3px, 3px, 15px, false, #333);
 
-    @include transition(all 0.3s ease 0s);
-    &:hover, &:focus {
+    @include transition(all .3s ease 0s);
+
+    border-radius: 5px;
+    // These two are a hack to center vertiacally  */
+    height: $sub-header-height;
+    line-height: $sub-header-height;
+    padding: (($sub-header-height / 2) - image-height($wave-img)) 15px;
+    //    border: 1px solid #000000;
+    text-decoration: none; // undo bootstap
+    //    color: inherit; // undo bootstrap link styling
+    white-space: nowrap;
+
+    &:hover,
+    &:focus {
 //      text-decoration: none; // undo bootstap
-      @include single-text-shadow(0px, 0px, 0px);
+      @include single-text-shadow(0, 0, 0);
     }
   }
 }

@@ -2,19 +2,19 @@
 @import '../base/variables';
 
 //noinspection SassScssUnresolvedFunction
-@mixin centre($axis: 'both'){
-  position:absolute;
+@mixin centre($axis: 'both') {
+  position: absolute;
   @if $axis == 'y' {
-    top:50%;
+    top: 50%;
     @include transform(translateY(-50%));
   }
   @if $axis == 'x' {
-    left:50%;
+    left: 50%;
     @include transform(translateX(-50%));
   }
   @if $axis == 'both' {
-    top:50%;
-    left:50%;
+    left: 50%;
+    top: 50%;
     @include transform(translate(-50%, -50%));
   }
 }
@@ -22,8 +22,8 @@
 @mixin wave-after($pos) {
   background: image-url($wave-img) repeat-x left $pos;
   position: absolute;
-  height: image_height($wave-img); // 22px;
-  bottom: -(image_height($wave-img) / 2); //-11px;
+  height: image-height($wave-img); // 22px;
+  bottom: -(image-height($wave-img) / 2); //-11px;
 
   width: 100%;
   content: '';
