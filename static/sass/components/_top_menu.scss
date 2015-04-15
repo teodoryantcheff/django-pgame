@@ -24,7 +24,7 @@
   }
 
   a {
-    padding: 10px 15px;
+    padding: (($sub-header-height / 2) - image_height($wave-img)) 15px;
 //    border: 1px solid #000000;
     border-radius: 5px;
 
