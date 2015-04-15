@@ -2,46 +2,52 @@
 
 {% load url from future %}
 {% load i18n %}
+{% load bootstrap3 %}
 
 {% block head_title %}{% trans "Sign up" %}{% endblock %}
 
 {% block content %}
-    <form id="signup_form" method="post" action="{% url "account_signup" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
-        <header>{% trans "SignUP" %}</header>
-        {% csrf_token %}
-        {{ form.as_ul }}
-        {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-        {% endif %}
-        <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button>
-    </form>
+  <h2>{% trans "Sign up" %}</h2>
 
-    <p class="login-signup">
-        <small>
-            {% trans "Already have an account?" %}  <strong><a href="{% url 'account_login' %}">{% trans "Log in" %}</a></strong>
-        </small>
-    </p>
+  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus ducimus eveniet laborum optio tenetur. Adipisci blanditiis cumque cupiditate doloremque excepturi libero magni nihil repellat veritatis voluptatum. Dolorum maiores quasi similique!
+  <br/><br/>
 
-<script>
+  <form id="signup_form" method="post" action="{% url "account_signup" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button> By clicking submit you agree with our <a
+          href="#">terms of service</a>
+  </form>
+
+  <p class="login-signup">
+    <small>
+      {% trans "Already have an account?" %}  <strong><a href="{% url 'account_login' %}">{% trans "Log in" %}</a></strong>
+    </small>
+  </p>
+
+  <script>
     function ref_cookies() {
-        //http://127.0.0.1:8000/account/signup/?ref_code=123&ref_src=source&ref_cmp=campaign
-        //http://127.0.0.1:8000/account/signup/?ref_code=ezX8G17bNspo&ref_src=source&ref_cmp=campaign
-        var ref_code = $.QueryString("ref_code");
-        ref_code = ref_code?ref_code:"";
+      //http://127.0.0.1:8000/account/signup/?ref_code=123&ref_src=source&ref_cmp=campaign
+      //http://127.0.0.1:8000/account/signup/?ref_code=ezX8G17bNspo&ref_src=source&ref_cmp=campaign
+      var ref_code = $.QueryString("ref_code");
+      ref_code = ref_code?ref_code:"";
 
-        var ref_src = $.QueryString("ref_src");
-        ref_src = ref_src?ref_src:"";
+      var ref_src = $.QueryString("ref_src");
+      ref_src = ref_src?ref_src:"";
 
-        var ref_cmp = $.QueryString("ref_cmp");
-        ref_cmp = ref_cmp?ref_cmp:"";
+      var ref_cmp = $.QueryString("ref_cmp");
+      ref_cmp = ref_cmp?ref_cmp:"";
 
-        console.log(ref_code, ref_src, ref_cmp);
-        if (ref_code !== "") {
-            $.cookie.json = true;
-            $.cookie("ref", {ref_code:ref_code, ref_src:ref_src, ref_cmp:ref_cmp}, {expires: 7, path: "/"});
-        }
+      console.log(ref_code, ref_src, ref_cmp);
+      if (ref_code !== "") {
+        $.cookie.json = true;
+        $.cookie("ref", {ref_code:ref_code, ref_src:ref_src, ref_cmp:ref_cmp}, {expires: 7, path: "/"});
+      }
     }
     $(document).ready(ref_cookies);
-</script>
+  </script>
 
 {% endblock %}

@@ -12,11 +12,11 @@
 
   <h4>Referral links</h4>
 
-    <div style="font-size: small">
-      <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b></div></div>
-      <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;</div></div>
-      <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;&<b>ref_cmp</b>=&lt;<i>choose</i>&gt;</div></div>
-    </div>
+  <div style="font-size: small">
+    <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b></div></div>
+    <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;</div></div>
+    <div class="panel panel-default"><div class="panel-body">{{ referral_signup_abs_uri }}?<b>ref_code</b>=<b>{{ user.profile.referral_id }}</b>&<b>ref_src</b>=&lt;<i>choose</i>&gt;&<b>ref_cmp</b>=&lt;<i>choose</i>&gt;</div></div>
+  </div>
 
   <p>How to use the shit above :
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. A asperiores at corporis deserunt dignissimos dolorum eos,
@@ -27,11 +27,11 @@
   {% if referral_stats %}
     <table class="table table-hover table-condensed">
       <thead>
-        <td><b>source</b></td>
-        <td><b>campaign</b></td>
-        <td><b>signups</b></td>
-        <td><b>payments</b></td>
-        <td><b>your bonus</b></td>
+      <td><b>source</b></td>
+      <td><b>campaign</b></td>
+      <td><b>signups</b></td>
+      <td><b>payments</b></td>
+      <td><b>your bonus</b></td>
       </thead>
       {% for rs in referral_stats %}
         <tr>
@@ -47,26 +47,26 @@
     No stats yet
   {% endif %}
 
-{#  <br/>#}
-{#  <h4>By signups</h4>#}
-{#  {% if referral_signup_stats %}#}
-{#    <table class="data-table">#}
-{#      <thead>#}
-{#      <td><b>source</b></td>#}
-{#      <td><b>campaign</b></td>#}
-{#      <td><b>signups</b></td>#}
-{#      </thead>#}
-{#      {% for rs in referral_signup_stats %}#}
-{#        <tr>#}
-{#          <td>{{ rs.ref_source }}</td>#}
-{#          <td>{{ rs.ref_campaign }}</td>#}
-{#          <td>{{ rs.signups }}</td>#}
-{#        </tr>#}
-{#      {% endfor %}#}
-{#    </table>#}
-{#  {% else %}#}
-{#    No stats yet#}
-{#  {% endif %}#}
+  {#  <br/>#}
+  {#  <h4>By signups</h4>#}
+  {#  {% if referral_signup_stats %}#}
+  {#    <table class="data-table">#}
+  {#      <thead>#}
+  {#      <td><b>source</b></td>#}
+  {#      <td><b>campaign</b></td>#}
+  {#      <td><b>signups</b></td>#}
+  {#      </thead>#}
+  {#      {% for rs in referral_signup_stats %}#}
+  {#        <tr>#}
+  {#          <td>{{ rs.ref_source }}</td>#}
+  {#          <td>{{ rs.ref_campaign }}</td>#}
+  {#          <td>{{ rs.signups }}</td>#}
+  {#        </tr>#}
+  {#      {% endfor %}#}
+  {#    </table>#}
+  {#  {% else %}#}
+  {#    No stats yet#}
+  {#  {% endif %}#}
 
   <br/>
 
@@ -74,7 +74,8 @@
     Total <b>{{ user_referred_accounts|length }}</b>. Here are the last 10.
     <table class="table table-hover table-condensed">
       <thead>
-      <td><b>date joined</b></td><td><b>account</b></td>
+      <td><b>date joined</b></td>
+      <td><b>nickname</b></td>
       </thead>
       {% for referred in user_referred_accounts|slice:":10" %}
         <tr>

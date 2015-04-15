@@ -15,13 +15,13 @@
   Minimum withdrawal amount <b>{{ game_config.min_withdrawal_amount }}</b> <br/>
   Minimum deposit amount to withdraw <b>{{ game_config.min_withdrawal_deposit_amount }}</b>. <br/>
   You have deposited <b>{{ sum_deposits|floatformat:"3" }}</b> {{ game_currency }} over <b>{{ count_deposits }}</b> deposits. <br/>
-{#  Investment <b>{{ user.profile.balance_i|floatformat:"0" }}</b> {{ game_currency }}.#}
+  {#  Investment <b>{{ user.profile.balance_i|floatformat:"0" }}</b> {{ game_currency }}.#}
 
   <br/>
 
   <form action="" method="post">{% csrf_token %}
     {% bootstrap_form form %}
-{#    <b style="color: red">{{ form.non_field_errors }}</b>#}
+    {#    <b style="color: red">{{ form.non_field_errors }}</b>#}
     <input type="submit" class="btn btn-lg btn-success" value="Request" />
   </form>
 
