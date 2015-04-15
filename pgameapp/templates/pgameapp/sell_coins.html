@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load staticfiles %}
+{% load bootstrap3 %}
 
 {% block help %}
   <strong>Sell coins</strong> <br/>
@@ -14,7 +15,8 @@
   Rate <b>{{ coin_to_gc_rate }}</b> coins for one <b>{{ game_currency }}</b>
 
   <form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
+    {% bootstrap_form form %}
+{#    {{ form.as_p }}#}
     <b style="color: red">{{ form.non_field_errors }}</b>
     <input type="submit" class="btn btn-lg btn-success" value="Sell for {{ game_currency }}" />
   </form>

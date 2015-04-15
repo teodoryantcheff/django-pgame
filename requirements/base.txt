@@ -5,3 +5,4 @@ django-axes==1.3.9
 django-user-accounts==1.0.1
 django-custom-user==0.5
 django-admin-tools
+django-bootstrap3

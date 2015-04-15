@@ -54,6 +54,7 @@ THIRD_PARTY_APPS = (
     'djangobower',
     'admin_tools_stats',
     'django_nvd3',
+    'bootstrap3',         # django-bootstrap3
 )
 
 # Apps defined in the project

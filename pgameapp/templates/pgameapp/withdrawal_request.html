@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load staticfiles %}
+{% load bootstrap3 %}
 
 {% block help %}
   <strong>Withdrawal</strong> <br/>
@@ -19,7 +20,7 @@
   <br/>
 
   <form action="" method="post">{% csrf_token %}
-    {{ form.as_p }}
+    {% bootstrap_form form %}
 {#    <b style="color: red">{{ form.non_field_errors }}</b>#}
     <input type="submit" class="btn btn-lg btn-success" value="Request" />
   </form>
