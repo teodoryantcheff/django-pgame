@@ -22,7 +22,7 @@
   clear: both;
 
   z-index: 5;
-  @include box-shadow(15px 15px 15px 0px rgba(0,0,0,0.4) inset);
+  @include box-shadow(15px 15px 15px 0px rgba(#000, 0.4) inset);
 
   &::after {
     @include wave-after(top);
