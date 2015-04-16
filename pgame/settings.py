@@ -151,17 +151,15 @@ DATETIME_FORMAT = 'Y-m-d H:i:s'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
 
-
 AUTH_USER_MODEL = 'custom_user.EmailUser'
 # AUTH_USER_MODEL = 'pgameapp.User'
-
 
 # django-accounts
 # see http://django-user-accounts.readthedocs.org/en/latest/ for full parameter set
