@@ -120,8 +120,8 @@ class User(EmailUser):
         """
         if ref_code:
             try:
-                self.prfile.referrer = User.objects.get(profile__referral_id=ref_code)
-                self.prfile.ref_source = ref_source
-                self.prfile.ref_campaign = ref_campaign
+                self.profile.referrer = User.objects.get(profile__referral_id=ref_code)
+                self.profile.ref_source = ref_source
+                self.profile.ref_campaign = ref_campaign
             except User.DoesNotExist:
                 print 'Account with referral_id {} does not exist. Ignoring'.format(ref_code)

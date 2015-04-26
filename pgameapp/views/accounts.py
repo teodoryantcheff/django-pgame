@@ -1,6 +1,7 @@
 import socket
 from bitcoinrpc.authproxy import AuthServiceProxy
 from pgameapp import wallet
+from pgameapp.models import User
 
 try:
     import simplejson as json
@@ -52,6 +53,7 @@ class SignupView(account.views.SignupView):
 
         # and set that on the user profile
         user = self.created_user
+        user.__class__ = User
         # up.set_referral_info(ref_code=ref_info.get('ref_code', None))
         user.set_referral_info(
             ref_code=self.request.session.get('ref_code') or '',
@@ -61,7 +63,7 @@ class SignupView(account.views.SignupView):
 
         try:
             w = AuthServiceProxy(wallet.CRYPTO_WALLET_CONNSTRING)
-            crypto_address = w.getnewaddress(account=user.email)
+            crypto_address = w.getnewaddress(user.email)
             user.set_crypto_address(crypto_address)
         except socket.error:
             # TODO Proper error handling here

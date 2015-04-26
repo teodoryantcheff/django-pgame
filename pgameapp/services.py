@@ -123,7 +123,8 @@ def apply_payment(address, amount, transaction):
         user.credit(amount)
         UserLedger.objects.log(user, UserLedger.PAYMENT, amount, transaction)
 
-        if user.get_deposits_info() < 1:
+        depcount, depamount = user.get_deposits_info()
+        if depcount < 1:
             bonus = amount * Decimal(game_config.first_deposit_bonus_percent) / 100
 
             user.credit(bonus)
