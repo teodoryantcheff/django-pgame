@@ -1,3 +1,4 @@
+//@import 'base/variables'
 // Override Bootstrap variables here (defaults from bootstrap-sass v3.3.4):
 
 //
@@ -20,6 +21,9 @@
 //$brand-primary:         #94BE5C;
 
 // $brand-success:         #5cb85c
+$brand-success:         #cd5acf;
+//$brand-success:         $link-color;
+
 // $brand-info:            #5bc0de
 // $brand-warning:         #f0ad4e
 // $brand-danger:          #d9534f
