@@ -1,0 +1,4 @@
+{% for n in news_summaries %}
+  <strong>{{ n.timestamp|date:"Y-m-d H:i" }}</strong> - <a href="{% url 'news_detail_view' n.id %}">{{ n.summary }}</a> <br/>
+  <hr/>
+{% endfor %}

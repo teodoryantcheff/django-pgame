@@ -59,6 +59,7 @@ THIRD_PARTY_APPS = (
 
 # Apps defined in the project
 PROJECT_APPS = (
+    'news',
     'pgameapp',
 )
 

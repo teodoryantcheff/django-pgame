@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     url(r'^accounts/signup/', pgameapp.views.SignupView.as_view(), name="account_signup"),
     url(r'^accounts/', include("account.urls")),
 
-
+    url(r'^news/', include('news.urls')),
 )
 
 
