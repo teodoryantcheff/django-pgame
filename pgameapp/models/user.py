@@ -67,8 +67,13 @@ class User(EmailUser):
     #         values('ref_source', 'ref_campaign').distinct().\
     #         annotate(signups=Count('user')).order_by('-signups')
 
-    def get_referrals(self):
-        return User.objects.filter(profile__referrer=self).order_by('-date_joined')
+    def get_referrals(self, with_income=False):
+        if with_income:
+            return User.objects.filter(profile__referrer=self).\
+                annotate(income=Sum('ref_payments__amount')).\
+                order_by('-date_joined')
+        else:
+            return User.objects.filter(profile__referrer=self).order_by('-date_joined')
 
     def get_deposits_info(self):
         return tuple(UserLedger.objects.filter(user=self, type=UserLedger.PAYMENT).

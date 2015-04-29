@@ -76,11 +76,13 @@
       <thead>
       <td><b>date joined</b></td>
       <td><b>nickname</b></td>
+      <td><b>income</b></td>
       </thead>
       {% for referred in user_referred_accounts|slice:":10" %}
         <tr>
           <td>{{ referred.date_joined|date:"Y-m-d H:i" }}</td>
           <td>{% if referred.profile.nickname %}{{ referred.profile.nickname}}{% else %}{{ referred.email|truncatechars:"10" }}{% endif %}</td>
+          <td>{{ referred.income|floatformat:"2"|default:"0" }}</td>
         </tr>
       {% endfor %}
     </table>

@@ -187,7 +187,7 @@ class ReferralsView(ListView):
     context_object_name = 'user_referred_accounts'
 
     def get_queryset(self):
-        return self.request.user.get_referrals()
+        return self.request.user.get_referrals(with_income=True)
 
     def get_context_data(self, **kwargs):
         context = super(ReferralsView, self).get_context_data(**kwargs)
