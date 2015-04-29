@@ -11,22 +11,34 @@
     <h2>Store</h2>
     {% for actor in sellable_actors %}
       <form action="" method="post">{% csrf_token %}
-        <li>
-          <img src="{% static actor.image_path %}">"{{ actor.name }}"
-          <i>price</i> <b>{{ actor.price|floatformat:"0" }}</b> {{ game_currency }}
-          <i>ouput</i> <b>{{ actor.output|floatformat:"0" }}</b> coins/hour
-          &nbsp;&nbsp;&nbsp;
+        <div style="
+        width: 45%;
+        height: 250px;
+        border: 1px solid #000000;
+        padding: 5px;
+        margin: 0 10px 10px auto;
+        border-radius: 15px;
+        display: inline-block;
+        float: left;
+        box-sizing: border-box;">
+          <img src="{% static actor.image_path %}"><strong>{{ actor.name }}</strong>
+          <br/>
+          <section>{{ actor.description }}</section>
+          <br/>
+          <i>price</i> <b>{{ actor.price|floatformat:"0" }}</b> {{ game_currency }}<br/>
+          <i>output</i> <b>{{ actor.output|floatformat:"0" }}</b> coins/hour
+          <br/>
           <input type="hidden" id="id_actor" class="hidden_id" name="actor" value="{{ actor.pk }}" />
 {#          <input type="hidden" id="id_user" class="hidden_id" name="user" value="{{ user.pk }}" />#}
-          <input type="submit" class="btn btn-success" value="Buy for {{ actor.price }}"  />
-        </li>
+          <input type="submit" class="btn btn-lg btn-success" value="Buy for {{ actor.price }}"  style="margin: 0 auto; text-align: center"/>
+        </div>
       </form>
     {% endfor %}
     <b style="color: red">{{ form.non_field_errors }}</b>
     <br/>
-    <div style="border: 1px solid black; width: 100%">
+    <div style="border: 1px solid black; width: 100%; clear: left">
       {% for owned in owned_actors %}
-        <div style="display: inline-block; padding: 5px 7px; margin: 5px 5px ; border: 1px dashed green; border-radius: 5px; background-color: #c0e8c7 ">
+        <div style="display: inline-block; padding: 5px 7px; margin: 5px 5px ; border: 1px dashed green; border-radius: 5px; background-color: #c0e8c7; ">
           {# TODO styles to style.css #}
           <img src="{% static owned.actor.image_path %}" alt="" style="vertical-align: middle"/>
           <span><b style="font-size: xx-large;vertical-align: middle">{{ owned.num_actors|stringformat:"02d" }}</b></span>

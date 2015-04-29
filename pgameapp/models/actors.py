@@ -49,6 +49,9 @@ class Actor(models.Model):
     dogs / cats / flowers ... cash generators
     """
     name = models.CharField(max_length=50)
+
+    description = models.TextField()
+
     price = models.DecimalField(
         verbose_name='price (GC)',
         default=0,

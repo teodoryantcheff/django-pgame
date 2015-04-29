@@ -68,10 +68,12 @@ class WithdrawalRequest(AbstractBaseUserHistory):
         blank=False
     )
 
+    # Meta
     class Meta:
         ordering = ('-timestamp',)
         get_latest_by = 'timestamp'
 
+    # Managers
     objects = models.Manager()
     approved = ApprovedWithdrawalRequestManager()
     denied = DeniedWithdrawalRequestManager()
