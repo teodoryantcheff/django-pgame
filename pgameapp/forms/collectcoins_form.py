@@ -12,7 +12,7 @@ class CollectCoinsForm(RequestContextForm):
 
     def __init__(self, *args, **kwargs):
         self.until = kwargs.pop('until', None)
-        print 'form until', self.until
+        # print 'form until', self.until
         super(CollectCoinsForm, self).__init__(*args, **kwargs)
 
     def clean(self):
