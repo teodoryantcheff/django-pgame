@@ -54,19 +54,33 @@
   {% block top-menu %}
 {#          <div class="top-menu">#}
 {#      <ul class="nav nav-justified top-menu-item">#}
+{#    <ul class="top-menu">#}
+{#      <li><a href="{% url 'user-profile' %}">Profile</a></li>#}
+{#      <li><a href="{% url 'collect-coins' %}">Collect</a></li>#}
+{#      <li><a href="{% url 'sell-coins' %}">Sell</a></li>#}
+{#      <li><a href="{% url 'store' %}">Store</a></li>#}
+{#      <li><a href="#">Game</a></li>#}
+{#      <li><a href="{% url 'exchange' %}">Exchange</a></li>#}
+{#      <li><a href="{% url 'referrals' %}">Referrals</a></li>#}
+{#      <li><a href="{% url 'deposit' %}">Deposit</a></li>#}
+{#      <li><a href="{% url 'withdraw' %}">Withdraw</a></li>#}
+{#      <li><a href="{% url 'user-profile-edit' %}">Edit</a></li>#}
+{#        <li role="presentation"><i class="fa fa-camera-retro fa-5x"></i> fa-5x</li>#}
+{#    </ul>#}
     <ul class="top-menu">
-      <li><a href="{% url 'user-profile' %}">Profile</a></li>
-      <li><a href="{% url 'collect-coins' %}">Collect</a></li>
-      <li><a href="{% url 'sell-coins' %}">Sell</a></li>
-      <li><a href="{% url 'store' %}">Store</a></li>
-      <li><a href="#">Game</a></li>
-      <li><a href="{% url 'exchange' %}">Exchange</a></li>
-      <li><a href="{% url 'referrals' %}">Referrals</a></li>
-      <li><a href="{% url 'deposit' %}">Deposit</a></li>
-      <li><a href="{% url 'withdraw' %}">Withdraw</a></li>
-      <li><a href="{% url 'user-profile-edit' %}">Edit</a></li>
+      <li><a href="{% url 'user-profile' %}">Профиль</a></li>
+      <li><a href="{% url 'collect-coins' %}">Собрать</a></li>
+      <li><a href="{% url 'sell-coins' %}">Продать</a></li>
+      <li><a href="{% url 'store' %}">Нанять</a></li>
+      <li><a href="#">Игры</a></li>
+      <li><a href="{% url 'exchange' %}">Обменник</a></li>
+      <li><a href="{% url 'referrals' %}">Рефералы</a></li>
+      <li><a href="{% url 'deposit' %}">Пополнить</a></li>
+      <li><a href="{% url 'withdraw' %}">Вывести</a></li>
+{#      <li><a href="{% url 'user-profile-edit' %}">Изменить</a></li>#}
 {#        <li role="presentation"><i class="fa fa-camera-retro fa-5x"></i> fa-5x</li>#}
     </ul>
+
 {#    </div>#}
   {% endblock %}
   </div>
@@ -96,8 +110,8 @@
   <!-- JS -->
 
   <script src="{% static "js/jquery-1.11.2.min.js" %}"></script>
-  <script src="{% static "js/jquery.cookie.js" %}"></script>
-  <script src="{% static "js/querystring-0.9.0-min.js" %}"></script>
+{#  <script src="{% static "js/jquery.cookie.js" %}"></script>#}
+{#  <script src="{% static "js/querystring-0.9.0-min.js" %}"></script>#}
 
   <!-- Latest compiled and minified JavaScript -->
 {#  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>#}
