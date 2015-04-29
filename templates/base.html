@@ -13,6 +13,7 @@
 
   <title>{% block title %}MEGA page title TEST{% endblock %}</title>
 
+<body> {# needs to have a body tag for DjDT to work #}
   <header class="header">
   {% block header %} <span style="position: absolute;">Content goes in here</span>  {% endblock %}
   </header>
@@ -115,5 +116,5 @@
 
   <!-- Latest compiled and minified JavaScript -->
 {#  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>#}
-
+</body>
 </html>
