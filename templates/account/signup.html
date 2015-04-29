@@ -18,8 +18,8 @@
     {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
-    <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button> By clicking submit you agree with our <a
-          href="#">terms of service</a>
+    <button type="submit" class="btn btn-lg btn-success">{% trans "Sign up" %}</button>
+    By clicking submit you agree with our <a href="/static/tos.html" target="_blank">terms of service</a>
   </form>
 
   <p class="login-signup">
@@ -28,26 +28,26 @@
     </small>
   </p>
 
-  <script>
-    function ref_cookies() {
-      //http://127.0.0.1:8000/account/signup/?ref_code=123&ref_src=source&ref_cmp=campaign
-      //http://127.0.0.1:8000/account/signup/?ref_code=ezX8G17bNspo&ref_src=source&ref_cmp=campaign
-      var ref_code = $.QueryString("ref_code");
-      ref_code = ref_code?ref_code:"";
-
-      var ref_src = $.QueryString("ref_src");
-      ref_src = ref_src?ref_src:"";
-
-      var ref_cmp = $.QueryString("ref_cmp");
-      ref_cmp = ref_cmp?ref_cmp:"";
-
-      console.log(ref_code, ref_src, ref_cmp);
-      if (ref_code !== "") {
-        $.cookie.json = true;
-        $.cookie("ref", {ref_code:ref_code, ref_src:ref_src, ref_cmp:ref_cmp}, {expires: 7, path: "/"});
-      }
-    }
-    $(document).ready(ref_cookies);
-  </script>
+{#  <script>#}
+{#    function ref_cookies() {#}
+{#      //http://127.0.0.1:8000/account/signup/?ref_code=123&ref_src=source&ref_cmp=campaign#}
+{#      //http://127.0.0.1:8000/account/signup/?ref_code=ezX8G17bNspo&ref_src=source&ref_cmp=campaign#}
+{#      var ref_code = $.QueryString("ref_code");#}
+{#      ref_code = ref_code?ref_code:"";#}
+{##}
+{#      var ref_src = $.QueryString("ref_src");#}
+{#      ref_src = ref_src?ref_src:"";#}
+{##}
+{#      var ref_cmp = $.QueryString("ref_cmp");#}
+{#      ref_cmp = ref_cmp?ref_cmp:"";#}
+{##}
+{#      console.log(ref_code, ref_src, ref_cmp);#}
+{#      if (ref_code !== "") {#}
+{#        $.cookie.json = true;#}
+{#        $.cookie("ref", {ref_code:ref_code, ref_src:ref_src, ref_cmp:ref_cmp}, {expires: 7, path: "/"});#}
+{#      }#}
+{#    }#}
+{#    $(document).ready(ref_cookies);#}
+{#  </script>#}
 
 {% endblock %}
