@@ -1,0 +1,36 @@
+# _TODO https://github.com/jcugat/django-custom-user
+# _TODO https://github.com/dyve/django-bootstrap3
+# _TODO signups
+# _TODO login ip
+# _TODO select_related vs prefetch_related
+# _TODO Referrals management and reports
+# _TODO dogecoin interfaces
+# TODO test transactions management
+# _TODO bonuses
+# TODO in site games
+# TODO tests
+# _TODO user action history
+# ^ https://django-simple-history.readthedocs.org/en/latest/
+
+# _TODO Profile, after login
+# _TODO Shop - buy actors
+# _TODO Sklad - convert coins to silver
+# _TODO Sell to GC
+# _TODO Exchange - withdrawal GC to investment GC
+# _TODO referrer stats
+# _TODO Top up balance (doge transfer confirmation)
+# _TODO Request payout / withdrawal
+# TODO Profile settings
+# _TODO game stats box
+
+# useful links and related
+# https://github.com/tomatohater/django-unfriendly
+# https://docs.djangoproject.com/en/1.7/ref/contrib/admin/actions/
+# http://www.revsys.com/blog/2014/nov/21/recommended-django-project-layout/
+# https://github.com/pydanny/cookiecutter-django/
+
+# Proper ValidatoinError - https://docs.djangoproject.com/en/1.7/ref/forms/validation/#raising-validationerror
+
+#  Separation of business logic and data access in django
+# http://stackoverflow.com/questions/12578908/separation-of-business-logic-and-data-access-in-django
+# http://mauveweb.co.uk/posts/2014/08/organising-django-projects.html

@@ -11,7 +11,7 @@ __pycache__/
 local_settings.py
 
 components/*
-# TODO statis ignores
+# TODO static ignores
 s/*
 
 */.sass-cache
