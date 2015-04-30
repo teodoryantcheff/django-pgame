@@ -1,10 +1,12 @@
 # coding=utf-8
 from decimal import Decimal
 from datetime import timedelta
-from django.db.models import Sum
 
+from django.db.models import Sum
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+
+from slugify import slugify
 
 from pgameapp.models import GameConfiguration, ReferralBonusPayment, User, WithdrawalRequest
 from pgameapp.models import UserActorOwnership
@@ -46,15 +48,17 @@ def buy_actor(user, actor):
 
 def collect_coins(user, until):
 
-    uacg, total = user.get_coins_generated(until=until)
+    uacg, total_generated = user.get_coins_generated(until=until)
 
-    print('total harvest {}'.format(total))
+    print('total_generated harvest {}'.format(total_generated))
     for ua, output in uacg:
-        print '{}: output {}'.format(ua, output)
+        print '{} of {}: output {}'.format(ua.num_actors, slugify(ua.actor.name), output)
 
-    user.profile.balance_coins += total
+    user.profile.balance_coins += total_generated
     user.profile.last_coin_collection_time = until
     user.profile.save()
+
+    return total_generated
 
 
 def exchange__w2i(user, gc_to_exchange):

@@ -3,22 +3,23 @@
 {% load staticfiles %}
 
 {% block help %}
-  <strong>Collect coins</strong> <br/>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid atque cupiditate dolores ea earum eos et inventore minus placeat praesentium provident quam quod, rerum similique tenetur ut veniam vitae voluptate?
+  <strong>Собрать</strong> <br/>
+  Здесь Вы можете собрать все монеты, которые заработал Ваш Салон красоты.
 {% endblock %}
 
 {% block content %}
     <h2>Collect coins</h2>
-
-    <p>last coin collection <b>{{ user.profile.last_coin_collection_time|timesince }}</b> ago</p>
-    <ul>{% for ua, output in user_actors_generated %}
-        <p><b>{{ ua.num_actors }} X</b> <img src="{% static ua.actor.image_path %}">"{{ ua.actor.name }}" <i>generated:</i> <b>{{ output|floatformat:"2" }}</b> coins</p>
-    {% endfor %}</ul>
-    Total: <b style="font-size: x-large">{{ total_generated|floatformat:"2" }}</b> coins.
-{#    <br/><br/><br/>#}
-
     <form action="" method="post">{% csrf_token %}
-        <b style="color: red">{{ form.non_field_errors }} {#{{ form }}#} </b>
+      <b style="color: red">{{ form.non_field_errors }}</b>
+      {% if collected_coins %}
+        <b style="color: green">Вы собрали {{ collected_coins }} монет !</b>
+      {% endif %}
+      <ul> {% for ua, output in user_actors_generated %}
+        <p><b>{{ ua.num_actors }} X</b> <img src="{% static ua.actor.image_path %}">"{{ ua.actor.name }}" <i>generated:</i> <b>{{ output|floatformat:"2" }}</b> coins</p>
+      {% endfor %}</ul>
+      Total: <b style="font-size: x-large">{{ total_generated|floatformat:"2" }}</b> coins.
+  {#    <br/><br/><br/>#}
+        <p>last coin collection <b>{{ user.profile.last_coin_collection_time|timesince }}</b> ago</p>
         <input type="submit" class="btn btn-lg btn-success" value="Collect coins" />
     </form>
 {% endblock %}

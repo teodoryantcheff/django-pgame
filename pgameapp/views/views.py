@@ -24,7 +24,8 @@ class CollectCoinsView(FormView):
     def form_valid(self, form):
         user = self.request.user
 
-        services.collect_coins(user, until=form.until)
+        total_generated = services.collect_coins(user, until=form.until)
+        self.request.session['collected_coins'] = total_generated
 
         return super(CollectCoinsView, self).form_valid(form)
 
@@ -43,6 +44,12 @@ class CollectCoinsView(FormView):
 
         context['last_collection_datetime'] = user.profile.last_coin_collection_time
         context['now'] = now
+
+        try:
+            context['collected_coins'] = self.request.session.get('collected_coins', None)
+            del self.request.session['collected_coins']
+        except:
+            pass
 
         return context
 

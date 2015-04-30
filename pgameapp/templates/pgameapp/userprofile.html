@@ -3,8 +3,8 @@
 {% load staticfiles %}
 
 {% block help %}
-  <strong>User Profile</strong> <br/>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid atque cupiditate dolores ea earum eos et inventore minus placeat praesentium provident quam quod, rerum similique tenetur ut veniam vitae voluptate?
+  <strong>{% trans "User Profile" %}</strong> <br/>
+  {% trans "User profile help text" %}
 {% endblock %}
 
 {% block content %}
@@ -24,7 +24,4 @@
         <li>$ withdrawn <b>TODO</b></li>
         <li>last coin collection <b>{{ userprofile.last_coin_collection_time|timesince }}</b> ago</li>
     </ul>
-
-    You have referred : <h2>{{ user.referrals.count }} users </h2> .
-
 {% endblock %}

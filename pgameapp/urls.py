@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^$', auth(UserProfileView.as_view()),
         name='user-profile'),
 
-    url(r'^profile_edit$', auth(ProfileEdit.as_view(success_url = reverse_lazy('user-profile'))),
+    url(r'^profile_edit/$', auth(ProfileEdit.as_view(success_url = reverse_lazy('user-profile'))),
         name='user-profile-edit'),
 
 
