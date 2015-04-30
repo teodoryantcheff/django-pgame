@@ -6,3 +6,4 @@ django-user-accounts==1.0.1
 django-custom-user==0.5
 django-admin-tools
 django-bootstrap3
+python-slugify
