@@ -32,7 +32,7 @@
     // These two are a hack to center vertiacally  */
     height: $sub-header-height;
     line-height: $sub-header-height;
-    padding: (($sub-header-height / 2) - image-height($wave-img)) 15px;
+    padding: (($sub-header-height / 2) - image-height($wave-img)) 12px;
     //    border: 1px solid #000000;
     text-decoration: none; // undo bootstap
     //    color: inherit; // undo bootstrap link styling
