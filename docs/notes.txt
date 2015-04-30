@@ -12,6 +12,7 @@
 # _TODO user action history
 # ^ https://django-simple-history.readthedocs.org/en/latest/
 
+# TODO logging
 # _TODO Profile, after login
 # _TODO Shop - buy actors
 # _TODO Sklad - convert coins to silver
