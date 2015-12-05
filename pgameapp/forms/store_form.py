@@ -1,8 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+
+from slugify import slugify
+
 from pgameapp.models import Actor, GameConfiguration
-from pgameapp.services import buy_actor
 
 from . import RequestContextForm
 
@@ -42,7 +44,7 @@ class StoreForm(RequestContextForm):
         actor = cleaned_data['actor']
         user = self.request.user
 
-        print 'Actor "{}", price {}'.format(actor, actor.price)
+        print 'Actor "{}", price {}'.format(slugify(actor.name), actor.price)
 
         if actor.price > user.profile.balance_i:
             raise ValidationError('Insufficient funds')
